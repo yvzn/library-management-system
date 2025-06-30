@@ -4,12 +4,21 @@
 	ViewData["Title"] = "Loan Details";
 }
 
-<h2>Loan Information</h2>
-<p><strong>@Html.DisplayNameFor(model => model.LoanDate):</strong> @Model.LoanDate</p>
-<p><strong>@Html.DisplayNameFor(model => model.DueDate):</strong> @Model.DueDate</p>
-<p><strong>@Html.DisplayNameFor(model => model.ReturnDate):</strong> @Model.ReturnDate</p>
+<div class="mb-3">
+	<h1 class="display-4">Loan Details</h1>
+</div>
 
-<h2>Loaned Books</h2>
+<div class="mb-3"><strong>@Html.DisplayNameFor(model => model.LoanDate):</strong> @Model.LoanDate</div>
+<div class="mb-3"><strong>@Html.DisplayNameFor(model => model.DueDate):</strong> @Model.DueDate</div>
+<div class="mb-3"><strong>@Html.DisplayNameFor(model => model.ReturnDate):</strong> @Model.ReturnDate</div>
+
+<div class="mb-3 row align-items-center">
+	<h2 class="display-5 col-12 col-md-6">Loaned Books</h2>
+	<div class="col-12 col-md-6 text-md-end">
+		<a class="btn btn-primary" asp-controller="Books" asp-action="Search">Add Book</a>
+	</div>
+</div>
+
 @if (Model.LoanBooks.Count == 0)
 {
 	<p>No books have been loaned.</p>
@@ -19,18 +28,18 @@ else
 	<table class="table">
 		<thead>
 			<tr>
-				<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book.Title)</th>
-				<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book.Author)</th>
-				<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book.ISBN)</th>
+				<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.Title)</th>
+				<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.Author)</th>
+				<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.ISBN)</th>
 			</tr>
 		</thead>
 		<tbody>
 			@foreach (var loanBook in Model.LoanBooks)
 			{
 				<tr>
-					<td>@Html.DisplayFor(model => loanBook.Book.Title)</td>
-					<td>@Html.DisplayFor(model => loanBook.Book.Author)</td>
-					<td>@Html.DisplayFor(model => loanBook.Book.ISBN)</td>
+					<td>@Html.DisplayFor(model => loanBook.Book!.Title)</td>
+					<td>@Html.DisplayFor(model => loanBook.Book!.Author)</td>
+					<td>@Html.DisplayFor(model => loanBook.Book!.ISBN)</td>
 				</tr>
 			}
 		</tbody>

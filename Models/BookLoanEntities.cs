@@ -15,9 +15,11 @@ public class Loan
 	public int ID { get; set; }
 
 	[Display(Name = "Loan Date")]
+	[Required]
 	public DateTime LoanDate { get; set; }
 
 	[Display(Name = "Due Date")]
+	[Required]
 	public DateTime DueDate { get; set; }
 
 	[Display(Name = "Return Date")]

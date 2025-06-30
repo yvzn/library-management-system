@@ -1,0 +1,29 @@
+@model library_management_system.Models.Loan
+
+@{
+	ViewData["Title"] = "New Loan";
+}
+
+<div class="mb-3">
+	<h1 class="display-4">Add New Loan</h1>
+</div>
+
+<form method="post" asp-controller="Loans" asp-action="Create">
+	<div class="row">
+		<div class="col-12 col-md-6">
+			<div class="mb-3">
+				<label asp-for="LoanDate" class="form-label">
+					@Html.DisplayNameFor(model => model.LoanDate)
+				</label>
+				<input asp-for="LoanDate" class="form-control" type="date" required />
+			</div>
+			<div class="mb-3">
+				<label asp-for="DueDate" class="form-label">
+					@Html.DisplayNameFor(model => model.DueDate)
+				</label>
+				<input asp-for="DueDate" class="form-control" type="date" required />
+			</div>
+			<button type="submit" class="btn btn-primary">Create Loan</button>
+		</div>
+	</div>
+</form>

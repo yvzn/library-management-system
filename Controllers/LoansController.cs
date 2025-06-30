@@ -1,4 +1,5 @@
 using library_management_system.Infrastructure;
+using library_management_system.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,5 +20,29 @@ public class LoansController(BookLoansContext dbContext) : Controller
 		}
 
 		return View(loan);
+	}
+
+	public IActionResult New()
+	{
+		var loan = new Loan
+		{
+			LoanDate = DateTime.Now,
+			DueDate = DateTime.Now.AddDays(30),
+		};
+
+		return View(loan);
+	}
+
+	public IActionResult Create(Loan loan)
+	{
+		if (!ModelState.IsValid)
+		{
+			return View(nameof(New), loan);
+		}
+
+		var created = dbContext.Loans.Add(loan);
+		dbContext.SaveChanges();
+
+		return RedirectToAction("Details", "Loans", new { id = created.Entity.ID });
 	}
 }
