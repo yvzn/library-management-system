@@ -1,5 +1,13 @@
 # Library Management System
 
+TODO
+
+## Running the project
+
+```pwsh
+dotnet watch run --launch-profile https --project library-management-system.csproj
+```
+
 ## Tasks
 
 - ✅ Init new ASP MVC project
@@ -31,3 +39,32 @@
 	- Name
 
 - Responsive
+
+## EntityFramework migrations
+
+<https://learn.microsoft.com/en-us/aspnet/core/data/ef-mvc/intro?view=aspnetcore-9.0>
+
+Update database
+
+```pwsh
+dotnet ef database update  --project library-management-system.csproj
+```
+
+Recreate database
+
+```pwsh
+dotnet ef database drop  --project library-management-system.csproj
+```
+
+Create migration
+
+```pwsh
+dotnet ef migrations add <<name>>  --project library-management-system.csproj
+```
+
+List all migrations
+
+```pwsh
+dotnet ef migrations list --project library-management-system.csproj
+```
+

@@ -1,6 +1,15 @@
+using library_management_system.Infrastructure;
+using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDbContext<BookLoansContext>(
+	options => options.UseSqlite($"Data Source={BookLoansContext.DbPath}"));
+builder.Services.AddScoped<BookLoansDbInitializer>();
+
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -25,5 +34,10 @@ app.MapControllerRoute(
 		pattern: "{controller=Home}/{action=Index}/{id?}")
 		.WithStaticAssets();
 
+using(var scope = app.Services.CreateScope()) {
+	var serviceProvider = scope.ServiceProvider;
+	var dbInitializer = serviceProvider.GetRequiredService<BookLoansDbInitializer>();
+	await dbInitializer.Init(CancellationToken.None);
+}
 
-app.Run();
+await app.RunAsync();
