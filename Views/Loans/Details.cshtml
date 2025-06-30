@@ -33,7 +33,7 @@ else
 			<tr>
 				<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.Title)</th>
 				<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.Author)</th>
-				<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.ISBN)</th>
+				<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.ISBN_10)</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -42,7 +42,7 @@ else
 				<tr>
 					<td>@Html.DisplayFor(model => loanBook.Book!.Title)</td>
 					<td>@Html.DisplayFor(model => loanBook.Book!.Author)</td>
-					<td>@Html.DisplayFor(model => loanBook.Book!.ISBN)</td>
+					<td>@Html.DisplayFor(model => loanBook.Book!.ISBN_10)</td>
 				</tr>
 			}
 		</tbody>

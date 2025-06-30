@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using library_management_system.Infrastructure;
 
@@ -10,9 +11,11 @@ using library_management_system.Infrastructure;
 namespace library_management_system.Migrations
 {
     [DbContext(typeof(BookLoansContext))]
-    partial class BookLoansContextModelSnapshot : ModelSnapshot
+    [Migration("20250630224021_AddISBN_10_13")]
+    partial class AddISBN_10_13
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.6");
@@ -24,7 +27,6 @@ namespace library_management_system.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Author")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ISBN_10")
@@ -34,7 +36,6 @@ namespace library_management_system.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID");

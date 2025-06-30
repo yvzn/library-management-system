@@ -15,7 +15,7 @@
 						<tr>
 							<th scope="col">@Html.DisplayNameFor(model => model.ExistingBooks.First().Title)</th>
 							<th scope="col">@Html.DisplayNameFor(model => model.ExistingBooks.First().Author)</th>
-							<th scope="col">@Html.DisplayNameFor(model => model.ExistingBooks.First().ISBN)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.ExistingBooks.First().ISBN_10)</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -23,14 +23,57 @@
 						@foreach (var book in Model.ExistingBooks)
 						{
 							<tr>
-								<td>@Html.DisplayFor(model => book.Title)</td>
-								<td>@Html.DisplayFor(model => book.Author)</td>
-								<td>@Html.DisplayFor(model => book.ISBN)</td>
+								<td class="align-middle">@Html.DisplayFor(model => book.Title)</td>
+								<td class="align-middle">@Html.DisplayFor(model => book.Author)</td>
+								<td class="align-middle">@Html.DisplayFor(model => book.ISBN_10)</td>
 								<td class="text-md-end">
 									@if (Model.LoanId != null)
 									{
-										<a asp-controller="Loans" asp-action="AddBook" asp-route-loanId="@Model.LoanId"
+										<a class="btn btn-outline-primary text-nowrap" asp-controller="Loans" asp-action="AddBook" asp-route-loanId="@Model.LoanId"
 											asp-route-bookId="@book.ID">Add to Loan</a>
+									}
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</output>
+		</section>
+	}
+
+	@if (Model.NewBooks.Count > 0)
+	{
+		<section>
+			<h2 class="display-5">New Books</h2>
+			<output class="row">
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">@Html.DisplayNameFor(model => model.NewBooks.First().Title)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.NewBooks.First().Author)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.NewBooks.First().ISBN_10)</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var book in Model.NewBooks)
+						{
+							<tr>
+								<td class="align-middle">@Html.DisplayFor(model => book.Title)</td>
+								<td class="align-middle">@Html.DisplayFor(model => book.Author)</td>
+								<td class="align-middle">@Html.DisplayFor(model => book.ISBN_10)</td>
+								<td class="text-md-end">
+									@if (Model.LoanId != null)
+									{
+										<form asp-controller="LoanBooks" asp-action="Create">
+											<input type="hidden" name="LoanId" value="@Model.LoanId" />
+											<input type="hidden" name="Book.Title" value="@book.Title" />
+											<input type="hidden" name="Book.Author" value="@book.Author" />
+											<input type="hidden" name="Book.ISBN_13" value="@book.ISBN_13" />
+											<input type="hidden" name="Book.ISBN_10" value="@book.ISBN_10" />
+
+											<button type="submit" class="btn btn-outline-primary text-nowrap">Add to Loan</button>
+										</form>
 									}
 								</td>
 							</tr>

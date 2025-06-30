@@ -2,7 +2,7 @@ using library_management_system.Infrastructure;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args); 
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<BookLoansContext>(
@@ -15,6 +15,7 @@ builder.Services.AddHttpLogging(options =>
 	options.ResponseBodyLogLimit = 128;
 	options.CombineLogs = true;
 });
+builder.Services.AddHttpClient();
 
 builder.Services.AddControllersWithViews();
 

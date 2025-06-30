@@ -47,10 +47,10 @@ public class LoansController(BookLoansContext dbContext) : Controller
 			return View(nameof(New), loan);
 		}
 
-		var created = dbContext.Loans.Add(loan);
+		var newlyCreatedLoan = dbContext.Loans.Add(loan);
 		dbContext.SaveChanges();
 
-		return RedirectToAction("Details", "Loans", new { id = created.Entity.ID, addBooks = true });
+		return RedirectToAction("Details", "Loans", new { id = newlyCreatedLoan.Entity.ID, addBooks = true });
 	}
 
 	public IActionResult AddBook(int loanId, int bookId)

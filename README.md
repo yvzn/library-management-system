@@ -38,6 +38,8 @@ dotnet watch run --launch-profile https --project library-management-system.cspr
 
 - Internationalization
 
+- CancellationTokens
+
 - Branding
 	- Favicon & Logo
 	- Name

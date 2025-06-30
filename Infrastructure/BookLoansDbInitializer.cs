@@ -20,10 +20,10 @@ public class BookLoansDbInitializer(BookLoansContext context)
 		// Seed data
 		var books = new List<Book>
 		{
-			new () { ID = 1, Title = "The Great Gatsby", Author = "F. Scott Fitzgerald", ISBN = "9780743273565" },
-			new () { ID = 2, Title = "1984", Author = "George Orwell", ISBN = "9780451524935" },
-			new () { ID = 3, Title = "To Kill a Mockingbird", Author = "Harper Lee", ISBN = "9780061120084" },
-			new () { ID = 4, Title = "Pride and Prejudice", Author = "Jane Austen", ISBN = "9780141040349" },
+			new () { ID = 1, Title = "The Great Gatsby", Author = "F. Scott Fitzgerald", ISBN_13 = "9780743273565" },
+			new () { ID = 2, Title = "1984", Author = "George Orwell", ISBN_13 = "9780451524935" },
+			new () { ID = 3, Title = "To Kill a Mockingbird", Author = "Harper Lee", ISBN_13 = "9780061120084" },
+			new () { ID = 4, Title = "Pride and Prejudice", Author = "Jane Austen", ISBN_13 = "9780141040349" },
 		};
 		await context.Books.AddRangeAsync(books, cancellationToken);
 
