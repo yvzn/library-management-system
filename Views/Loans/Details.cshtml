@@ -1,0 +1,37 @@
+@model library_management_system.Models.Loan
+
+@{
+	ViewData["Title"] = "Loan Details";
+}
+
+<h2>Loan Information</h2>
+<p><strong>Loan Date:</strong> @Model.LoanDate</p>
+<p><strong>Return Date:</strong> @Model.ReturnDate</p>
+
+<h2>Loaned Books</h2>
+@if (Model.LoanBooks.Count == 0)
+{
+	<p>No books have been loaned.</p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book.Title)</th>
+				<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book.Author)</th>
+				<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book.ISBN)</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var loanBook in Model.LoanBooks)
+			{
+				<tr>
+					<td>@Html.DisplayFor(model => loanBook.Book.Title)</td>
+					<td>@Html.DisplayFor(model => loanBook.Book.Author)</td>
+					<td>@Html.DisplayFor(model => loanBook.Book.ISBN)</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
