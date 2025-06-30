@@ -9,6 +9,12 @@ builder.Services.AddDbContext<BookLoansContext>(
 	options => options.UseSqlite($"Data Source={BookLoansContext.DbPath}"));
 builder.Services.AddScoped<BookLoansDbInitializer>();
 
+builder.Services.AddHttpLogging(options =>
+{
+	options.LoggingFields = HttpLoggingFields.RequestPath | HttpLoggingFields.RequestMethod | HttpLoggingFields.ResponseStatusCode | HttpLoggingFields.ResponseBody;
+	options.ResponseBodyLogLimit = 128;
+	options.CombineLogs = true;
+});
 
 builder.Services.AddControllersWithViews();
 
@@ -26,6 +32,8 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseHttpLogging();
 
 app.MapStaticAssets();
 
