@@ -25,7 +25,7 @@ dotnet watch run --launch-profile https --project library-management-system.cspr
 
 - ✅ Loan Due Date
 
-- Add a new loan
+- ✅ Add a new loan
 
 - Add a book to a loan
     - Book search (Title, Author, ISBN)
@@ -36,11 +36,14 @@ dotnet watch run --launch-profile https --project library-management-system.cspr
 
 - Mark a loan as returned
 
+- Internationalization
+
 - Branding
 	- Favicon & Logo
 	- Name
 
 - Responsive
+	- Spacing / UX
 
 ## EntityFramework migrations
 

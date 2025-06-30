@@ -7,7 +7,9 @@ namespace library_management_system.Controllers;
 
 public class LoansController(BookLoansContext dbContext) : Controller
 {
-	public IActionResult Details(int id)
+	public IActionResult Details(
+		int id,
+		bool addBooks = false)
 	{
 		var loan = dbContext.Loans
 			.Include(l => l.LoanBooks)
@@ -17,6 +19,11 @@ public class LoansController(BookLoansContext dbContext) : Controller
 		if (loan == null)
 		{
 			return NotFound();
+		}
+
+		if (addBooks)
+		{
+			ViewData["AddBooks"] = "true";
 		}
 
 		return View(loan);
@@ -43,6 +50,27 @@ public class LoansController(BookLoansContext dbContext) : Controller
 		var created = dbContext.Loans.Add(loan);
 		dbContext.SaveChanges();
 
-		return RedirectToAction("Details", "Loans", new { id = created.Entity.ID });
+		return RedirectToAction("Details", "Loans", new { id = created.Entity.ID, addBooks = true });
+	}
+
+	public IActionResult AddBook(int loanId, int bookId)
+	{
+		var loan = dbContext.Loans
+			.Include(l => l.LoanBooks)
+			.Single(l => l.ID == loanId);
+
+		if (loan.LoanBooks.Any(lb => lb.BookID == bookId))
+		{
+			return RedirectToAction("Details", new { id = loanId, addBooks = true });
+		}
+
+		loan.LoanBooks.Add(new LoanBook
+		{
+			LoanID = loan.ID,
+			BookID = bookId
+		});
+		dbContext.SaveChanges();
+
+		return RedirectToAction("Details", new { id = loanId, addBooks = true });
 	}
 }

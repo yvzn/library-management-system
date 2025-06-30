@@ -13,9 +13,12 @@
 <div class="mb-3"><strong>@Html.DisplayNameFor(model => model.ReturnDate):</strong> @Model.ReturnDate</div>
 
 <div class="mb-3 row align-items-center">
-	<h2 class="display-5 col-12 col-md-6">Loaned Books</h2>
+	<h2 class="display-5 col-12 col-md-6">Books</h2>
 	<div class="col-12 col-md-6 text-md-end">
-		<a class="btn btn-primary" asp-controller="Books" asp-action="Search">Add Book</a>
+		@if (ViewData["AddBooks"] != null && "true".Equals(ViewData["AddBooks"]))
+		{
+			<a class="btn btn-primary" asp-controller="Books" asp-action="Search" asp-route-loanId="@Model.ID">Add Book</a>
+		}
 	</div>
 </div>
 

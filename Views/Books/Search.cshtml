@@ -1,0 +1,45 @@
+@model library_management_system.Models.SearchViewModel
+
+@{
+	ViewData["Title"] = "Search Books";
+}
+
+<div class="mb-3">
+	@if (Model.LoanId != null)
+	{
+		<h1 class="display-4">Add Book</h1>
+	}
+	else
+	{
+		<h1 class="display-4">Search Books</h1>
+	}
+</div>
+
+<search>
+	<form method="post" asp-controller="Books" asp-action="SearchResults" class="mb-5">
+		<input type="hidden" asp-for="LoanId" />
+		<div class="row align-items-end">
+			<div class="col-12 col-md-3">
+				<label asp-for="Title" class="form-label">
+					@Html.DisplayNameFor(model => model.Title)
+				</label>
+				<input asp-for="Title" class="form-control" type="search" enterkeyhint="search" />
+			</div>
+			<div class="col-12 col-md-3">
+				<label asp-for="Author" class="form-label">
+					@Html.DisplayNameFor(model => model.Author)
+				</label>
+				<input asp-for="Author" class="form-control" type="search" enterkeyhint="search" />
+			</div>
+			<div class="col-12 col-md-3">
+				<label asp-for="ISBN" class="form-label">
+					@Html.DisplayNameFor(model => model.ISBN)
+				</label>
+				<input asp-for="ISBN" class="form-control" type="search" enterkeyhint="search" />
+			</div>
+			<div class="col-12 col-md-3 text-md-end">
+				<button type="submit" class="btn btn-primary" type="submit">Search</button>
+			</div>
+		</div>
+	</form>
+</search>

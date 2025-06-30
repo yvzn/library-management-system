@@ -1,0 +1,43 @@
+@model library_management_system.Models.SearchResultsViewModel
+
+@{
+	ViewData["Title"] = "Search Results";
+}
+
+<search>
+	@if (Model.ExistingBooks.Count > 0)
+	{
+		<section>
+			<h2 class="display-5">Known Books</h2>
+			<output class="row">
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">@Html.DisplayNameFor(model => model.ExistingBooks.First().Title)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.ExistingBooks.First().Author)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.ExistingBooks.First().ISBN)</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var book in Model.ExistingBooks)
+						{
+							<tr>
+								<td>@Html.DisplayFor(model => book.Title)</td>
+								<td>@Html.DisplayFor(model => book.Author)</td>
+								<td>@Html.DisplayFor(model => book.ISBN)</td>
+								<td class="text-md-end">
+									@if (Model.LoanId != null)
+									{
+										<a asp-controller="Loans" asp-action="AddBook" asp-route-loanId="@Model.LoanId"
+											asp-route-bookId="@book.ID">Add to Loan</a>
+									}
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</output>
+		</section>
+	}
+</search>

@@ -13,6 +13,8 @@ public class HomeController(BookLoansContext dbContext) : Controller
 		var currentLoans = dbContext.Loans
 			.Where(loan => loan.ReturnDate == null)
 			.Include(loan => loan.LoanBooks)
+			.OrderByDescending(loan => loan.DueDate)
+			.Take(5)
 			.AsNoTracking()
 			.ToList();
 
