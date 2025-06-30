@@ -20,8 +20,10 @@ dotnet watch run --launch-profile https --project library-management-system.cspr
     - ✅ add initial migration
     - ✅ add automatic migrations
 
-- Index page
-    - list of current loans
+- ✅ Index page
+    - ✅ list of current loans
+
+- ✅ Loan Due Date
 
 - Add a new loan
 
@@ -30,7 +32,7 @@ dotnet watch run --launch-profile https --project library-management-system.cspr
 
 - List of all loans
 
-- Loan details page
+- ✅ Loan details page
 
 - Mark a loan as returned
 

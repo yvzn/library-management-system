@@ -31,12 +31,14 @@ public class BookLoansDbInitializer(BookLoansContext context)
 		{
 			ID = 1,
 			LoanDate = DateTime.UtcNow.AddDays(-1),
+			DueDate = DateTime.UtcNow.AddDays(14),
 			ReturnDate = null,
 		};
 		var returnedLoan = new Loan
 		{
 			ID = 2,
 			LoanDate = DateTime.UtcNow.AddDays(-10),
+			DueDate = DateTime.UtcNow.AddDays(4),
 			ReturnDate = DateTime.UtcNow.AddDays(-5),
 		};
 		await context.Loans.AddRangeAsync([activeLoan, returnedLoan], cancellationToken);

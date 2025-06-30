@@ -18,7 +18,7 @@ else
 		<thead>
 			<tr>
 				<th scope="col">@Html.DisplayNameFor(model => model.First().LoanDate)</th>
-				<th scope="col">@Html.DisplayNameFor(model => model.First().ReturnDate)</th>
+				<th scope="col">@Html.DisplayNameFor(model => model.First().DueDate)</th>
 				<th scope="col">@Html.DisplayNameFor(model => model.First().LoanBooks.Count)</th>
 				<th></th>
 			</tr>
@@ -28,7 +28,7 @@ else
 			{
 				<tr>
 					<td>@Html.DisplayFor(model => loan.LoanDate)</td>
-					<td>@Html.DisplayFor(model => loan.ReturnDate)</td>
+					<td>@Html.DisplayFor(model => loan.DueDate)</td>
 					<td>@Html.DisplayFor(model => loan.LoanBooks.Count)</td>
 					<td><a asp-controller="Loans" asp-action="Details" asp-route-id="@loan.ID">Details</a></td>
 				</tr>

@@ -5,8 +5,9 @@
 }
 
 <h2>Loan Information</h2>
-<p><strong>Loan Date:</strong> @Model.LoanDate</p>
-<p><strong>Return Date:</strong> @Model.ReturnDate</p>
+<p><strong>@Html.DisplayNameFor(model => model.LoanDate):</strong> @Model.LoanDate</p>
+<p><strong>@Html.DisplayNameFor(model => model.DueDate):</strong> @Model.DueDate</p>
+<p><strong>@Html.DisplayNameFor(model => model.ReturnDate):</strong> @Model.ReturnDate</p>
 
 <h2>Loaned Books</h2>
 @if (Model.LoanBooks.Count == 0)
