@@ -14,11 +14,11 @@ dotnet watch run --launch-profile https --project library-management-system.cspr
     - ✅ test
     - ✅ cleanup (bootstrap, jquery, styles)
 
-- EF context
-    - entities: books, loans
-    - add db context
-    - add initial migration
-    - add automatic migrations
+- ✅ EF context
+    - ✅ entities: books, loans
+    - ✅ add db context
+    - ✅ add initial migration
+    - ✅ add automatic migrations
 
 - Index page
     - list of current loans

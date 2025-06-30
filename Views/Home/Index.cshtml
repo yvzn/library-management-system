@@ -1,7 +1,38 @@
-﻿@{
+﻿@model IList<library_management_system.Models.Loan>
+
+@{
 	ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
 	<h1 class="display-4">Welcome</h1>
 </div>
+<h2>Current Loans</h2>
+@if (Model.Count == 0)
+{
+	<p>No current loans.</p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th scope="col">@Html.DisplayNameFor(model => model.First().LoanDate)</th>
+				<th scope="col">@Html.DisplayNameFor(model => model.First().ReturnDate)</th>
+				<th scope="col">@Html.DisplayNameFor(model => model.First().LoanBooks.Count)</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var loan in Model)
+			{
+				<tr>
+					<td>@Html.DisplayFor(model => loan.LoanDate)</td>
+					<td>@Html.DisplayFor(model => loan.ReturnDate)</td>
+					<td>@Html.DisplayFor(model => loan.LoanBooks.Count)</td>
+					<td><a asp-controller="Loans" asp-action="Details" asp-route-id="@loan.ID">Details</a></td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}

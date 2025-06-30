@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace library_management_system.Models;
 
 public class Book
@@ -11,8 +13,13 @@ public class Book
 public class Loan
 {
 	public int ID { get; set; }
+
+	[Display(Name = "Loan Date")]
 	public DateTime LoanDate { get; set; }
+
+	[Display(Name = "Return Date")]
 	public DateTime? ReturnDate { get; set; }
+
 	public ICollection<LoanBook> LoanBooks { get; set; } = [];
 }
 
