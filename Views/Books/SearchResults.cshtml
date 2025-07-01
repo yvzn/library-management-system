@@ -7,10 +7,16 @@
 <search>
 	@if (Model.ExistingBooks.Count > 0)
 	{
-		<section class="mb-6">
+		<section class="mb-5">
 			<h2 class="display-5">Known Books</h2>
 			<output class="row">
 				<table class="table">
+					<colgroup>
+						<col class="col-5"></col>
+						<col class="col-3"></col>
+						<col class="col-2"></col>
+						<col class="col-2"></col>
+					</colgroup>
 					<thead>
 						<tr>
 							<th scope="col">@Html.DisplayNameFor(model => model.ExistingBooks.First().Title)</th>
@@ -43,10 +49,16 @@
 
 	@if (Model.NewBooks.Count > 0)
 	{
-		<section class="mb-6">
+		<section class="mb-5">
 			<h2 class="display-5">New Books</h2>
 			<output class="row">
 				<table class="table">
+					<colgroup>
+						<col class="col-5"></col>
+						<col class="col-3"></col>
+						<col class="col-2"></col>
+						<col class="col-2"></col>
+					</colgroup>
 					<thead>
 						<tr>
 							<th scope="col">@Html.DisplayNameFor(model => model.NewBooks.First().Title)</th>
@@ -85,7 +97,7 @@
 	}
 </search>
 
-<form asp-controller="Books" asp-action="New" class="mb-6">
+<form asp-controller="Books" asp-action="New" class="mb-5">
 	<h2 class="display-5">Add New Book</h2>
 
 	<input type="hidden" name="LoanId" value="@Model.LoanId" />
