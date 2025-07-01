@@ -51,7 +51,7 @@ $env:ConnectionStrings__BookSearchApiKey = "YOUR_API_KEY"
 
 - Dynamic book search (htmx)
 
-- List of all loans
+- ✅ List of all loans
 
 - ✅ Loan details page
 
@@ -59,7 +59,7 @@ $env:ConnectionStrings__BookSearchApiKey = "YOUR_API_KEY"
 
 - Internationalization
 
-- CancellationTokens
+- ✅ CancellationTokens
 
 - Branding
 	- Favicon & Logo

@@ -7,6 +7,16 @@ namespace library_management_system.Controllers;
 
 public class LoansController(BookLoansContext dbContext) : Controller
 {
+	public async Task<IActionResult> Index()
+	{
+		var loans = await dbContext.Loans
+			.Include(l => l.LoanBooks)
+			.OrderByDescending(l => l.LoanDate)
+			.ToListAsync(HttpContext.RequestAborted);
+
+		return View(loans);
+	}
+
 	public async Task<IActionResult> Details(
 		int id,
 		bool addBooks = false)

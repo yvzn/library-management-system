@@ -3,20 +3,21 @@ using Microsoft.AspNetCore.Mvc;
 using library_management_system.Models;
 using library_management_system.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace library_management_system.Controllers;
 
 public class HomeController(BookLoansContext dbContext) : Controller
 {
-	public IActionResult Index()
+	public async Task<IActionResult> Index()
 	{
-		var currentLoans = dbContext.Loans
+		var currentLoans = await dbContext.Loans
 			.Where(loan => loan.ReturnDate == null)
 			.Include(loan => loan.LoanBooks)
 			.OrderByDescending(loan => loan.DueDate)
 			.Take(5)
 			.AsNoTracking()
-			.ToList();
+			.ToListAsync(HttpContext.RequestAborted);
 
 		return View(currentLoans);
 	}

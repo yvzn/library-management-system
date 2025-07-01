@@ -1,0 +1,43 @@
+﻿@model IList<library_management_system.Models.Loan>
+
+@{
+	ViewData["Title"] = "Book Loans";
+}
+
+<div class="mb-3 row align-items-center">
+	<h1 class="display-4 col-12 col-md-6">Book Loans</h1>
+	<div class="col-12 col-md-6 text-md-end">
+		<a class="btn btn-primary" asp-controller="Loans" asp-action="New">Add New Loan</a>
+	</div>
+</div>
+
+@if (Model.Count == 0)
+{
+	<p>No book loans.</p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th scope="col">@Html.DisplayNameFor(model => model.First().LoanDate)</th>
+				<th scope="col">@Html.DisplayNameFor(model => model.First().DueDate)</th>
+				<th scope="col">@Html.DisplayNameFor(model => model.First().ReturnDate)</th>
+				<th scope="col">@Html.DisplayNameFor(model => model.First().LoanBooks.Count)</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var loan in Model)
+			{
+				<tr>
+					<td>@Html.DisplayFor(model => loan.LoanDate)</td>
+					<td>@Html.DisplayFor(model => loan.DueDate)</td>
+					<td>@Html.DisplayFor(model => loan.ReturnDate)</td>
+					<td>@Html.DisplayFor(model => loan.LoanBooks.Count)</td>
+					<td class="text-md-end"><a asp-controller="Loans" asp-action="Details" asp-route-id="@loan.ID">Details</a></td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
