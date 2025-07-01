@@ -11,8 +11,8 @@ using library_management_system.Infrastructure;
 namespace library_management_system.Migrations
 {
     [DbContext(typeof(BookLoansContext))]
-    [Migration("20250630155304_AddLoanDueDate")]
-    partial class AddLoanDueDate
+    [Migration("20250701115048_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,12 +27,17 @@ namespace library_management_system.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Author")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ISBN")
+                    b.Property<string>("ISBN_10")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ISBN_13")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID");
