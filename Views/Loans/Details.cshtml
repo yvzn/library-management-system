@@ -8,11 +8,38 @@
 	<h1 class="display-4">Loan Details</h1>
 </div>
 
-<div class="mb-3"><strong>@Html.DisplayNameFor(model => model.LoanDate):</strong> @Model.LoanDate</div>
-<div class="mb-3"><strong>@Html.DisplayNameFor(model => model.DueDate):</strong> @Model.DueDate</div>
-<div class="mb-3"><strong>@Html.DisplayNameFor(model => model.ReturnDate):</strong> @Model.ReturnDate</div>
+<div class="row">
+	<div class="col-12 col-md-6">
+		<div class="row mb-3">
+			<div class="col-4">@Html.DisplayNameFor(model => model.LoanDate):</div>
+			<div class="col-8">@Model.LoanDate</div>
+		</div>
+		<div class="row mb-3">
+			<div class="col-4">@Html.DisplayNameFor(model => model.DueDate):</div>
+			<div class="col-8">@Model.DueDate</div>
+		</div>
+		<div class="row mb-3">
+			<div class="col-4">@Html.DisplayNameFor(model => model.ReturnDate):</div>
+			<div class="col-8">
+				@if (ViewData["AddBooks"] != null && "true".Equals(ViewData["AddBooks"]))
+				{
 
-<div class="mb-3 row align-items-center">
+				}
+				else if (@Model.ReturnDate == null)
+				{
+					<a class="btn btn-primary" asp-asp-controller="Loans" asp-action="Return"
+						asp-route-loanId="@Model.ID">Mark as returned</a>
+				}
+				else
+				{
+					@Model.ReturnDate
+				}
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class=" mb-3 row align-items-center">
 	<h2 class="display-5 col-12 col-md-6">Books</h2>
 	<div class="col-12 col-md-6 text-md-end">
 		@if (ViewData["AddBooks"] != null && "true".Equals(ViewData["AddBooks"]))

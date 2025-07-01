@@ -49,11 +49,13 @@ $env:ConnectionStrings__BookSearchApiKey = "YOUR_API_KEY"
 
 - Manual book creation
 
+- Dynamic book search (htmx)
+
 - List of all loans
 
 - ✅ Loan details page
 
-- Mark a loan as returned
+- ✅ Mark a loan as returned
 
 - Internationalization
 
@@ -62,6 +64,8 @@ $env:ConnectionStrings__BookSearchApiKey = "YOUR_API_KEY"
 - Branding
 	- Favicon & Logo
 	- Name
+
+- Table column widths
 
 - Responsive
 	- Spacing / UX
