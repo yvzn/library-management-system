@@ -7,7 +7,7 @@
 <search>
 	@if (Model.ExistingBooks.Count > 0)
 	{
-		<section>
+		<section class="mb-6">
 			<h2 class="display-5">Known Books</h2>
 			<output class="row">
 				<table class="table">
@@ -29,8 +29,8 @@
 								<td class="text-md-end">
 									@if (Model.LoanId != null)
 									{
-										<a class="btn btn-outline-primary text-nowrap" asp-controller="Loans" asp-action="AddBook" asp-route-loanId="@Model.LoanId"
-											asp-route-bookId="@book.ID">Add to Loan</a>
+										<a class="btn btn-outline-primary text-nowrap" asp-controller="Loans" asp-action="AddBook"
+											asp-route-loanId="@Model.LoanId" asp-route-bookId="@book.ID">Add to Loan</a>
 									}
 								</td>
 							</tr>
@@ -43,7 +43,7 @@
 
 	@if (Model.NewBooks.Count > 0)
 	{
-		<section>
+		<section class="mb-6">
 			<h2 class="display-5">New Books</h2>
 			<output class="row">
 				<table class="table">
@@ -84,3 +84,23 @@
 		</section>
 	}
 </search>
+
+<form asp-controller="Books" asp-action="New" class="mb-6">
+	<h2 class="display-5">Add New Book</h2>
+
+	<input type="hidden" name="LoanId" value="@Model.LoanId" />
+	<input type="hidden" name="Book.Title" value="@Model.Title" />
+	<input type="hidden" name="Book.Author" value="@Model.Author" />
+	<input type="hidden" name="Book.ISBN_13" value="@Model.ISBN" />
+	<input type="hidden" name="Book.ISBN_10" value="@Model.ISBN" />
+
+	@if (Model.ExistingBooks.Count == 0 && Model.NewBooks.Count == 0)
+	{
+		<p>No books found.</p>
+	}
+	else
+	{
+		<p>Not listed?</p>
+	}
+	<button type="submit" class="btn btn-outline-primary text-nowrap">Add New Book</button>
+</form>

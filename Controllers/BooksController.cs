@@ -93,4 +93,41 @@ public class BooksController(
 				ISBN_10 = volumeInfo.IndustryIdentifiers.FirstOrDefault(i => i.Type == "ISBN_10")?.Identifier,
 			}) ?? [];
 	}
+
+	public IActionResult New(Book book, int? loanId)
+	{
+		ViewData["LoanId"] = loanId;
+		return View(book);
+	}
+
+	public async Task<IActionResult> Create(Book book, int? loanId)
+	{
+		if (!ModelState.IsValid)
+		{
+			ViewData["LoanId"] = loanId;
+			return View(nameof(New), book);
+		}
+
+		var newlyCreatedBook = await dbContext.Books.AddAsync(book, HttpContext.RequestAborted);
+		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
+
+		if (loanId.HasValue)
+		{
+			var loanBook = new LoanBook
+			{
+				LoanID = loanId.Value,
+				BookID = newlyCreatedBook.Entity.ID
+			};
+
+			await dbContext.LoanBooks.AddAsync(loanBook, HttpContext.RequestAborted);
+			await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
+		}
+
+		if (loanId.HasValue)
+		{
+			return RedirectToAction("Details", "Loans", new { id = loanId.Value, addBooks = true });
+		}
+
+		return RedirectToAction("Index");
+	}
 }

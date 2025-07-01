@@ -47,7 +47,7 @@ $env:ConnectionStrings__BookSearchApiKey = "YOUR_API_KEY"
 - ✅ Add a book to a loan
     - ✅ Book search (Title, Author, ISBN)
 
-- Manual book creation
+- ✅ Manual book creation
 
 - Dynamic book search (htmx)
 
