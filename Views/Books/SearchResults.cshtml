@@ -5,28 +5,39 @@
 }
 
 <search>
-	@if (Model.ExistingBooks.Count > 0)
+	<form id="searchParams" hx-post="/Books/SearchResultsOnline" hx-trigger="intersect once" hx-target="#searchResultsOnline">
+		<input type="hidden" name="LoanId" value="@Model.LoanId" />
+		<input type="hidden" name="Title" value="@Model.Title" />
+		<input type="hidden" name="Author" value="@Model.Author" />
+		<input type="hidden" name="ISBN" value="@Model.ISBN" />
+	</form>
+
+	@if (Model.Books.Count > 0)
 	{
 		<section class="mb-5">
 			<h2 class="display-5">Known Books</h2>
 			<output class="row">
 				<table class="table">
 					<colgroup>
-						<col class="col-5"></col>
-						<col class="col-3"></col>
-						<col class="col-2"></col>
-						<col class="col-2"></col>
+						<col class="col-5">
+						</col>
+						<col class="col-3">
+						</col>
+						<col class="col-2">
+						</col>
+						<col class="col-2">
+						</col>
 					</colgroup>
 					<thead>
 						<tr>
-							<th scope="col">@Html.DisplayNameFor(model => model.ExistingBooks.First().Title)</th>
-							<th scope="col">@Html.DisplayNameFor(model => model.ExistingBooks.First().Author)</th>
-							<th scope="col">@Html.DisplayNameFor(model => model.ExistingBooks.First().ISBN_10)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.Books.First().Title)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.Books.First().Author)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.Books.First().ISBN_10)</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-						@foreach (var book in Model.ExistingBooks)
+						@foreach (var book in Model.Books)
 						{
 							<tr>
 								<td class="align-middle">@Html.DisplayFor(model => book.Title)</td>
@@ -47,54 +58,13 @@
 		</section>
 	}
 
-	@if (Model.NewBooks.Count > 0)
-	{
-		<section class="mb-5">
-			<h2 class="display-5">New Books</h2>
-			<output class="row">
-				<table class="table">
-					<colgroup>
-						<col class="col-5"></col>
-						<col class="col-3"></col>
-						<col class="col-2"></col>
-						<col class="col-2"></col>
-					</colgroup>
-					<thead>
-						<tr>
-							<th scope="col">@Html.DisplayNameFor(model => model.NewBooks.First().Title)</th>
-							<th scope="col">@Html.DisplayNameFor(model => model.NewBooks.First().Author)</th>
-							<th scope="col">@Html.DisplayNameFor(model => model.NewBooks.First().ISBN_10)</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach (var book in Model.NewBooks)
-						{
-							<tr>
-								<td class="align-middle">@Html.DisplayFor(model => book.Title)</td>
-								<td class="align-middle">@Html.DisplayFor(model => book.Author)</td>
-								<td class="align-middle">@Html.DisplayFor(model => book.ISBN_10)</td>
-								<td class="text-md-end">
-									@if (Model.LoanId != null)
-									{
-										<form asp-controller="LoanBooks" asp-action="Create">
-											<input type="hidden" name="LoanId" value="@Model.LoanId" />
-											<input type="hidden" name="Book.Title" value="@book.Title" />
-											<input type="hidden" name="Book.Author" value="@book.Author" />
-											<input type="hidden" name="Book.ISBN_13" value="@book.ISBN_13" />
-											<input type="hidden" name="Book.ISBN_10" value="@book.ISBN_10" />
 
-											<button type="submit" class="btn btn-outline-primary text-nowrap">Add to Loan</button>
-										</form>
-									}
-								</td>
-							</tr>
-						}
-					</tbody>
-				</table>
-			</output>
-		</section>
-	}
+	<section class="mb-5" id="searchResultsOnline">
+		<h2 class="display-5">New Books</h2>
+		<div class="spinner-border text-primary" role="status">
+			<span class="visually-hidden">Loading...</span>
+		</div>
+	</section>
 </search>
 
 <form asp-controller="Books" asp-action="New" class="mb-5">
@@ -106,13 +76,12 @@
 	<input type="hidden" name="Book.ISBN_13" value="@Model.ISBN" />
 	<input type="hidden" name="Book.ISBN_10" value="@Model.ISBN" />
 
-	@if (Model.ExistingBooks.Count == 0 && Model.NewBooks.Count == 0)
-	{
-		<p>No books found.</p>
-	}
-	else
-	{
-		<p>Not listed?</p>
-	}
+	<p>Book not listed?</p>
+
 	<button type="submit" class="btn btn-outline-primary text-nowrap">Add New Book</button>
 </form>
+
+@section Scripts {
+	<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js"
+		integrity="sha256-tnaO7U86+Ftzp1BUcBvWDhfKxxiu8rf2slTl4OIEVhY=" crossorigin="anonymous"></script>
+}

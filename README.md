@@ -27,48 +27,25 @@ $env:ConnectionStrings__BookSearchApiKey = "YOUR_API_KEY"
 
 ## Tasks
 
-- ✅ Init new ASP MVC project
-    - ✅ test
-    - ✅ cleanup (bootstrap, jquery, styles)
+- Start browser on launch
+	- Log levels in Release mode
+	- No console output
+	- Detect browser window closure
 
-- ✅ EF context
-    - ✅ entities: books, loans
-    - ✅ add db context
-    - ✅ add initial migration
-    - ✅ add automatic migrations
-
-- ✅ Index page
-    - ✅ list of current loans
-
-- ✅ Loan Due Date
-
-- ✅ Add a new loan
-
-- ✅ Add a book to a loan
-    - ✅ Book search (Title, Author, ISBN)
-
-- ✅ Manual book creation
-
-- Dynamic book search (htmx)
-
-- ✅ List of all loans
-
-- ✅ Loan details page
-
-- ✅ Mark a loan as returned
-
-- Internationalization
-
-- ✅ CancellationTokens
+- Packaging
+	- Database connection string
+	- Configure default days before return date
 
 - Branding
 	- Favicon & Logo
 	- Name
 
-- Table column widths
+- Internationalization
 
 - Responsive
 	- Spacing / UX
+
+- Cards instead of tables
 
 ## EntityFramework migrations
 

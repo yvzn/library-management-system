@@ -20,6 +20,5 @@ public record SearchResultsViewModel : SearchViewModel
 		LoanId = model.LoanId;
 	}
 
-	public List<Book> ExistingBooks { get; set; } = [];
-	public List<Book> NewBooks { get; set; } = [];
+	public List<Book> Books { get; set; } = [];
 }

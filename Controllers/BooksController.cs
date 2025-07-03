@@ -22,18 +22,6 @@ public class BooksController(
 
 	public async Task<IActionResult> SearchResults(SearchViewModel model)
 	{
-		var existingBooks = await SearchBooksLocally(model);
-		var newBooks = await SearchBooksOnline(model);
-		return View(
-			new SearchResultsViewModel(model)
-			{
-				ExistingBooks = existingBooks,
-				NewBooks = [.. newBooks],
-			});
-	}
-
-	private async Task<List<Book>> SearchBooksLocally(SearchViewModel model)
-	{
 		var books = dbContext.Books.AsQueryable();
 		if (!string.IsNullOrEmpty(model.Author))
 		{
@@ -49,10 +37,17 @@ public class BooksController(
 				b => b.ISBN_13 != null && b.ISBN_13.Equals(model.ISBN)
 				|| b.ISBN_10 != null && b.ISBN_10.Equals(model.ISBN));
 		}
-		return await books.AsNoTracking().ToListAsync(HttpContext.RequestAborted);
+
+		var result = await books.AsNoTracking().ToListAsync(HttpContext.RequestAborted);
+
+		return View(
+			new SearchResultsViewModel(model)
+			{
+				Books = result
+			});
 	}
 
-	private async Task<IEnumerable<Book>> SearchBooksOnline(SearchViewModel model)
+	public async Task<IActionResult> SearchResultsOnline(SearchViewModel model)
 	{
 		var apiKey = configuration.GetConnectionString("BookSearchApiKey");
 		var uriBuilder = new UriBuilder("https://www.googleapis.com/books/v1/volumes");
@@ -83,7 +78,7 @@ public class BooksController(
 
 		var response = await client.GetFromJsonAsync<GoogleBooksApiResponse>(uriBuilder.Uri, HttpContext.RequestAborted);
 
-		return response?.Items
+		var result = response?.Items
 			.Select(item => item.VolumeInfo)
 			.Select(volumeInfo => new Book
 			{
@@ -92,6 +87,13 @@ public class BooksController(
 				ISBN_13 = volumeInfo.IndustryIdentifiers.FirstOrDefault(i => i.Type == "ISBN_13")?.Identifier,
 				ISBN_10 = volumeInfo.IndustryIdentifiers.FirstOrDefault(i => i.Type == "ISBN_10")?.Identifier,
 			}) ?? [];
+
+		return PartialView(
+			"_SearchResultsOnlinePartial",
+			new SearchResultsViewModel(model)
+			{
+				Books = [.. result]
+			});
 	}
 
 	public IActionResult New(Book book, int? loanId)
