@@ -21,7 +21,7 @@
 		<div class="row mb-3">
 			<div class="col-4">@Html.DisplayNameFor(model => model.ReturnDate):</div>
 			<div class="col-8">
-				@if (ViewData["AddBooks"] != null && "true".Equals(ViewData["AddBooks"]))
+				@if ("true".Equals(ViewData["AddBooks"]))
 				{
 
 				}
@@ -42,7 +42,7 @@
 <div class=" mb-3 row align-items-center">
 	<h2 class="display-5 col-12 col-md-6">Books</h2>
 	<div class="col-12 col-md-6 text-md-end">
-		@if (ViewData["AddBooks"] != null && "true".Equals(ViewData["AddBooks"]))
+		@if ("true".Equals(ViewData["AddBooks"]))
 		{
 			<a class="btn btn-primary" asp-controller="Books" asp-action="Search" asp-route-loanId="@Model.ID">Add Book</a>
 		}

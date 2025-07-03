@@ -40,6 +40,9 @@ public class BooksController(
 
 		var result = await books.AsNoTracking().ToListAsync(HttpContext.RequestAborted);
 
+		var apiKey = configuration.GetConnectionString("BookSearchApiKey");
+		ViewData["OnlineSearchEnabled"] = (!string.IsNullOrEmpty(apiKey)).ToString().ToLowerInvariant();
+
 		return View(
 			new SearchResultsViewModel(model)
 			{

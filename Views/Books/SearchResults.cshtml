@@ -5,12 +5,16 @@
 }
 
 <search>
-	<form id="searchParams" hx-post="/Books/SearchResultsOnline" hx-trigger="intersect once" hx-target="#searchResultsOnline">
-		<input type="hidden" name="LoanId" value="@Model.LoanId" />
-		<input type="hidden" name="Title" value="@Model.Title" />
-		<input type="hidden" name="Author" value="@Model.Author" />
-		<input type="hidden" name="ISBN" value="@Model.ISBN" />
-	</form>
+	@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
+	{
+		<form id="searchParams" hx-post="/Books/SearchResultsOnline" hx-trigger="intersect once"
+			hx-target="#searchResultsOnline">
+			<input type="hidden" name="LoanId" value="@Model.LoanId" />
+			<input type="hidden" name="Title" value="@Model.Title" />
+			<input type="hidden" name="Author" value="@Model.Author" />
+			<input type="hidden" name="ISBN" value="@Model.ISBN" />
+		</form>
+	}
 
 	@if (Model.Books.Count > 0)
 	{
@@ -58,13 +62,15 @@
 		</section>
 	}
 
-
-	<section class="mb-5" id="searchResultsOnline">
-		<h2 class="display-5">New Books</h2>
-		<div class="spinner-border text-primary" role="status">
-			<span class="visually-hidden">Loading...</span>
-		</div>
-	</section>
+	@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
+	{
+		<section class="mb-5" id="searchResultsOnline">
+			<h2 class="display-5">New Books</h2>
+			<div class="spinner-border text-primary" role="status">
+				<span class="visually-hidden">Loading...</span>
+			</div>
+		</section>
+	}
 </search>
 
 <form asp-controller="Books" asp-action="New" class="mb-5">
