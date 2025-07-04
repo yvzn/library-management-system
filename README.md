@@ -10,10 +10,28 @@ Requirements:
 To run the project, navigate to the project directory and use the following command:
 
 ```pwsh
-dotnet watch run --launch-profile https --project library-management-system.csproj
+dotnet watch run --launch-profile http --project library-management-system.csproj
 ```
 
-Book search is provided by the [Google Books API](https://developers.google.com/books/docs/overview). An API key is required to use the search functionality. You can obtain an API key by following the instructions in the [Google Books API documentation](https://developers.google.com/books/docs/v1/using#APIKey).
+### Database
+
+The project uses a SQLite database for storing loan information. By default, the database file is located at `%LocalAppData%` on Windows, `XDG_DATA_HOME` on Linux, and `~/Library/Application Support` on macOS.
+
+The project will automatically create the database if it does not exist.
+
+Change the database location by modifying the connection string in the `appsettings.json` file:
+
+```json
+{
+  "ConnectionStrings": {
+    "BookLoansDb": "Data Source=/path/to/your/database.db"
+  }
+}
+```
+
+### Configuration
+
+Optional: Book search is provided by the [Google Books API](https://developers.google.com/books/docs/overview). An API key is required to use the search functionality. You can obtain an API key by following the instructions in the [Google Books API documentation](https://developers.google.com/books/docs/v1/using#APIKey).
 
 Store the API key in user-secrets or environment variables:
 
@@ -24,7 +42,6 @@ dotnet user-secrets set "ConnectionStrings:BookSearchApiKey" "YOUR_API_KEY"
 # Or set the API key in environment variables
 $env:ConnectionStrings__BookSearchApiKey = "YOUR_API_KEY"
 ```
-
 ## Tasks
 
 - Start browser on launch
@@ -32,9 +49,8 @@ $env:ConnectionStrings__BookSearchApiKey = "YOUR_API_KEY"
 	- No console output
 	- Detect browser window closure
 
-- Packaging
-	- Database connection string
-	- Configure default days before return date
+- Packaging instructions
+	- Installation instructions
 
 - Branding
 	- Favicon & Logo

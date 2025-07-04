@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace library_management_system.Controllers;
 
-public class LoansController(BookLoansContext dbContext) : Controller
+public class LoansController(BookLoansContext dbContext, IConfiguration configuration) : Controller
 {
 	public async Task<IActionResult> Index()
 	{
@@ -41,10 +41,12 @@ public class LoansController(BookLoansContext dbContext) : Controller
 
 	public IActionResult New()
 	{
+		var defaultLoanDuration = configuration.GetValue("DefaultLoanDuration", 28);
+
 		var loan = new Loan
 		{
 			LoanDate = DateTime.Now,
-			DueDate = DateTime.Now.AddDays(30),
+			DueDate = DateTime.Now.AddDays(defaultLoanDuration),
 		};
 
 		return View(loan);
