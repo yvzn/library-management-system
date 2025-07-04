@@ -1,4 +1,5 @@
 using library_management_system.Infrastructure;
+using library_management_system.Services;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.HttpLogging;
@@ -11,12 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // -- Add services to the container. ------------------------------------------
 
-var connectionString = builder.Configuration.GetConnectionString("BookLoansDb");
-if (string.IsNullOrEmpty(connectionString)) connectionString = $"Data Source={BookLoansContext.DbPath}";
-builder.Services.AddDbContext<BookLoansContext>(
-	options => options.UseSqlite(connectionString));
-builder.Services.AddScoped<BookLoansDbInitializer>();
-
 builder.Services.AddHttpLogging(options =>
 {
 	options.LoggingFields = HttpLoggingFields.RequestPath | HttpLoggingFields.RequestMethod | HttpLoggingFields.ResponseStatusCode | HttpLoggingFields.ResponseBody;
@@ -26,6 +21,14 @@ builder.Services.AddHttpLogging(options =>
 builder.Services.AddHttpClient();
 
 builder.Services.AddControllersWithViews();
+
+var connectionString = builder.Configuration.GetConnectionString("BookLoansDb");
+if (string.IsNullOrEmpty(connectionString)) connectionString = $"Data Source={BookLoansContext.DbPath}";
+builder.Services.AddDbContext<BookLoansContext>(
+	options => options.UseSqlite(connectionString));
+builder.Services.AddScoped<BookLoansDbInitializer>();
+
+builder.Services.AddHostedService<LaunchBrowserOnStartup>();
 
 var app = builder.Build();
 

@@ -2,7 +2,17 @@
 
 This is a simple library management system built with ASP.NET Core MVC and Entity Framework. It allows users to manage book loans, including adding new loans, viewing loan details, and marking loans as returned.
 
-## Running the project
+## Installation instructions
+
+Download the project from the releases page in the [GitHub repository](https://github.com/yvzn/library-management-system/releases).
+
+Extract the downloaded archive to a directory of your choice.
+
+Review the `appsettings.json` file to ensure the configuration is correct.
+
+Run `library-management-system.exe`.
+
+## Running the project locally
 
 Requirements:
 - .NET SDK 9.0 or later
@@ -42,15 +52,16 @@ dotnet user-secrets set "ConnectionStrings:BookSearchApiKey" "YOUR_API_KEY"
 # Or set the API key in environment variables
 $env:ConnectionStrings__BookSearchApiKey = "YOUR_API_KEY"
 ```
+
+## Publishing the project
+
+To publish the project, use the following command:
+
+```pwsh
+dotnet publish library-management-system.csproj --configuration Release -r win-x64 --output ./publish
+```
+
 ## Tasks
-
-- Start browser on launch
-	- Log levels in Release mode
-	- No console output
-	- Detect browser window closure
-
-- Packaging instructions
-	- Installation instructions
 
 - Branding
 	- Favicon & Logo
