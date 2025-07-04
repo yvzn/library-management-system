@@ -1,0 +1,32 @@
+name: Publish release package
+
+on:
+  release:
+    types: [created]
+
+permissions:
+  contents: write
+
+env:
+  DOTNET_VERSION: '9.0.x' 
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v4
+
+    - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: '📦 Publish for win-x64 using DotNet'
+      shell: bash
+      run: |
+        dotnet publish library-management-system.csproj --configuration Release -r win-x64 --output ./publish
+        zip -r library-management-system-win-x64.zip ./publish -j
+        gh release upload ${{github.event.release.tag_name}} library-management-system-win-x64.zip
+      env:
+        GITHUB_TOKEN: ${{ github.TOKEN }}
