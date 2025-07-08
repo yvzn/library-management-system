@@ -1,19 +1,23 @@
 ﻿@model IList<library_management_system.Models.Loan>
 
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
 @{
-	ViewData["Title"] = "Home Page";
+	ViewData["Title"] = Localizer["Home Page"];
 }
 
 <div class="mb-3 row align-items-center">
-	<h1 class="display-4 col-12 col-md-6">Most Current Loans</h1>
+	<h1 class="display-4 col-12 col-md-6">@Localizer["Most Current Loans"]</h1>
 	<div class="col-12 col-md-6 text-md-end">
-		<a class="btn btn-primary" asp-controller="Loans" asp-action="New">Add New Loan</a>
+		<a class="btn btn-primary" asp-controller="Loans" asp-action="New">@Localizer["Add New Loan"]</a>
 	</div>
 </div>
 
 @if (Model.Count == 0)
 {
-	<p>No current loans.</p>
+	<p>@Localizer["No current loans."]</p>
 }
 else
 {
@@ -22,7 +26,7 @@ else
 			<tr>
 				<th scope="col">@Html.DisplayNameFor(model => model.First().LoanDate)</th>
 				<th scope="col">@Html.DisplayNameFor(model => model.First().DueDate)</th>
-				<th scope="col">@Html.DisplayNameFor(model => model.First().LoanBooks.Count)</th>
+				<th scope="col">@Localizer["Book Count"]</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -33,7 +37,7 @@ else
 					<td>@Html.DisplayFor(model => loan.LoanDate)</td>
 					<td>@Html.DisplayFor(model => loan.DueDate)</td>
 					<td>@Html.DisplayFor(model => loan.LoanBooks.Count)</td>
-					<td class="text-md-end"><a asp-controller="Loans" asp-action="Details" asp-route-id="@loan.ID">Details</a></td>
+					<td class="text-md-end"><a asp-controller="Loans" asp-action="Details" asp-route-id="@loan.ID">@Localizer["Details"]</a></td>
 				</tr>
 			}
 		</tbody>

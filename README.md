@@ -63,11 +63,17 @@ dotnet publish library-management-system.csproj --configuration Release -r win-x
 
 ## Tasks
 
+- Internationalization
+
+- AppSettings sections
+
+- Startup Banner + link
+
+- Delete loans
+
 - Branding
 	- Favicon & Logo
 	- Name
-
-- Internationalization
 
 - Responsive
 	- Spacing / UX

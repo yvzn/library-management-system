@@ -1,16 +1,21 @@
 using library_management_system.Infrastructure;
 using library_management_system.Services;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.HttpLogging;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var supportedCultures = new[] { "en", "fr" };
 
 
 // -- Add services to the container. ------------------------------------------
+
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.AddControllersWithViews()
+	.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+	.AddDataAnnotationsLocalization();
 
 builder.Services.AddHttpLogging(options =>
 {
@@ -19,8 +24,6 @@ builder.Services.AddHttpLogging(options =>
 	options.CombineLogs = true;
 });
 builder.Services.AddHttpClient();
-
-builder.Services.AddControllersWithViews();
 
 var connectionString = builder.Configuration.GetConnectionString("BookLoansDb");
 if (string.IsNullOrEmpty(connectionString)) connectionString = $"Data Source={BookLoansContext.DbPath}";
@@ -35,6 +38,14 @@ var app = builder.Build();
 
 
 // -- Configure the HTTP request pipeline. ------------------------------------
+
+app.UseRequestLocalization(options =>
+{
+	options.SetDefaultCulture(supportedCultures[0])
+		.AddSupportedCultures(supportedCultures)
+		.AddSupportedUICultures(supportedCultures);
+	options.ApplyCurrentCultureToResponseHeaders = true;
+});
 
 if (!app.Environment.IsDevelopment())
 {
