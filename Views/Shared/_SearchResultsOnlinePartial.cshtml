@@ -1,7 +1,11 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
 @model library_management_system.Models.SearchResultsViewModel
 
 <section class="mb-5">
-	<h2 class="display-5">New Books</h2>
+	<h2 class="display-5">@Localizer["New Books"]</h2>
 	@if (Model.Books.Count > 0)
 	{
 		<output class="row">
@@ -41,7 +45,7 @@
 										<input type="hidden" name="Book.ISBN_13" value="@book.ISBN_13" />
 										<input type="hidden" name="Book.ISBN_10" value="@book.ISBN_10" />
 
-										<button type="submit" class="btn btn-outline-primary text-nowrap">Add to Loan</button>
+										<button type="submit" class="btn btn-outline-primary text-nowrap">@Localizer["Add to Loan"]</button>
 									</form>
 								}
 							</td>
@@ -51,9 +55,10 @@
 			</table>
 		</output>
 	}
-	else {
+	else
+	{
 		<div>
-			No books found.
+			@Localizer["No books found."]
 		</div>
 	}
 </section>

@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -9,15 +13,13 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
 		integrity="sha256-zRgmWB5PK4CvTx4FiXsxbHaYRBBjz/rvu97sOC7kzXI=" crossorigin="anonymous">
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-	<link rel="stylesheet" href="~/library_management_system.styles.css" asp-append-version="true" />
 </head>
 
 <body>
 	<header>
 		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
 			<div class="container-fluid">
-				<a class="navbar-brand" asp-area="" asp-controller="Home"
-					asp-action="Index">[logo]</a>
+				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">[logo]</a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
 					aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
@@ -25,10 +27,11 @@
 				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
 					<ul class="navbar-nav flex-grow-1">
 						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["Home"]</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Loans" asp-action="Index">Loans</a>
+							<a class="nav-link text-dark" asp-area="" asp-controller="Loans"
+								asp-action="Index">@Localizer["Loans"]</a>
 						</li>
 					</ul>
 				</div>
@@ -43,7 +46,8 @@
 
 	<footer class="border-top footer text-muted mt-5">
 		<div class="container mt-3">
-			&copy; 2025 - [Author Name]
+			&copy; 2025 - Yvan Razafindramanana - <a target="_blank" rel="noopener noreferrer"
+				href="https://github.com/yvzn/library-management-system">@Localizer["Source code"]</a>
 		</div>
 	</footer>
 	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"
