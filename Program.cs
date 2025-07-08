@@ -1,3 +1,4 @@
+using library_management_system;
 using library_management_system.Infrastructure;
 using library_management_system.Services;
 using Microsoft.AspNetCore.HttpLogging;
@@ -24,6 +25,8 @@ builder.Services.AddHttpLogging(options =>
 	options.CombineLogs = true;
 });
 builder.Services.AddHttpClient();
+
+builder.Services.Configure<Features>(builder.Configuration.GetSection(nameof(Features)));
 
 var connectionString = builder.Configuration.GetConnectionString("BookLoansDb");
 if (string.IsNullOrEmpty(connectionString)) connectionString = $"Data Source={BookLoansContext.DbPath}";

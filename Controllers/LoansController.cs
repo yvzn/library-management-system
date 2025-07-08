@@ -2,10 +2,11 @@ using library_management_system.Infrastructure;
 using library_management_system.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace library_management_system.Controllers;
 
-public class LoansController(BookLoansContext dbContext, IConfiguration configuration) : Controller
+public class LoansController(BookLoansContext dbContext, IOptions<Features> features) : Controller
 {
 	public async Task<IActionResult> Index()
 	{
@@ -41,12 +42,10 @@ public class LoansController(BookLoansContext dbContext, IConfiguration configur
 
 	public IActionResult New()
 	{
-		var defaultLoanDuration = configuration.GetValue("DefaultLoanDuration", 28);
-
 		var loan = new Loan
 		{
 			LoanDate = DateTime.Now,
-			DueDate = DateTime.Now.AddDays(defaultLoanDuration),
+			DueDate = DateTime.Now.AddDays(features.Value.DefaultLoanDuration),
 		};
 
 		return View(loan);

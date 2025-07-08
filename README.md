@@ -63,10 +63,6 @@ dotnet publish library-management-system.csproj --configuration Release -r win-x
 
 ## Tasks
 
-- Internationalization
-
-- AppSettings sections
-
 - Search GET vs POST
 
 - Startup Banner + link
@@ -76,6 +72,8 @@ dotnet publish library-management-system.csproj --configuration Release -r win-x
 - Branding
 	- Favicon & Logo
 	- Name
+
+- About page
 
 - Responsive
 	- Spacing / UX

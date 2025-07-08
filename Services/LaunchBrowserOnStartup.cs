@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -11,13 +12,13 @@ namespace library_management_system.Services;
  * Similar to `launchBrowser` in `launchSettings.json`, but for all environments.
  */
 internal class LaunchBrowserOnStartup(
-	IConfiguration configuration,
+	IOptions<Features> features,
 	IServer server,
 	IHostApplicationLifetime lifetime) : BackgroundService
 {
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		if (configuration.GetValue("LaunchBrowserOnStartup", false) is false)
+		if (!features.Value.LaunchBrowserOnStartup)
 			return;
 
 		lifetime.ApplicationStarted.Register(() =>
