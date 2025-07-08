@@ -126,4 +126,7 @@
   <data name="Loans" xml:space="preserve">
     <value>Emprunts</value>
   </data>
+  <data name="Toggle navigation" xml:space="preserve">
+    <value>Afficher navigation</value>
+  </data>
 </root>
