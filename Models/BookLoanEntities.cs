@@ -7,9 +7,12 @@ public class Book
 	public int ID { get; set; }
 
 	[Required]
+	[Display(Name = "Title")]
+
 	public string? Title { get; set; }
 
 	[Required]
+	[Display(Name = "Author")]
 	public string? Author { get; set; }
 
 	[Display(Name = "ISBN-13")]

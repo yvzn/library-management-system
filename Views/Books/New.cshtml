@@ -1,11 +1,15 @@
 @model library_management_system.Models.Book
 
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
 @{
-	ViewData["Title"] = "New Book";
+	ViewData["Title"] = @Localizer["Add New Book"];
 }
 
 <div class="mb-3">
-	<h1 class="display-4">Add New Book</h1>
+	<h1 class="display-4">@Localizer["Add New Book"]</h1>
 </div>
 
 <form method="post" asp-controller="Books" asp-action="Create" asp-route-loanId="@ViewData["LoanId"]">
@@ -40,7 +44,7 @@
 
 	<div class="row">
 		<div class="col-12 col-md-6">
-			<button type="submit" class="btn btn-primary">Create Book</button>
+			<button type="submit" class="btn btn-primary">@Localizer["Create Book"]</button>
 		</div>
 	</div>
 </form>
