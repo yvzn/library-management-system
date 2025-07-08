@@ -1,8 +1,14 @@
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
 @model library_management_system.Models.SearchResultsViewModel
 
+
 @{
-	ViewData["Title"] = "Search Results";
+	ViewData["Title"] = Localizer["Search Results"];
 }
+
 
 <search>
 	@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
@@ -19,7 +25,7 @@
 	@if (Model.Books.Count > 0)
 	{
 		<section class="mb-5">
-			<h2 class="display-5">Known Books</h2>
+			<h2 class="display-5">@Localizer["Known Books"]</h2>
 			<output class="row">
 				<table class="table">
 					<colgroup>
@@ -51,7 +57,7 @@
 									@if (Model.LoanId != null)
 									{
 										<a class="btn btn-outline-primary text-nowrap" asp-controller="Loans" asp-action="AddBook"
-											asp-route-loanId="@Model.LoanId" asp-route-bookId="@book.ID">Add to Loan</a>
+											asp-route-loanId="@Model.LoanId" asp-route-bookId="@book.ID">@Localizer["Add to Loan"]</a>
 									}
 								</td>
 							</tr>
@@ -65,16 +71,17 @@
 	@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
 	{
 		<section class="mb-5" id="searchResultsOnline">
-			<h2 class="display-5">New Books</h2>
+			<h2 class="display-5">@Localizer["New Books"]</h2>
 			<div class="spinner-border text-primary" role="status">
-				<span class="visually-hidden">Loading...</span>
+				<span class="visually-hidden">@Localizer["Loading..."]</span>
 			</div>
 		</section>
 	}
 </search>
 
+
 <form asp-controller="Books" asp-action="New" class="mb-5">
-	<h2 class="display-5">Add New Book</h2>
+	<h2 class="display-5">@Localizer["Add New Book"]</h2>
 
 	<input type="hidden" name="LoanId" value="@Model.LoanId" />
 	<input type="hidden" name="Book.Title" value="@Model.Title" />
@@ -82,9 +89,9 @@
 	<input type="hidden" name="Book.ISBN_13" value="@Model.ISBN" />
 	<input type="hidden" name="Book.ISBN_10" value="@Model.ISBN" />
 
-	<p>Book not listed?</p>
+	<p>@Localizer["Book not listed?"]</p>
 
-	<button type="submit" class="btn btn-outline-primary text-nowrap">Add New Book</button>
+	<button type="submit" class="btn btn-outline-primary text-nowrap">@Localizer["Add New Book"]</button>
 </form>
 
 @section Scripts {

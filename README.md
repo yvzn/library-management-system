@@ -67,6 +67,8 @@ dotnet publish library-management-system.csproj --configuration Release -r win-x
 
 - AppSettings sections
 
+- Search GET vs POST
+
 - Startup Banner + link
 
 - Delete loans

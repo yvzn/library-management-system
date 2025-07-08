@@ -1,17 +1,22 @@
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
 @model library_management_system.Models.SearchViewModel
 
 @{
-	ViewData["Title"] = "Search Books";
+	ViewData["Title"] = @Localizer["Search Books"];
 }
+
 
 <div class="mb-3">
 	@if (Model.LoanId != null)
 	{
-		<h1 class="display-4">Add Book to Loan</h1>
+		<h1 class="display-4">@Localizer["Add Book to Loan"]</h1>
 	}
 	else
 	{
-		<h1 class="display-4">Search Books</h1>
+		<h1 class="display-4">@Localizer["Search Books"]</h1>
 	}
 </div>
 
@@ -38,7 +43,7 @@
 				<input asp-for="ISBN" class="form-control" type="search" enterkeyhint="search" />
 			</div>
 			<div class="col-12 col-md-3 text-md-end">
-				<button type="submit" class="btn btn-primary" type="submit">Search</button>
+				<button type="submit" class="btn btn-primary" type="submit">@Localizer["Search"]</button>
 			</div>
 		</div>
 	</form>

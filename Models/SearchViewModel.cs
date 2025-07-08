@@ -1,12 +1,20 @@
 
 
+using System.ComponentModel.DataAnnotations;
+
 namespace library_management_system.Models;
 
 public record SearchViewModel
 {
+	[Display(Name = "Title")]
 	public string? Title { get; set; }
+
+	[Display(Name = "Author")]
 	public string? Author { get; set; }
+
+	[Display(Name = "ISBN")]
 	public string? ISBN { get; set; }
+	
 	public int? LoanId { get; set; }
 }
 
