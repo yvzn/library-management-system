@@ -1,11 +1,15 @@
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
 @model library_management_system.Models.Loan
 
 @{
-	ViewData["Title"] = "New Loan";
+	ViewData["Title"] = Localizer["New Loan"];
 }
 
 <div class="mb-3">
-	<h1 class="display-4">Add New Loan</h1>
+	<h1 class="display-4">@Localizer["Add New Loan"]</h1>
 </div>
 
 <form method="post" asp-controller="Loans" asp-action="Create">
@@ -23,7 +27,7 @@
 				</label>
 				<input asp-for="DueDate" class="form-control" type="date" required />
 			</div>
-			<button type="submit" class="btn btn-primary">Create Loan</button>
+			<button type="submit" class="btn btn-primary">@Localizer["Create Loan"]</button>
 		</div>
 	</div>
 </form>

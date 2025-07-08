@@ -1,15 +1,19 @@
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
 @model library_management_system.Models.Loan
 
 @{
-	ViewData["Title"] = "Loan Details";
+	ViewData["Title"] = Localizer["Loan Details"];
 }
 
 <div class="mb-3">
-	<h1 class="display-4">Loan Details</h1>
+	<h1 class="display-4">@Localizer["Loan Details"]</h1>
 </div>
 
 <div class="row">
-	<div class="col-12 col-md-6">
+	<div class="col-12 col-md-8">
 		<div class="row mb-3">
 			<div class="col-4">@Html.DisplayNameFor(model => model.LoanDate):</div>
 			<div class="col-8">@Model.LoanDate</div>
@@ -21,14 +25,10 @@
 		<div class="row mb-3">
 			<div class="col-4">@Html.DisplayNameFor(model => model.ReturnDate):</div>
 			<div class="col-8">
-				@if ("true".Equals(ViewData["AddBooks"]))
-				{
-
-				}
-				else if (@Model.ReturnDate == null)
+				@if (@Model.ReturnDate == null)
 				{
 					<a class="btn btn-primary" asp-asp-controller="Loans" asp-action="Return"
-						asp-route-loanId="@Model.ID">Mark as returned</a>
+						asp-route-loanId="@Model.ID">@Localizer["Mark as returned"]</a>
 				}
 				else
 				{
@@ -40,18 +40,18 @@
 </div>
 
 <div class=" mb-3 row align-items-center">
-	<h2 class="display-5 col-12 col-md-6">Books</h2>
+	<h2 class="display-5 col-12 col-md-6">@Localizer["Books"]</h2>
 	<div class="col-12 col-md-6 text-md-end">
 		@if ("true".Equals(ViewData["AddBooks"]))
 		{
-			<a class="btn btn-primary" asp-controller="Books" asp-action="Search" asp-route-loanId="@Model.ID">Add Book</a>
+			<a class="btn btn-primary" asp-controller="Books" asp-action="Search" asp-route-loanId="@Model.ID">@Localizer["Add Book"]</a>
 		}
 	</div>
 </div>
 
 @if (Model.LoanBooks.Count == 0)
 {
-	<p>No books have been loaned.</p>
+	<p>@Localizer["No books have been loaned."]</p>
 }
 else
 {

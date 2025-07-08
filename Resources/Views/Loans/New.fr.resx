@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="New Loan" xml:space="preserve">
+    <value>Nouvel emprunt</value>
+  </data>
+  <data name="Add New Loan" xml:space="preserve">
+    <value>Ajouter un nouvel emprunt</value>
+  </data>
+  <data name="Create Loan" xml:space="preserve">
+    <value>Créer l'emprunt</value>
+  </data>
+</root>
