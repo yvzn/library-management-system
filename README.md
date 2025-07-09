@@ -1,6 +1,6 @@
-# Library Management System
+# Libre Library - Open Source Integrated Library System (ILS)
 
-This is a simple library management system built with ASP.NET Core MVC and Entity Framework. It allows users to manage book loans, including adding new loans, viewing loan details, and marking loans as returned.
+_Libr(e)ary_ is a simple library management system (LMS) built with ASP.NET Core MVC and Entity Framework. It allows users to manage book loans, including adding new loans, viewing loan details, and marking loans as returned.
 
 ## Installation instructions
 
@@ -11,6 +11,12 @@ Extract the downloaded archive to a directory of your choice.
 Review the `appsettings.json` file to ensure the configuration is correct.
 
 Run `library-management-system.exe`.
+
+### Update instructions
+
+Back up your existing database and `appsettings.json` before updating the project.
+
+Repeat the installation instructions above to download the latest version of the project.
 
 ## Running the project locally
 
@@ -62,8 +68,6 @@ dotnet publish library-management-system.csproj --configuration Release -r win-x
 ```
 
 ## Tasks
-
-- Startup Banner + link
 
 - Delete loans
 

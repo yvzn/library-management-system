@@ -6,8 +6,11 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 var supportedCultures = new[] { "en", "fr" };
+
 
 
 // -- Add services to the container. ------------------------------------------
@@ -35,6 +38,7 @@ builder.Services.AddDbContext<BookLoansContext>(
 builder.Services.AddScoped<BookLoansDbInitializer>();
 
 builder.Services.AddHostedService<LaunchBrowserOnStartup>();
+builder.Services.AddHostedService<StartupBanner>();
 
 var app = builder.Build();
 
