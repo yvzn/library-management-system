@@ -69,8 +69,6 @@ dotnet publish library-management-system.csproj --configuration Release -r win-x
 
 ## Tasks
 
-- Delete loans
-
 - Branding
 	- Favicon & Logo
 	- Name

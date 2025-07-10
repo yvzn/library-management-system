@@ -95,4 +95,21 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 
 		return RedirectToAction("Details", new { id = loanId });
 	}
+
+	public async Task<IActionResult> Delete(int id)
+	{
+		var loanBooks = await dbContext.LoanBooks
+			.Where(lb => lb.LoanID == id)
+			.ToListAsync(HttpContext.RequestAborted);
+
+		dbContext.LoanBooks.RemoveRange(loanBooks);
+
+		var loan = await dbContext.Loans
+			.SingleAsync(l => l.ID == id, HttpContext.RequestAborted);
+
+		dbContext.Loans.Remove(loan);
+		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
+
+		return RedirectToAction("Index");
+	}
 }

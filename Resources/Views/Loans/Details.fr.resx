@@ -132,4 +132,13 @@
   <data name="No books have been loaned." xml:space="preserve">
     <value>Aucun livre n'a été emprunté.</value>
   </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Sensitive Actions" xml:space="preserve">
+    <value>Actions sensibles</value>
+  </data>
+  <data name="Delete Loan" xml:space="preserve">
+    <value>Supprimer l'emprunt</value>
+  </data>
 </root>
