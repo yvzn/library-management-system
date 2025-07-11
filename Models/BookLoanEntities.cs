@@ -28,13 +28,16 @@ public class Loan
 
 	[Required]
 	[Display(Name = "Loan Date")]
+	[DisplayFormat(DataFormatString = "{0:d}")]
 	public DateTime LoanDate { get; set; }
 
 	[Required]
 	[Display(Name = "Due Date")]
+	[DisplayFormat(DataFormatString = "{0:d}")]
 	public DateTime DueDate { get; set; }
 
 	[Display(Name = "Return Date")]
+	[DisplayFormat(DataFormatString = "{0:d}")]
 	public DateTime? ReturnDate { get; set; }
 
 	public ICollection<LoanBook> LoanBooks { get; set; } = [];

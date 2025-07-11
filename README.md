@@ -79,8 +79,6 @@ dotnet publish library-management-system.csproj --configuration Release -r win-x
 
 ## Tasks
 
-- Dates localization
-
 - About page
 
 - Responsive
