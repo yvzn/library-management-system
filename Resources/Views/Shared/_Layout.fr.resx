@@ -129,4 +129,7 @@
   <data name="Toggle navigation" xml:space="preserve">
     <value>Afficher navigation</value>
   </data>
+  <data name="Libre Library is a simple library management system. It allows users to manage book loans, including adding new loans, viewing loan details, and marking loans as returned." xml:space="preserve">
+    <value>Libre Library est un système de gestion de bibliothèque simple. Il permet aux utilisateurs de gérer les prêts de livres, y compris l'ajout de nouveaux prêts, la consultation des détails des prêts et la marquage des prêts comme retournés.</value>
+  </data>
 </root>
