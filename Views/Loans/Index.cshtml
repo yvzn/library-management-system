@@ -16,31 +16,34 @@
 
 @if (Model.Count == 0)
 {
-	<p>@Localizer["No book loans."]</p>
+	<p class="mb-5">@Localizer["No book loans."]</p>
 }
 else
 {
-	<table class="table">
-		<thead>
-			<tr>
-				<th scope="col">@Html.DisplayNameFor(model => model.First().LoanDate)</th>
-				<th scope="col">@Html.DisplayNameFor(model => model.First().DueDate)</th>
-				<th scope="col">@Html.DisplayNameFor(model => model.First().ReturnDate)</th>
-				<th scope="col">@Localizer["Book Count"]</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var loan in Model)
-			{
+	<div class="table-responsive mb-5">
+		<table class="table table-hover">
+			<thead>
 				<tr>
-					<td>@Html.DisplayFor(model => loan.LoanDate)</td>
-					<td>@Html.DisplayFor(model => loan.DueDate)</td>
-					<td>@Html.DisplayFor(model => loan.ReturnDate)</td>
-					<td>@Html.DisplayFor(model => loan.LoanBooks.Count)</td>
-					<td class="text-md-end"><a asp-controller="Loans" asp-action="Details" asp-route-id="@loan.ID">@Localizer["Details"]</a></td>
+					<th scope="col">@Html.DisplayNameFor(model => model.First().LoanDate)</th>
+					<th scope="col">@Html.DisplayNameFor(model => model.First().DueDate)</th>
+					<th scope="col">@Html.DisplayNameFor(model => model.First().ReturnDate)</th>
+					<th scope="col">@Localizer["Book Count"]</th>
+					<th></th>
 				</tr>
-			}
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				@foreach (var loan in Model)
+				{
+					<tr>
+						<td>@Html.DisplayFor(model => loan.LoanDate)</td>
+						<td>@Html.DisplayFor(model => loan.DueDate)</td>
+						<td>@Html.DisplayFor(model => loan.ReturnDate)</td>
+						<td>@Html.DisplayFor(model => loan.LoanBooks.Count)</td>
+						<td class="text-md-end"><a asp-controller="Loans" asp-action="Details"
+								asp-route-id="@loan.ID">@Localizer["Details"]</a></td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
 }
