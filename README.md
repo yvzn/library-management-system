@@ -59,6 +59,16 @@ dotnet user-secrets set "ConnectionStrings:BookSearchApiKey" "YOUR_API_KEY"
 $env:ConnectionStrings__BookSearchApiKey = "YOUR_API_KEY"
 ```
 
+You can also set the API key in the `appsettings.json` file, but this is not recommended for production environments:
+
+```json
+{
+  "ConnectionStrings": {
+    "BookSearchApiKey": "YOUR_API_KEY"
+  }
+}
+```
+
 ## Publishing the project
 
 To publish the project, use the following command:
@@ -111,3 +121,10 @@ dotnet ef migrations list --project library-management-system.csproj
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+Icon credits:
+
+- [Brackets SVG Vector](https://www.svgrepo.com/author/wishforge.games/) by [Wishforge Games](https://wishforge.games/)
+- [Book Check SVG Vector](https://www.svgrepo.com/author/Leonid%20Tsvetkov/) by [Leonid Tsvetkov](https://www.figma.com/@leonid?ref=svgrepo.com)
+
+
