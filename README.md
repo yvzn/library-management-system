@@ -79,9 +79,7 @@ dotnet publish library-management-system.csproj --configuration Release -r win-x
 
 ## Tasks
 
-- Branding
-	- Favicon & Logo
-	- Name
+- Dates localization
 
 - About page
 

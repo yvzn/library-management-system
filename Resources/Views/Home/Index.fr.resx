@@ -117,8 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="No current loans" xml:space="preserve">
-    <value>Pas d'emprunt en cours</value>
+  <data name="No current loans." xml:space="preserve">
+    <value>Pas d'emprunt en cours.</value>
   </data>
   <data name="Most Current Loans" xml:space="preserve">
     <value>Derniers emprunts</value>
