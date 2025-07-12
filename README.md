@@ -77,7 +77,11 @@ To publish the project, use the following command:
 dotnet publish library-management-system.csproj --configuration Release -r win-x64 --output ./publish
 ```
 
-## Tasks
+## TODO
+
+- Edit loan dates
+
+- Add DVDs
 
 - About page
 
