@@ -8,7 +8,7 @@ permissions:
   contents: write
 
 env:
-  DOTNET_VERSION: '9.0.x' 
+  DOTNET_VERSION: '9.0.x'
 
 jobs:
   build-and-publish:
@@ -26,7 +26,7 @@ jobs:
       shell: bash
       run: |
         dotnet publish library-management-system.csproj --configuration Release -r win-x64 --output ./publish
-        zip -r library-management-system-win-x64.zip ./publish -j
+        zip -r library-management-system-win-x64.zip ./publish
         gh release upload ${{github.event.release.tag_name}} library-management-system-win-x64.zip
       env:
         GITHUB_TOKEN: ${{ github.TOKEN }}
