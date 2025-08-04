@@ -23,7 +23,7 @@
 
 <search>
 	<form method="get" asp-controller="Books" asp-action="SearchResults" class="mb-5">
-		<input type="hidden" asp-for="LoanId" />
+		@Html.HiddenFor(model => model.LoanId)
 		<div class="row align-items-end">
 			<div class="col-12 col-md-3">
 				<label asp-for="Title" class="form-label">
@@ -41,7 +41,7 @@
 				<label asp-for="ISBN" class="form-label">
 					@Html.DisplayNameFor(model => model.ISBN)
 				</label>
-				<input asp-for="ISBN" class="form-control" type="search" enterkeyhint="search" />
+				<input asp-for="ISBN" class="form-control" type="search" enterkeyhint="search" autofocus />
 			</div>
 			<div class="col-12 col-md-3 text-md-end">
 				<button type="submit" class="btn btn-primary" type="submit">@Localizer["Search"]</button>

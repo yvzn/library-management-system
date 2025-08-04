@@ -12,13 +12,16 @@
 	<h1 class="display-4 col-12 col-md-6">@Localizer["Loan Details"]</h1>
 	<div class="col-12 col-md-6 text-md-end">
 		<a class="btn btn-outline-primary" asp-controller="Loans" asp-action="Edit"
-				asp-route-loanId="@Model.ID">@Localizer["Edit Dates"]</a>
+			asp-route-loanId="@Model.ID">@Localizer["Edit Dates"]</a>
 
 		@if (@Model.ReturnDate == null)
 		{
-			<a class="btn btn-primary" asp-asp-controller="Loans" asp-action="Return"
+			<a class="btn btn-outline-primary ms-2" asp-controller="Loans" asp-action="Return"
 				asp-route-loanId="@Model.ID">@Localizer["Mark as returned"]</a>
 		}
+
+		<a class="btn btn-primary ms-2" asp-controller="Books" asp-action="Search"
+			asp-route-loanId="@Model.ID">@Localizer["Add Book"]</a>
 	</div>
 </div>
 
@@ -42,15 +45,8 @@
 	</div>
 </div>
 
-<div class="mb-3 row align-items-center">
-	<h2 class="display-5 mb-0 col-12 col-md-6">@Localizer["Books"]</h2>
-	<div class="col-12 col-md-6 text-md-end">
-		@if (@Model.ReturnDate == null)
-		{
-			<a class="btn @("true".Equals(ViewData["IsNewLoan"]) ? "btn-primary" : "btn-outline-primary")" asp-controller="Books" asp-action="Search"
-				asp-route-loanId="@Model.ID">@Localizer["Add Book"]</a>
-		}
-	</div>
+<div class="mb-3">
+	<h2 class="display-5 mb-0">@Localizer["Books"]</h2>
 </div>
 
 @if (Model.LoanBooks.Count == 0)

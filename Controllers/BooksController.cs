@@ -22,6 +22,10 @@ public class BooksController(
 
 	public async Task<IActionResult> SearchResults(SearchViewModel model)
 	{
+		model.Author = model.Author?.Trim();
+		model.Title = model.Title?.Trim();
+		model.ISBN = model.ISBN?.Trim().Replace("-", "");
+
 		var books = dbContext.Books.AsQueryable();
 		if (!string.IsNullOrEmpty(model.Author))
 		{
@@ -102,6 +106,7 @@ public class BooksController(
 	public IActionResult New(Book book, int? loanId)
 	{
 		ViewData["LoanId"] = loanId;
+
 		return View(book);
 	}
 
@@ -130,7 +135,7 @@ public class BooksController(
 
 		if (loanId.HasValue)
 		{
-			return RedirectToAction("Details", "Loans", new { id = loanId.Value, isNewLoan = true });
+			return RedirectToAction("Details", "Loans", new { id = loanId.Value });
 		}
 
 		return RedirectToAction("Index");

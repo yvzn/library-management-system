@@ -19,9 +19,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		return View(loans);
 	}
 
-	public async Task<IActionResult> Details(
-		int id,
-		bool isNewLoan = false)
+	public async Task<IActionResult> Details(int id)
 	{
 		var loan = await dbContext.Loans
 			.Include(l => l.LoanBooks)
@@ -32,11 +30,6 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		if (loan == null)
 		{
 			return NotFound();
-		}
-
-		if (isNewLoan)
-		{
-			ViewData["IsNewLoan"] = "true";
 		}
 
 		return View(loan);
@@ -77,7 +70,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		var newlyCreatedLoan = dbContext.Loans.Add(loan);
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
-		return RedirectToAction("Details", "Loans", new { id = newlyCreatedLoan.Entity.ID, isNewLoan = true });
+		return RedirectToAction("Details", "Loans", new { id = newlyCreatedLoan.Entity.ID });
 	}
 
 	public async Task<IActionResult> Update(Loan loan)
@@ -99,7 +92,9 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		return RedirectToAction("Details", new { id = existingLoan.ID });
 	}
 
-	public async Task<IActionResult> AddBook(int loanId, int bookId)
+	public async Task<IActionResult> AddBook(
+		int loanId,
+		int bookId)
 	{
 		var loan = await dbContext.Loans
 			.Include(l => l.LoanBooks)
@@ -107,7 +102,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 
 		if (loan.LoanBooks.Any(lb => lb.BookID == bookId))
 		{
-			return RedirectToAction("Details", new { id = loanId, isNewLoan = true });
+			return RedirectToAction("Details", new { id = loanId });
 		}
 
 		loan.LoanBooks.Add(new LoanBook
@@ -117,7 +112,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		});
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
-		return RedirectToAction("Details", new { id = loanId, isNewLoan = true });
+		return RedirectToAction("Details", new { id = loanId });
 	}
 
 	public async Task<IActionResult> Return(int loanId)

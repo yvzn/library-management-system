@@ -14,7 +14,7 @@ public record SearchViewModel
 
 	[Display(Name = "ISBN")]
 	public string? ISBN { get; set; }
-	
+
 	public int? LoanId { get; set; }
 }
 
