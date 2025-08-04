@@ -68,7 +68,7 @@ else
 				</tr>
 			</thead>
 			<tbody>
-				@foreach (var loanBook in Model.LoanBooks)
+				@foreach (var loanBook in Model.LoanBooks.OrderBy(lb => lb.Book!.Title))
 				{
 					<tr>
 						<td>@Html.DisplayFor(model => loanBook.Book!.Title)</td>
