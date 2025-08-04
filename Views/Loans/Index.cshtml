@@ -1,10 +1,11 @@
-﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
 
 @model IList<library_management_system.Models.Loan>
 
 @{
 	ViewData["Title"] = Localizer["Book Loans"];
+	ViewData["ActiveNav"] = "Loans";
 }
 
 <div class="mb-3 row align-items-center">

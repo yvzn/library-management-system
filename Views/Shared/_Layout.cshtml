@@ -1,9 +1,9 @@
-﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
 
 @inject IViewLocalizer Localizer
 
 @{
-	ViewData["lang"] = System.Globalization.CultureInfo.CurrentCulture.Name;
+    ViewData["lang"] = System.Globalization.CultureInfo.CurrentCulture.Name;
 }
 
 <!DOCTYPE html>
@@ -30,7 +30,7 @@
 
 <body>
 	<header>
-		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
 			<div class="container-fluid">
 				<a class="navbar-brand" asp-controller="Home" asp-action="Index">
 					<img src="~/img/logo.svg" alt="" height="32" width="32" class="logo" />
@@ -42,12 +42,12 @@
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-					<ul class="nav nav-pills flex-grow-1">
+					<ul class="nav nav-underline flex-grow-1">
 						<li class="nav-item">
-							<a class="nav-link" asp-controller="Home" asp-action="Index">@Localizer["Home"]</a>
+							<a class="nav-link @("Home".Equals(ViewData["ActiveNav"]) ? "active" : "")" asp-controller="Home" asp-action="Index">@Localizer["Home"]</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" asp-controller="Loans" asp-action="Index">@Localizer["Loans"]</a>
+							<a class="nav-link @("Loans".Equals(ViewData["ActiveNav"]) ? "active" : "")" asp-controller="Loans" asp-action="Index">@Localizer["Loans"]</a>
 						</li>
 					</ul>
 				</div>
