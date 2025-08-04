@@ -13,6 +13,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		var loans = await dbContext.Loans
 			.Include(l => l.LoanBooks)
 			.OrderByDescending(l => l.LoanDate)
+			.AsNoTracking()
 			.ToListAsync(HttpContext.RequestAborted);
 
 		return View(loans);
@@ -25,6 +26,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		var loan = await dbContext.Loans
 			.Include(l => l.LoanBooks)
 				.ThenInclude(lb => lb.Book)
+			.AsNoTracking()
 			.FirstOrDefaultAsync(l => l.ID == id, HttpContext.RequestAborted);
 
 		if (loan == null)
@@ -51,6 +53,20 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		return View(loan);
 	}
 
+	public async Task<IActionResult> Edit(int loanId)
+	{
+		var loan = await dbContext.Loans
+			.AsNoTracking()
+			.FirstOrDefaultAsync(l => l.ID == loanId, HttpContext.RequestAborted);
+
+		if (loan == null)
+		{
+			return NotFound();
+		}
+
+		return View(loan);
+	}
+
 	public async Task<IActionResult> Create(Loan loan)
 	{
 		if (!ModelState.IsValid)
@@ -62,6 +78,25 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
 		return RedirectToAction("Details", "Loans", new { id = newlyCreatedLoan.Entity.ID, isNewLoan = true });
+	}
+
+	public async Task<IActionResult> Update(Loan loan)
+	{
+		if (!ModelState.IsValid)
+		{
+			return View(nameof(Edit), loan);
+		}
+
+		var existingLoan = await dbContext.Loans
+			.SingleAsync(l => l.ID == loan.ID, HttpContext.RequestAborted);
+
+		existingLoan.LoanDate = loan.LoanDate;
+		existingLoan.DueDate = loan.DueDate;
+		existingLoan.ReturnDate = loan.ReturnDate;
+
+		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
+
+		return RedirectToAction("Details", new { id = existingLoan.ID });
 	}
 
 	public async Task<IActionResult> AddBook(int loanId, int bookId)

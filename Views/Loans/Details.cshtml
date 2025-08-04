@@ -11,6 +11,9 @@
 <div class="mb-3 row align-items-center">
 	<h1 class="display-4 col-12 col-md-6">@Localizer["Loan Details"]</h1>
 	<div class="col-12 col-md-6 text-md-end">
+		<a class="btn btn-outline-primary" asp-controller="Loans" asp-action="Edit"
+				asp-route-loanId="@Model.ID">@Localizer["Edit Dates"]</a>
+
 		@if (@Model.ReturnDate == null)
 		{
 			<a class="btn btn-primary" asp-asp-controller="Loans" asp-action="Return"

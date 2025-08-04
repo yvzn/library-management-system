@@ -117,31 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Loan Details" xml:space="preserve">
-    <value>Détails de l'emprunt</value>
+  <data name="Edit Loan" xml:space="preserve">
+    <value>Éditer un emprunt</value>
   </data>
-  <data name="Mark as returned" xml:space="preserve">
-    <value>Marquer comme retourné</value>
-  </data>
-  <data name="Books" xml:space="preserve">
-    <value>Livres</value>
-  </data>
-  <data name="Add Book" xml:space="preserve">
-    <value>Ajouter un livre</value>
-  </data>
-  <data name="No books have been loaned." xml:space="preserve">
-    <value>Aucun livre n'a été emprunté.</value>
-  </data>
-  <data name="Operations" xml:space="preserve">
-    <value>Opérations</value>
-  </data>
-  <data name="Sensitive Actions" xml:space="preserve">
-    <value>Actions sensibles</value>
-  </data>
-  <data name="Delete Loan" xml:space="preserve">
-    <value>Supprimer l'emprunt</value>
-  </data>
-  <data name="Edit Dates" xml:space="preserve">
-    <value>Éditer les dates</value>
+  <data name="Update Loan" xml:space="preserve">
+    <value>Mettre à jour</value>
   </data>
 </root>

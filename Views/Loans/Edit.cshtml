@@ -1,0 +1,44 @@
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@model library_management_system.Models.Loan
+
+@{
+	ViewData["Title"] = Localizer["Edit Loan"];
+	ViewData["ActiveNav"] = "Loans";
+}
+
+<div class="mb-3">
+	<h1 class="display-4">@Localizer["Edit Loan"]</h1>
+</div>
+
+<form method="post" asp-controller="Loans" asp-action="Update">
+	@Html.HiddenFor(model => model.ID)
+	<div class="row mb-5">
+		<div class="col-12 col-md-6">
+			<div class="mb-3">
+				<label asp-for="LoanDate" class="form-label">
+					@Html.DisplayNameFor(model => model.LoanDate)
+				</label>
+				<input asp-for="LoanDate" class="form-control" type="date" required />
+			</div>
+			<div class="mb-3">
+				<label asp-for="DueDate" class="form-label">
+					@Html.DisplayNameFor(model => model.DueDate)
+				</label>
+				<input asp-for="DueDate" class="form-control" type="date" required />
+			</div>
+			@if (@Model.ReturnDate != null)
+			{
+				<div class="mb-3">
+					<label asp-for="ReturnDate" class="form-label">
+						@Html.DisplayNameFor(model => model.ReturnDate)
+					</label>
+					<input asp-for="ReturnDate" class="form-control" type="date" />
+				</div>
+			}
+			<button type="submit" class="btn btn-primary">@Localizer["Update Loan"]</button>
+		</div>
+	</div>
+</form>
