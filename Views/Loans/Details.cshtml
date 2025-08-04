@@ -62,6 +62,7 @@ else
 					<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.Title)</th>
 					<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.Author)</th>
 					<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.ISBN_10)</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -71,6 +72,8 @@ else
 						<td>@Html.DisplayFor(model => loanBook.Book!.Title)</td>
 						<td>@Html.DisplayFor(model => loanBook.Book!.Author)</td>
 						<td>@Html.DisplayFor(model => loanBook.Book!.ISBN_10)</td>
+						<td class="text-md-end"><a class="link-danger" asp-controller="LoanBooks" asp-action="Delete"
+								asp-route-id="@loanBook.ID">@Localizer["Delete"]</a></td>
 					</tr>
 				}
 			</tbody>
