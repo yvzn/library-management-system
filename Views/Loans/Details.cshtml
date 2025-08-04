@@ -11,17 +11,19 @@
 <div class="mb-3 row align-items-center">
 	<h1 class="display-4 col-12 col-md-6">@Localizer["Loan Details"]</h1>
 	<div class="col-12 col-md-6 text-md-end">
-		<a class="btn btn-outline-primary" asp-controller="Loans" asp-action="Edit"
-			asp-route-loanId="@Model.ID">@Localizer["Edit Dates"]</a>
+		<a class="btn btn-outline-primary mb-2" asp-controller="Loans" asp-action="Edit" asp-route-loanId="@Model.ID"><i
+				class="bi bi-calendar-week me-2"></i> @Localizer["Edit Dates"]</a>
 
 		@if (@Model.ReturnDate == null)
 		{
-			<a class="btn btn-outline-primary ms-2" asp-controller="Loans" asp-action="Return"
-				asp-route-loanId="@Model.ID">@Localizer["Mark as returned"]</a>
+			<a class="btn btn-outline-primary mb-2 ms-2" asp-controller="Loans" asp-action="Return"
+				asp-route-loanId="@Model.ID"><i
+				class="bi bi-calendar-check me-2"></i> @Localizer["Mark as returned"]</a>
 		}
 
-		<a class="btn btn-primary ms-2" asp-controller="Books" asp-action="Search"
-			asp-route-loanId="@Model.ID">@Localizer["Add Book"]</a>
+		<a class="btn btn-primary mb-2 ms-2" asp-controller="Books" asp-action="Search"
+			asp-route-loanId="@Model.ID"><i
+				class="bi bi-book me-2"></i> @Localizer["Add Book"]</a>
 	</div>
 </div>
 
