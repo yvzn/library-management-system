@@ -10,7 +10,7 @@ public class LoanBooksController(BookLoansContext dbContext) : Controller
 	{
 		if (!ModelState.IsValid)
 		{
-			return RedirectToAction("Details", "Loans", new { id = loanBook.LoanID, addBooks = true });
+			return RedirectToAction("Details", "Loans", new { id = loanBook.LoanID, isNewLoan = true });
 		}
 
 		var newlyCreatedBook = await dbContext.Books.AddAsync(loanBook.Book!, HttpContext.RequestAborted);
@@ -20,6 +20,6 @@ public class LoanBooksController(BookLoansContext dbContext) : Controller
 
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
-		return RedirectToAction("Details", "Loans", new { id = loanBook.LoanID, addBooks = true });
+		return RedirectToAction("Details", "Loans", new { id = loanBook.LoanID, isNewLoan = true });
 	}
 }

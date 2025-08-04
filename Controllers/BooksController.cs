@@ -130,7 +130,7 @@ public class BooksController(
 
 		if (loanId.HasValue)
 		{
-			return RedirectToAction("Details", "Loans", new { id = loanId.Value, addBooks = true });
+			return RedirectToAction("Details", "Loans", new { id = loanId.Value, isNewLoan = true });
 		}
 
 		return RedirectToAction("Index");

@@ -20,7 +20,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 
 	public async Task<IActionResult> Details(
 		int id,
-		bool addBooks = false)
+		bool isNewLoan = false)
 	{
 		var loan = await dbContext.Loans
 			.Include(l => l.LoanBooks)
@@ -32,9 +32,9 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 			return NotFound();
 		}
 
-		if (addBooks)
+		if (isNewLoan)
 		{
-			ViewData["AddBooks"] = "true";
+			ViewData["IsNewLoan"] = "true";
 		}
 
 		return View(loan);
@@ -61,7 +61,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		var newlyCreatedLoan = dbContext.Loans.Add(loan);
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
-		return RedirectToAction("Details", "Loans", new { id = newlyCreatedLoan.Entity.ID, addBooks = true });
+		return RedirectToAction("Details", "Loans", new { id = newlyCreatedLoan.Entity.ID, isNewLoan = true });
 	}
 
 	public async Task<IActionResult> AddBook(int loanId, int bookId)
@@ -72,7 +72,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 
 		if (loan.LoanBooks.Any(lb => lb.BookID == bookId))
 		{
-			return RedirectToAction("Details", new { id = loanId, addBooks = true });
+			return RedirectToAction("Details", new { id = loanId, isNewLoan = true });
 		}
 
 		loan.LoanBooks.Add(new LoanBook
@@ -82,7 +82,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		});
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
-		return RedirectToAction("Details", new { id = loanId, addBooks = true });
+		return RedirectToAction("Details", new { id = loanId, isNewLoan = true });
 	}
 
 	public async Task<IActionResult> Return(int loanId)
