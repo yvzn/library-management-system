@@ -16,12 +16,12 @@
 
 		@if (@Model.ReturnDate == null)
 		{
-			<a class="btn btn-outline-primary mb-2 ms-2" asp-controller="Loans" asp-action="Return"
+			<a class="btn @("true".Equals(ViewData["IsNewLoan"]) ? "btn-outline-primary" : "btn-primary") mb-2 ms-2" asp-controller="Loans" asp-action="Return"
 				asp-route-loanId="@Model.ID"><i
 				class="bi bi-calendar-check me-2"></i> @Localizer["Mark as returned"]</a>
 		}
 
-		<a class="btn btn-primary mb-2 ms-2" asp-controller="Books" asp-action="Search"
+		<a class="btn @("true".Equals(ViewData["IsNewLoan"]) ? "btn-primary" : "btn-outline-primary") mb-2 ms-2" asp-controller="Books" asp-action="Search"
 			asp-route-loanId="@Model.ID"><i
 				class="bi bi-book me-2"></i> @Localizer["Add Book"]</a>
 	</div>

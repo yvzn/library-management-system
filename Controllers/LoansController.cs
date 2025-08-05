@@ -32,6 +32,8 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 			return NotFound();
 		}
 
+		ViewData["IsNewLoan"] = (loan.LoanDate.Date >= DateTime.Now.Date).ToString().ToLowerInvariant();
+
 		return View(loan);
 	}
 
