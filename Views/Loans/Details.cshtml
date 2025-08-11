@@ -9,8 +9,8 @@
 }
 
 <div class="mb-3 row align-items-center">
-	<h1 class="display-4 col-12 col-md-6">@Localizer["Loan Details"]</h1>
-	<div class="col-12 col-md-6 text-md-end">
+	<h1 class="display-4 col-12 col-md-4">@Localizer["Loan Details"]</h1>
+	<div class="col-12 col-md-8 text-md-end">
 		<a class="btn btn-outline-primary mb-2" asp-controller="Loans" asp-action="Edit" asp-route-loanId="@Model.ID"><i
 				class="bi bi-calendar-week me-2"></i> @Localizer["Edit Dates"]</a>
 
@@ -24,6 +24,9 @@
 		<a class="btn @("true".Equals(ViewData["IsNewLoan"]) ? "btn-primary" : "btn-outline-primary") mb-2 ms-2" asp-controller="Books" asp-action="Search"
 			asp-route-loanId="@Model.ID"><i
 				class="bi bi-book me-2"></i> @Localizer["Add Book"]</a>
+
+		<a class="btn btn-outline-primary mb-2 ms-2" asp-controller="Movies" asp-action="Search"
+			asp-route-loanId="@Model.ID"><i class="bi bi-film me-2"></i> @Localizer["Add Movie"]</a>
 	</div>
 </div>
 

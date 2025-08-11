@@ -2,6 +2,11 @@
 
 _Libr(e)ary_ is a simple library management system (LMS) built with ASP.NET Core MVC and Entity Framework. It allows users to manage book loans, including adding new loans, viewing loan details, and marking loans as returned.
 
+It can be used:
+
+- as a library manager, to manage book loans and inventory
+- as a library patron, to manage their active loans and returns
+
 ## Installation instructions
 
 Download the project from the releases page in the [GitHub repository](https://github.com/yvzn/library-management-system/releases).

@@ -41,6 +41,8 @@ public class Loan
 	public DateTime? ReturnDate { get; set; }
 
 	public ICollection<LoanBook> LoanBooks { get; set; } = [];
+
+	public ICollection<LoanMovie> LoanMovies { get; set; } = [];
 }
 
 public class LoanBook
@@ -53,4 +55,28 @@ public class LoanBook
 	public int BookID { get; set; }
 
 	public Book? Book { get; set; }
+}
+
+public class Movie
+{
+	public int ID { get; set; }
+
+	[Required]
+	[Display(Name = "Title")]
+	public string? Title { get; set; }
+
+	[Display(Name = "EAN")]
+	public string? EAN { get; set; }
+}
+
+public class LoanMovie
+{
+	public int ID { get; set; }
+
+	[Required]
+	public int LoanID { get; set; }
+
+	public int MovieID { get; set; }
+
+	public Movie? Movie { get; set; }
 }
