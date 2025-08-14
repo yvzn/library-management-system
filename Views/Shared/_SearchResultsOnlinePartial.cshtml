@@ -45,7 +45,9 @@
 										<input type="hidden" name="Book.ISBN_13" value="@book.ISBN_13" />
 										<input type="hidden" name="Book.ISBN_10" value="@book.ISBN_10" />
 
-										<button type="submit" class="btn btn-outline-primary text-nowrap">@Localizer["Add to Loan"]</button>
+										<button type="submit" class="btn btn-outline-primary text-nowrap"
+											autofocus="@(Model.Books.Count == 1)"
+											>@Localizer["Add to Loan"]</button>
 									</form>
 								}
 							</td>

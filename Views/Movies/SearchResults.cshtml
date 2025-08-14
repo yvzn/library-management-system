@@ -47,7 +47,9 @@
 									@if (Model.LoanId != null)
 									{
 										<a class="btn btn-outline-primary text-nowrap" asp-controller="Loans" asp-action="AddMovie"
-											asp-route-loanId="@Model.LoanId" asp-route-movieId="@movie.ID">@Localizer["Add to Loan"]</a>
+											asp-route-loanId="@Model.LoanId" asp-route-movieId="@movie.ID"
+											autofocus="@(Model.Movies.Count == 1)"
+											>@Localizer["Add to Loan"]</a>
 									}
 								</td>
 							</tr>
