@@ -22,6 +22,11 @@ public class BooksController(
 
 	public async Task<IActionResult> SearchResults(SearchViewModel model)
 	{
+		if (!ModelState.IsValid)
+		{
+			return View(nameof(Search), model);
+		}
+
 		model.Author = model.Author?.Trim();
 		model.Title = model.Title?.Trim();
 		model.ISBN = model.ISBN?.Trim().Replace("-", "");

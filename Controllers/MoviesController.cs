@@ -19,6 +19,11 @@ public class MoviesController(BookLoansContext dbContext) : Controller
 
 	public async Task<IActionResult> SearchResults(SearchViewModel model)
 	{
+		if (!ModelState.IsValid)
+		{
+			return View(nameof(Search), model);
+		}
+		
 		model.Title = model.Title?.Trim();
 		model.Director = model.Director?.Trim();
 		model.EAN = model.EAN?.Trim().Replace(" ", "");

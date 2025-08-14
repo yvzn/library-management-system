@@ -135,4 +135,7 @@
   <data name="Release Year" xml:space="preserve">
     <value>Année</value>
   </data>
+  <data name="At least one search criterion must be specified." xml:space="preserve">
+    <value>Au moins un critère de recherche doit être renseigné.</value>
+  </data>
 </root>
