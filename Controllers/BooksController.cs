@@ -2,11 +2,13 @@ using library_management_system.Infrastructure;
 using library_management_system.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace library_management_system.Controllers;
 
 public class BooksController(
 	BookLoansContext dbContext,
+	IMemoryCache memoryCache,
 	IHttpClientFactory httpClientFactory,
 	IConfiguration configuration) : Controller
 {
@@ -61,6 +63,12 @@ public class BooksController(
 
 	public async Task<IActionResult> SearchResultsOnline(SearchViewModel model)
 	{
+		var cacheKey = $"SearchResultsOnline_{model.Title}_{model.Author}_{model.ISBN}";
+		if (memoryCache.TryGetValue(cacheKey, out SearchResultsViewModel? cachedResults))
+		{
+			return PartialView("_BookSearchResultsOnlinePartial", cachedResults);
+		}
+
 		var apiKey = configuration.GetConnectionString("BookSearchApiKey");
 		var uriBuilder = new UriBuilder("https://www.googleapis.com/books/v1/volumes");
 
@@ -100,12 +108,14 @@ public class BooksController(
 				ISBN_10 = volumeInfo.IndustryIdentifiers.FirstOrDefault(i => i.Type == "ISBN_10")?.Identifier,
 			}) ?? [];
 
-		return PartialView(
-			"_BookSearchResultsOnlinePartial",
-			new SearchResultsViewModel(model)
-			{
-				Books = [.. result]
-			});
+		var searchResults = new SearchResultsViewModel(model)
+		{
+			Books = [.. result]
+		};
+
+		memoryCache.Set(cacheKey, searchResults, TimeSpan.FromMinutes(5));
+
+		return PartialView("_BookSearchResultsOnlinePartial", searchResults);
 	}
 
 	public IActionResult New(Book book, int? loanId)

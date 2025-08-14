@@ -2,6 +2,7 @@ using library_management_system.Infrastructure;
 using library_management_system.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using System.Xml.Linq;
 
@@ -9,6 +10,7 @@ namespace library_management_system.Controllers;
 
 public class MoviesController(
 	BookLoansContext dbContext,
+	IMemoryCache memoryCache,
 	IHttpClientFactory httpClientFactory,
 	IOptions<Features> features) : Controller
 {
@@ -67,6 +69,12 @@ public class MoviesController(
 
 	public async Task<IActionResult> SearchResultsOnline(SearchViewModel model)
 	{
+		var cacheKey = $"SearchResultsOnline_{model.Title}_{model.EAN}";
+		if (memoryCache.TryGetValue(cacheKey, out SearchResultsViewModel? cachedResults))
+		{
+			return PartialView("_MovieSearchResultsOnlinePartial", cachedResults);
+		}
+
 		var uriBuilder = new UriBuilder("http://www.dvdfr.com/api/search.php");
 
 		var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
@@ -89,6 +97,7 @@ public class MoviesController(
 
 		uriBuilder.Query = queryString;
 		var client = httpClientFactory.CreateClient();
+		client.DefaultRequestHeaders.UserAgent.ParseAdd("LibreLibrary/1.0 (https://github.com/yvznd/library-management-system)");
 
 		using var response = await client.GetAsync(uriBuilder.Uri, HttpContext.RequestAborted);
 		response.EnsureSuccessStatusCode();
@@ -96,19 +105,21 @@ public class MoviesController(
 		var xmlContent = await response.Content.ReadAsStringAsync(HttpContext.RequestAborted);
 		var movies = ParseMoviesFromXml(xmlContent);
 
-		movies = [..movies.DistinctBy(m => m.Title + m.Director + m.ReleaseYear + m.Media)];
+		movies = [.. movies.DistinctBy(m => m.Title + m.Director + m.ReleaseYear + m.Media)];
 
 		if (!string.IsNullOrWhiteSpace(model.EAN))
 		{
 			movies = [.. movies.Select(x => { x.EAN = model.EAN; return x; })];
 		}
 
-		return PartialView(
-				"_MovieSearchResultsOnlinePartial",
-				new SearchResultsViewModel(model)
-				{
-					Movies = [.. movies]
-				});
+		var searchResults = new SearchResultsViewModel(model)
+		{
+			Movies = [.. movies]
+		};
+
+		memoryCache.Set(cacheKey, searchResults, TimeSpan.FromMinutes(5));
+
+		return PartialView("_MovieSearchResultsOnlinePartial", searchResults);
 	}
 
 	public IActionResult New(Movie movie, int? loanId)
