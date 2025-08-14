@@ -32,6 +32,22 @@
 	</div>
 	<div class="row mb-3">
 		<div class="col-12 col-md-6 mb-3">
+			<label asp-for="TitleFr" class="form-label">
+				@Html.DisplayNameFor(model => model.TitleFr)
+			</label>
+			<input asp-for="TitleFr" class="form-control" type="text" />
+			<span asp-validation-for="TitleFr" class="text-danger"></span>
+		</div>
+		<div class="col-12 col-md-6 mb-3">
+			<label asp-for="Media" class="form-label">
+				@Html.DisplayNameFor(model => model.Media)
+			</label>
+			<input asp-for="Media" class="form-control" type="text" />
+			<span asp-validation-for="Media" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="row mb-3">
+		<div class="col-12 col-md-6 mb-3">
 			<label asp-for="ReleaseYear" class="form-label">
 				@Html.DisplayNameFor(model => model.ReleaseYear)
 			</label>

@@ -36,7 +36,10 @@ public class MoviesController(
 		var movies = dbContext.Movies.AsQueryable();
 		if (!string.IsNullOrEmpty(model.Title))
 		{
-			movies = movies.Where(m => m.Title != null && m.Title.ToLower().Contains(model.Title.ToLower()));
+			movies = movies.Where(m =>
+				m.Title != null && m.Title.ToLower().Contains(model.Title.ToLower())
+				||
+				m.TitleFr != null && m.TitleFr.ToLower().Contains(model.Title.ToLower()));
 		}
 		if (!string.IsNullOrEmpty(model.Director))
 		{
@@ -77,7 +80,8 @@ public class MoviesController(
 		}
 
 		var queryString = query.ToString();
-		if (string.IsNullOrEmpty(queryString)) {
+		if (string.IsNullOrEmpty(queryString))
+		{
 			return PartialView(
 				"_MovieSearchResultsOnlinePartial",
 				new SearchResultsViewModel(model));
@@ -92,11 +96,18 @@ public class MoviesController(
 		var xmlContent = await response.Content.ReadAsStringAsync(HttpContext.RequestAborted);
 		var movies = ParseMoviesFromXml(xmlContent);
 
+		movies = [..movies.DistinctBy(m => m.Title + m.Director + m.ReleaseYear + m.Media)];
+
+		if (!string.IsNullOrWhiteSpace(model.EAN))
+		{
+			movies = [.. movies.Select(x => { x.EAN = model.EAN; return x; })];
+		}
+
 		return PartialView(
 				"_MovieSearchResultsOnlinePartial",
 				new SearchResultsViewModel(model)
 				{
-					Movies = [..movies]
+					Movies = [.. movies]
 				});
 	}
 
@@ -155,14 +166,27 @@ public class MoviesController(
 			var titresElement = dvdElement.Element("titres");
 			if (titresElement != null)
 			{
-				var firstTitle = titresElement.Elements().FirstOrDefault();
-				movie.Title = firstTitle?.Value?.Trim();
+				var voTitle = titresElement.Element("vo")?.Value?.Trim();
+				var frTitle = titresElement.Element("fr")?.Value?.Trim();
+				var anyTitle = titresElement.Elements()
+					.FirstOrDefault(e => !string.IsNullOrWhiteSpace(e.Value))?.Value?.Trim();
+
+				movie.Title = !string.IsNullOrEmpty(voTitle) ? voTitle :
+								!string.IsNullOrEmpty(frTitle) ? frTitle :
+								anyTitle;
+				movie.TitleFr = frTitle;
 			}
 
 			var anneeElement = dvdElement.Element("annee");
 			if (anneeElement != null && int.TryParse(anneeElement.Value, out var year))
 			{
 				movie.ReleaseYear = year;
+			}
+
+			var mediaElement = dvdElement.Element("media");
+			if (mediaElement != null)
+			{
+				movie.Media = mediaElement.Value?.Trim();
 			}
 
 			var starsElement = dvdElement.Element("stars");

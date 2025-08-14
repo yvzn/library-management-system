@@ -129,4 +129,13 @@
   <data name="Release Year" xml:space="preserve">
     <value>Année</value>
   </data>
+  <data name="Original Title" xml:space="preserve">
+    <value>Titre original</value>
+  </data>
+  <data name="French Title" xml:space="preserve">
+    <value>Titre français</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>Média</value>
+  </data>
 </root>

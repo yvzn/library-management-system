@@ -14,6 +14,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 			.Include(l => l.LoanBooks)
 			.Include(l => l.LoanMovies)
 			.OrderByDescending(l => l.LoanDate)
+			.AsSplitQuery()
 			.AsNoTracking()
 			.ToListAsync(HttpContext.RequestAborted);
 
@@ -27,6 +28,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 				.ThenInclude(lb => lb.Book)
 			.Include(l => l.LoanMovies)
 				.ThenInclude(lm => lm.Movie)
+			.AsSingleQuery()
 			.AsNoTracking()
 			.FirstOrDefaultAsync(l => l.ID == id, HttpContext.RequestAborted);
 

@@ -116,11 +116,17 @@ namespace library_management_system.Migrations
                     b.Property<string>("EAN")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Media")
+                        .HasColumnType("TEXT");
+
                     b.Property<int?>("ReleaseYear")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TitleFr")
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID");

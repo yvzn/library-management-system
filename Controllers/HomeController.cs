@@ -13,8 +13,10 @@ public class HomeController(BookLoansContext dbContext) : Controller
 		var currentLoans = await dbContext.Loans
 			.Where(loan => loan.ReturnDate == null)
 			.Include(loan => loan.LoanBooks)
+			.Include(loan => loan.LoanMovies)
 			.OrderByDescending(loan => loan.DueDate)
 			.Take(5)
+			.AsSplitQuery()
 			.AsNoTracking()
 			.ToListAsync(HttpContext.RequestAborted);
 

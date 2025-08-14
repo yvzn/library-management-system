@@ -4,6 +4,7 @@
 @model library_management_system.Models.Loan
 
 @{
+	ViewData["lang"] = System.Globalization.CultureInfo.CurrentCulture.Name;
 	ViewData["Title"] = Localizer["Loan Details"];
 	ViewData["ActiveNav"] = "Loans";
 }
@@ -100,10 +101,9 @@ else
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th scope="col">@Html.DisplayNameFor(model => model.LoanMovies.First().Movie!.Title)</th>
+					<th scope="col">@Localizer["Title"]</th>
 					<th scope="col">@Html.DisplayNameFor(model => model.LoanMovies.First().Movie!.Director)</th>
 					<th scope="col">@Html.DisplayNameFor(model => model.LoanMovies.First().Movie!.ReleaseYear)</th>
-					<th scope="col">@Html.DisplayNameFor(model => model.LoanMovies.First().Movie!.EAN)</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -111,10 +111,9 @@ else
 				@foreach (var loanMovie in Model.LoanMovies.OrderBy(lm => lm.Movie!.Title))
 				{
 					<tr>
-						<td>@Html.DisplayFor(model => loanMovie.Movie!.Title)</td>
+						<td>@("fr".Equals(ViewData["lang"]) ? loanMovie.Movie!.TitleFr ?? loanMovie.Movie!.Title : loanMovie.Movie!.Title)</td>
 						<td>@Html.DisplayFor(model => loanMovie.Movie!.Director)</td>
 						<td>@Html.DisplayFor(model => loanMovie.Movie!.ReleaseYear)</td>
-						<td>@Html.DisplayFor(model => loanMovie.Movie!.EAN)</td>
 						<td class="text-md-end"><a class="link-danger" asp-controller="LoanMovies" asp-action="Delete"
 								asp-route-id="@loanMovie.ID">@Localizer["Delete"]</a></td>
 					</tr>

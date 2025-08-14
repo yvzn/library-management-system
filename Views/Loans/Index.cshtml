@@ -4,12 +4,12 @@
 @model IList<library_management_system.Models.Loan>
 
 @{
-	ViewData["Title"] = Localizer["Book Loans"];
+	ViewData["Title"] = Localizer["Loans"];
 	ViewData["ActiveNav"] = "Loans";
 }
 
 <div class="mb-3 row align-items-center">
-	<h1 class="display-4 col-12 col-md-6">@Localizer["All Book Loans"]</h1>
+	<h1 class="display-4 col-12 col-md-6">@Localizer["All Loans"]</h1>
 	<div class="col-12 col-md-6 text-md-end">
 		<a class="btn btn-primary" asp-controller="Loans" asp-action="New"><i class="bi bi-calendar-plus me-2"></i>
 			@Localizer["Add New Loan"]</a>
@@ -18,7 +18,7 @@
 
 @if (Model.Count == 0)
 {
-	<p class="mb-5">@Localizer["No book loans."]</p>
+	<p class="mb-5">@Localizer["No loans."]</p>
 }
 else
 {

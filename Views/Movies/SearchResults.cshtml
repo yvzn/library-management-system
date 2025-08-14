@@ -4,12 +4,11 @@
 
 @model library_management_system.Models.SearchResultsViewModel
 
-
 @{
+	ViewData["lang"] = System.Globalization.CultureInfo.CurrentCulture.Name;
 	ViewData["Title"] = Localizer["Search Results"];
 	ViewData["ActiveNav"] = "Loans";
 }
-
 
 <search>
 	@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
@@ -35,26 +34,30 @@
 						</col>
 						<col class="col-3">
 						</col>
-						<col class="col-2">
+						<col class="col-1">
+						</col>
+						<col class="col-1">
 						</col>
 						<col class="col-2">
 						</col>
 					</colgroup>
 					<thead>
 						<tr>
-							<th scope="col">@Html.DisplayNameFor(model => model.Movies.First().Title)</th>
+							<th scope="col">@Localizer["Title"]</th>
 							<th scope="col">@Html.DisplayNameFor(model => model.Movies.First().Director)</th>
 							<th scope="col">@Html.DisplayNameFor(model => model.Movies.First().ReleaseYear)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.Movies.First().Media)</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-						@foreach (var movie in Model.Movies)
+						@foreach (var movie in Model.Movies.OrderBy(m => m.Title))
 						{
 							<tr>
-								<td class="align-middle">@Html.DisplayFor(model => movie.Title)</td>
+								<td class="align-middle">@("fr".Equals(ViewData["lang"]) ? movie.TitleFr ?? movie.Title : movie.Title)</td>
 								<td class="align-middle">@Html.DisplayFor(model => movie.Director)</td>
 								<td class="align-middle">@Html.DisplayFor(model => movie.ReleaseYear)</td>
+								<td class="align-middle">@Html.DisplayFor(model => movie.Media)</td>
 								<td class="text-md-end">
 									@if (Model.LoanId != null)
 									{
@@ -82,7 +85,6 @@
 		</section>
 	}
 </search>
-
 
 <form asp-controller="Movies" asp-action="New" class="mb-5">
 	<h2 class="display-5">@Localizer["Add New Movie"]</h2>

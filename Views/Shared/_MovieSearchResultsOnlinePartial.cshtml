@@ -1,8 +1,11 @@
 @using Microsoft.AspNetCore.Mvc.Localization
-
 @inject IViewLocalizer Localizer
 
 @model library_management_system.Models.SearchResultsViewModel
+
+@{
+	ViewData["lang"] = System.Globalization.CultureInfo.CurrentCulture.Name;
+}
 
 <section class="mb-5">
 	<h2 class="display-5">@Localizer["New Movies"]</h2>
@@ -15,16 +18,19 @@
 					</col>
 					<col class="col-3">
 					</col>
-					<col class="col-2">
+					<col class="col-1">
+					</col>
+					<col class="col-1">
 					</col>
 					<col class="col-2">
 					</col>
 				</colgroup>
 				<thead>
 					<tr>
-						<th scope="col">@Html.DisplayNameFor(model => model.Movies.First().Title)</th>
+						<th scope="col">@Localizer["Title"]</th>
 						<th scope="col">@Html.DisplayNameFor(model => model.Movies.First().Director)</th>
 						<th scope="col">@Html.DisplayNameFor(model => model.Movies.First().ReleaseYear)</th>
+						<th scope="col">@Html.DisplayNameFor(model => model.Movies.First().Media)</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -32,17 +38,20 @@
 					@foreach (var movie in Model.Movies)
 					{
 						<tr>
-							<td class="align-middle">@Html.DisplayFor(model => movie.Title)</td>
+							<td class="align-middle">@("fr".Equals(ViewData["lang"]) ? movie.TitleFr ?? movie.Title : movie.Title)</td>
 							<td class="align-middle">@Html.DisplayFor(model => movie.Director)</td>
 							<td class="align-middle">@Html.DisplayFor(model => movie.ReleaseYear)</td>
+							<td class="align-middle">@Html.DisplayFor(model => movie.Media)</td>
 							<td class="text-md-end">
 								@if (Model.LoanId != null)
 								{
 									<form asp-controller="LoanMovies" asp-action="Create">
 										<input type="hidden" name="LoanId" value="@Model.LoanId" />
 										<input type="hidden" name="Movie.Title" value="@movie.Title" />
+										<input type="hidden" name="Movie.TitleFr" value="@movie.TitleFr" />
 										<input type="hidden" name="Movie.Director" value="@movie.Director" />
 										<input type="hidden" name="Movie.ReleaseYear" value="@movie.ReleaseYear" />
+										<input type="hidden" name="Movie.Media" value="@movie.Media" />
 										<input type="hidden" name="Movie.EAN" value="@movie.EAN" />
 
 										<button type="submit" class="btn btn-outline-primary text-nowrap"

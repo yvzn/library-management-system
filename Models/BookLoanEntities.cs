@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace library_management_system.Models;
 
@@ -61,15 +62,24 @@ public class Movie
 {
 	public int ID { get; set; }
 
+	/**
+	 * Default title in original language
+	 */
 	[Required]
-	[Display(Name = "Title")]
+	[Display(Name = "Original Title")]
 	public string? Title { get; set; }
+
+	[Display(Name = "French Title")]
+	public string? TitleFr { get; set; }
 
 	[Display(Name = "Director")]
 	public string? Director { get; set; }
 
 	[Display(Name = "Release Year")]
 	public int? ReleaseYear { get; set; }
+
+	[Display(Name = "Media")]
+	public string? Media { get; set; }
 
 	[Display(Name = "EAN")]
 	public string? EAN { get; set; }
