@@ -68,15 +68,15 @@ public class BooksController(
 		query[nameof(apiKey)] = apiKey;
 
 		var q = new List<string>();
-		if (!string.IsNullOrEmpty(model.Author))
+		if (!string.IsNullOrWhiteSpace(model.Author))
 		{
 			q.Add($"inauthor:{model.Author}");
 		}
-		if (!string.IsNullOrEmpty(model.Title))
+		if (!string.IsNullOrWhiteSpace(model.Title))
 		{
 			q.Add($"intitle:{model.Title}");
 		}
-		if (!string.IsNullOrEmpty(model.ISBN))
+		if (!string.IsNullOrWhiteSpace(model.ISBN))
 		{
 			q.Add($"isbn:{model.ISBN}");
 		}

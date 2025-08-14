@@ -2,10 +2,15 @@ using library_management_system.Infrastructure;
 using library_management_system.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Xml.Linq;
 
 namespace library_management_system.Controllers;
 
-public class MoviesController(BookLoansContext dbContext) : Controller
+public class MoviesController(
+	BookLoansContext dbContext,
+	IHttpClientFactory httpClientFactory,
+	IOptions<Features> features) : Controller
 {
 	public IActionResult Search(int? loanId)
 	{
@@ -48,8 +53,7 @@ public class MoviesController(BookLoansContext dbContext) : Controller
 
 		var result = await movies.AsNoTracking().ToListAsync(HttpContext.RequestAborted);
 
-		// For demo purposes, enable online search (in real app this would be configured)
-		ViewData["OnlineSearchEnabled"] = "true";
+		ViewData["OnlineSearchEnabled"] = features.Value.OnlineMovieSearch.ToString().ToLowerInvariant();
 
 		return View(
 			new SearchResultsViewModel(model)
@@ -60,40 +64,40 @@ public class MoviesController(BookLoansContext dbContext) : Controller
 
 	public async Task<IActionResult> SearchResultsOnline(SearchViewModel model)
 	{
-		// Dummy implementation - in a real application, this would call an external movie API
-		var dummyMovies = new List<Movie>();
+		var uriBuilder = new UriBuilder("http://www.dvdfr.com/api/search.php");
 
-		// Create some dummy results based on search criteria
-		if (!string.IsNullOrEmpty(model.Title) || !string.IsNullOrEmpty(model.Director) || model.ReleaseYear.HasValue || !string.IsNullOrEmpty(model.EAN))
+		var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
+		if (!string.IsNullOrWhiteSpace(model.Title))
 		{
-			dummyMovies.AddRange(new[]
-			{
-				new Movie
-				{
-					Title = $"Online Movie: {model.Title ?? "Sample Title"}",
-					Director = model.Director ?? "Sample Director",
-					ReleaseYear = model.ReleaseYear ?? 2023,
-					EAN = model.EAN ?? "1234567890123"
-				},
-				new Movie
-				{
-					Title = $"Another Movie: {model.Title ?? "Another Sample"}",
-					Director = model.Director ?? "Another Director",
-					ReleaseYear = (model.ReleaseYear ?? 2023) - 1,
-					EAN = model.EAN ?? "9876543210987"
-				}
-			});
+			query["title"] = model.Title;
+		}
+		if (!string.IsNullOrWhiteSpace(model.EAN))
+		{
+			query["gencode"] = model.EAN;
 		}
 
-		// Simulate async delay for API call
-		await Task.Delay(500, HttpContext.RequestAborted);
+		var queryString = query.ToString();
+		if (string.IsNullOrEmpty(queryString)) {
+			return PartialView(
+				"_MovieSearchResultsOnlinePartial",
+				new SearchResultsViewModel(model));
+		}
+
+		uriBuilder.Query = queryString;
+		var client = httpClientFactory.CreateClient();
+
+		using var response = await client.GetAsync(uriBuilder.Uri, HttpContext.RequestAborted);
+		response.EnsureSuccessStatusCode();
+
+		var xmlContent = await response.Content.ReadAsStringAsync(HttpContext.RequestAborted);
+		var movies = ParseMoviesFromXml(xmlContent);
 
 		return PartialView(
-			"_MovieSearchResultsOnlinePartial",
-			new SearchResultsViewModel(model)
-			{
-				Movies = dummyMovies
-			});
+				"_MovieSearchResultsOnlinePartial",
+				new SearchResultsViewModel(model)
+				{
+					Movies = [..movies]
+				});
 	}
 
 	public IActionResult New(Movie movie, int? loanId)
@@ -132,5 +136,53 @@ public class MoviesController(BookLoansContext dbContext) : Controller
 		}
 
 		return RedirectToAction("Index", "Loans");
+	}
+
+	private static IEnumerable<Movie> ParseMoviesFromXml(string xmlContent)
+	{
+		var document = XDocument.Parse(xmlContent);
+		var dvdElements = document.Root?.Elements("dvd");
+
+		if (dvdElements == null)
+		{
+			yield break;
+		}
+
+		foreach (var dvdElement in dvdElements)
+		{
+			var movie = new Movie();
+
+			var titresElement = dvdElement.Element("titres");
+			if (titresElement != null)
+			{
+				var firstTitle = titresElement.Elements().FirstOrDefault();
+				movie.Title = firstTitle?.Value?.Trim();
+			}
+
+			var anneeElement = dvdElement.Element("annee");
+			if (anneeElement != null && int.TryParse(anneeElement.Value, out var year))
+			{
+				movie.ReleaseYear = year;
+			}
+
+			var starsElement = dvdElement.Element("stars");
+			if (starsElement != null)
+			{
+				var directors = starsElement.Elements("star")
+					.Where(s => s.Attribute("type")?.Value == "Réalisateur")
+					.Select(s => s.Value?.Trim())
+					.Where(name => !string.IsNullOrEmpty(name));
+
+				movie.Director = string.Join(", ", directors);
+			}
+
+			// EAN is not provided in the XML structure, so we leave it null
+			movie.EAN = null;
+
+			if (!string.IsNullOrEmpty(movie.Title))
+			{
+				yield return movie;
+			}
+		}
 	}
 }
