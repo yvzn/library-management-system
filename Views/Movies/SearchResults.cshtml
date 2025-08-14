@@ -12,6 +12,18 @@
 
 
 <search>
+	@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
+	{
+		<form id="searchParams" hx-post="/Movies/SearchResultsOnline" hx-trigger="intersect once"
+			hx-target="#searchResultsOnline">
+			<input type="hidden" name="LoanId" value="@Model.LoanId" />
+			<input type="hidden" name="Title" value="@Model.Title" />
+			<input type="hidden" name="Director" value="@Model.Director" />
+			<input type="hidden" name="ReleaseYear" value="@Model.ReleaseYear" />
+			<input type="hidden" name="EAN" value="@Model.EAN" />
+		</form>
+	}
+
 	@if (Model.Movies.Count > 0)
 	{
 		<section class="mb-5">
@@ -57,6 +69,16 @@
 					</tbody>
 				</table>
 			</output>
+		</section>
+	}
+
+	@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
+	{
+		<section class="mb-5" id="searchResultsOnline">
+			<h2 class="display-5">@Localizer["New Movies"]</h2>
+			<div class="spinner-border text-primary" role="status">
+				<span class="visually-hidden">@Localizer["Loading..."]</span>
+			</div>
 		</section>
 	}
 </search>

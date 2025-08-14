@@ -101,7 +101,7 @@ public class BooksController(
 			}) ?? [];
 
 		return PartialView(
-			"_SearchResultsOnlinePartial",
+			"_BookSearchResultsOnlinePartial",
 			new SearchResultsViewModel(model)
 			{
 				Books = [.. result]

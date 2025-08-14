@@ -23,7 +23,7 @@ public class MoviesController(BookLoansContext dbContext) : Controller
 		{
 			return View(nameof(Search), model);
 		}
-		
+
 		model.Title = model.Title?.Trim();
 		model.Director = model.Director?.Trim();
 		model.EAN = model.EAN?.Trim().Replace(" ", "");
@@ -48,10 +48,51 @@ public class MoviesController(BookLoansContext dbContext) : Controller
 
 		var result = await movies.AsNoTracking().ToListAsync(HttpContext.RequestAborted);
 
+		// For demo purposes, enable online search (in real app this would be configured)
+		ViewData["OnlineSearchEnabled"] = "true";
+
 		return View(
 			new SearchResultsViewModel(model)
 			{
 				Movies = result
+			});
+	}
+
+	public async Task<IActionResult> SearchResultsOnline(SearchViewModel model)
+	{
+		// Dummy implementation - in a real application, this would call an external movie API
+		var dummyMovies = new List<Movie>();
+
+		// Create some dummy results based on search criteria
+		if (!string.IsNullOrEmpty(model.Title) || !string.IsNullOrEmpty(model.Director) || model.ReleaseYear.HasValue || !string.IsNullOrEmpty(model.EAN))
+		{
+			dummyMovies.AddRange(new[]
+			{
+				new Movie
+				{
+					Title = $"Online Movie: {model.Title ?? "Sample Title"}",
+					Director = model.Director ?? "Sample Director",
+					ReleaseYear = model.ReleaseYear ?? 2023,
+					EAN = model.EAN ?? "1234567890123"
+				},
+				new Movie
+				{
+					Title = $"Another Movie: {model.Title ?? "Another Sample"}",
+					Director = model.Director ?? "Another Director",
+					ReleaseYear = (model.ReleaseYear ?? 2023) - 1,
+					EAN = model.EAN ?? "9876543210987"
+				}
+			});
+		}
+
+		// Simulate async delay for API call
+		await Task.Delay(500, HttpContext.RequestAborted);
+
+		return PartialView(
+			"_MovieSearchResultsOnlinePartial",
+			new SearchResultsViewModel(model)
+			{
+				Movies = dummyMovies
 			});
 	}
 
