@@ -30,6 +30,7 @@ else
 					<th scope="col">@Html.DisplayNameFor(model => model.First().DueDate)</th>
 					<th scope="col">@Html.DisplayNameFor(model => model.First().ReturnDate)</th>
 					<th scope="col">@Localizer["Book Count"]</th>
+					<th scope="col">@Localizer["Movie Count"]</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -41,6 +42,7 @@ else
 						<td>@Html.DisplayFor(model => loan.DueDate)</td>
 						<td>@Html.DisplayFor(model => loan.ReturnDate)</td>
 						<td>@Html.DisplayFor(model => loan.LoanBooks.Count)</td>
+						<td>@Html.DisplayFor(model => loan.LoanMovies.Count)</td>
 						<td class="text-md-end"><a asp-controller="Loans" asp-action="Details"
 								asp-route-id="@loan.ID">@Localizer["Details"]</a></td>
 					</tr>

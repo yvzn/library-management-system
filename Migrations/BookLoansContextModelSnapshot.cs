@@ -101,7 +101,7 @@ namespace library_management_system.Migrations
 
                     b.HasIndex("MovieID");
 
-                    b.ToTable("LoanMovie");
+                    b.ToTable("LoanMovie", (string)null);
                 });
 
             modelBuilder.Entity("library_management_system.Models.Movie", b =>
@@ -110,8 +110,14 @@ namespace library_management_system.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Director")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("EAN")
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("ReleaseYear")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -119,7 +125,7 @@ namespace library_management_system.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Movie");
+                    b.ToTable("Movie", (string)null);
                 });
 
             modelBuilder.Entity("library_management_system.Models.LoanBook", b =>

@@ -1,0 +1,81 @@
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@model library_management_system.Models.SearchResultsViewModel
+
+
+@{
+	ViewData["Title"] = Localizer["Search Results"];
+	ViewData["ActiveNav"] = "Loans";
+}
+
+
+<search>
+	@if (Model.Movies.Count > 0)
+	{
+		<section class="mb-5">
+			<h2 class="display-5">@Localizer["Known Movies"]</h2>
+			<output class="row">
+				<table class="table">
+					<colgroup>
+						<col class="col-5">
+						</col>
+						<col class="col-3">
+						</col>
+						<col class="col-2">
+						</col>
+						<col class="col-2">
+						</col>
+					</colgroup>
+					<thead>
+						<tr>
+							<th scope="col">@Html.DisplayNameFor(model => model.Movies.First().Title)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.Movies.First().Director)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.Movies.First().ReleaseYear)</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var movie in Model.Movies)
+						{
+							<tr>
+								<td class="align-middle">@Html.DisplayFor(model => movie.Title)</td>
+								<td class="align-middle">@Html.DisplayFor(model => movie.Director)</td>
+								<td class="align-middle">@Html.DisplayFor(model => movie.ReleaseYear)</td>
+								<td class="text-md-end">
+									@if (Model.LoanId != null)
+									{
+										<a class="btn btn-outline-primary text-nowrap" asp-controller="Loans" asp-action="AddMovie"
+											asp-route-loanId="@Model.LoanId" asp-route-movieId="@movie.ID">@Localizer["Add to Loan"]</a>
+									}
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</output>
+		</section>
+	}
+</search>
+
+
+<form asp-controller="Movies" asp-action="New" class="mb-5">
+	<h2 class="display-5">@Localizer["Add New Movie"]</h2>
+
+	<input type="hidden" name="LoanId" value="@Model.LoanId" />
+	<input type="hidden" name="Movie.Title" value="@Model.Title" />
+	<input type="hidden" name="Movie.Director" value="@Model.Director" />
+	<input type="hidden" name="Movie.ReleaseYear" value="@Model.ReleaseYear" />
+	<input type="hidden" name="Movie.EAN" value="@Model.EAN" />
+
+	<p>@Localizer["Movie not listed?"]</p>
+
+	<button type="submit" class="btn btn-outline-primary text-nowrap"><i
+				class="bi bi-book me-2"></i> @Localizer["Add New Movie"]</button>
+</form>
+
+@section Scripts {
+	<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js"
+		integrity="sha256-tnaO7U86+Ftzp1BUcBvWDhfKxxiu8rf2slTl4OIEVhY=" crossorigin="anonymous"></script>
+}

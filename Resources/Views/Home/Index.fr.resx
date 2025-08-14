@@ -135,4 +135,7 @@
   <data name="Book Count" xml:space="preserve">
     <value>Nb. livres</value>
   </data>
+  <data name="Movie Count" xml:space="preserve">
+    <value>Nb. films</value>
+  </data>
 </root>

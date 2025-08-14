@@ -11,7 +11,7 @@ using library_management_system.Infrastructure;
 namespace library_management_system.Migrations
 {
     [DbContext(typeof(BookLoansContext))]
-    [Migration("20250811152838_AddLoanMovies")]
+    [Migration("20250812093802_AddLoanMovies")]
     partial class AddLoanMovies
     {
         /// <inheritdoc />
@@ -104,7 +104,7 @@ namespace library_management_system.Migrations
 
                     b.HasIndex("MovieID");
 
-                    b.ToTable("LoanMovie");
+                    b.ToTable("LoanMovie", (string)null);
                 });
 
             modelBuilder.Entity("library_management_system.Models.Movie", b =>
@@ -113,8 +113,14 @@ namespace library_management_system.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Director")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("EAN")
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("ReleaseYear")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -122,7 +128,7 @@ namespace library_management_system.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Movie");
+                    b.ToTable("Movie", (string)null);
                 });
 
             modelBuilder.Entity("library_management_system.Models.LoanBook", b =>

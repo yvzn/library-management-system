@@ -15,6 +15,15 @@ public record SearchViewModel
 	[Display(Name = "ISBN")]
 	public string? ISBN { get; set; }
 
+	[Display(Name = "Director")]
+	public string? Director { get; set; }
+
+	[Display(Name = "Release Year")]
+	public int? ReleaseYear { get; set; }
+
+	[Display(Name = "EAN")]
+	public string? EAN { get; set; }
+
 	public int? LoanId { get; set; }
 }
 
@@ -26,7 +35,12 @@ public record SearchResultsViewModel : SearchViewModel
 		Author = model.Author;
 		ISBN = model.ISBN;
 		LoanId = model.LoanId;
+		Director = model.Director;
+		ReleaseYear = model.ReleaseYear;
+		EAN = model.EAN;
 	}
 
 	public List<Book> Books { get; set; } = [];
+
+	public List<Movie> Movies { get; set; } = [];
 }

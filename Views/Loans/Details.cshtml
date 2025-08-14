@@ -86,6 +86,44 @@ else
 	</div>
 }
 
+<div class="mb-3">
+	<h2 class="display-5 mb-0">@Localizer["Movies"]</h2>
+</div>
+
+@if (Model.LoanMovies.Count == 0)
+{
+	<p class="mb-5">@Localizer["No movies have been loaned."]</p>
+}
+else
+{
+	<div class="table-responsive mb-5">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th scope="col">@Html.DisplayNameFor(model => model.LoanMovies.First().Movie!.Title)</th>
+					<th scope="col">@Html.DisplayNameFor(model => model.LoanMovies.First().Movie!.Director)</th>
+					<th scope="col">@Html.DisplayNameFor(model => model.LoanMovies.First().Movie!.ReleaseYear)</th>
+					<th scope="col">@Html.DisplayNameFor(model => model.LoanMovies.First().Movie!.EAN)</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var loanMovie in Model.LoanMovies.OrderBy(lm => lm.Movie!.Title))
+				{
+					<tr>
+						<td>@Html.DisplayFor(model => loanMovie.Movie!.Title)</td>
+						<td>@Html.DisplayFor(model => loanMovie.Movie!.Director)</td>
+						<td>@Html.DisplayFor(model => loanMovie.Movie!.ReleaseYear)</td>
+						<td>@Html.DisplayFor(model => loanMovie.Movie!.EAN)</td>
+						<td class="text-md-end"><a class="link-danger" asp-controller="LoanMovies" asp-action="Delete"
+								asp-route-id="@loanMovie.ID">@Localizer["Delete"]</a></td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}
+
 <div class="mb-5">
 	<form asp-controller="Loans" asp-action="Delete" asp-route-id="@Model.ID" method="post">
 		<h2 class="display-6">@Localizer["Operations"]</h2>

@@ -121,13 +121,13 @@
     <value>Détails de l'emprunt</value>
   </data>
   <data name="Mark as returned" xml:space="preserve">
-    <value>Marquer comme retourné</value>
+    <value>Marquer retourné</value>
   </data>
   <data name="Books" xml:space="preserve">
     <value>Livres</value>
   </data>
   <data name="Add Book" xml:space="preserve">
-    <value>Ajouter un livre</value>
+    <value>Ajouter livre</value>
   </data>
   <data name="No books have been loaned." xml:space="preserve">
     <value>Aucun livre n'a été emprunté.</value>
@@ -146,5 +146,14 @@
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Supprimer</value>
+  </data>
+  <data name="Add Movie" xml:space="preserve">
+    <value>Ajouter film</value>
+  </data>
+  <data name="Movies" xml:space="preserve">
+    <value>Films</value>
+  </data>
+  <data name="No movies have been loaned." xml:space="preserve">
+    <value>Aucun film n'a été emprunté.</value>
   </data>
 </root>

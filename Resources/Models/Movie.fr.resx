@@ -117,25 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Book Loans" xml:space="preserve">
-    <value>Emprunts de livres</value>
+  <data name="EAN" xml:space="preserve">
+    <value>Code barre</value>
   </data>
-  <data name="All Book Loans" xml:space="preserve">
-    <value>Tous les emprunts</value>
+  <data name="Title" xml:space="preserve">
+    <value>Titre</value>
   </data>
-  <data name="Add New Loan" xml:space="preserve">
-    <value>Nouvel emprunt</value>
+  <data name="Director" xml:space="preserve">
+    <value>Réalisateur</value>
   </data>
-  <data name="No book loans." xml:space="preserve">
-    <value>Aucun emprunt.</value>
-  </data>
-  <data name="Details" xml:space="preserve">
-    <value>Détails</value>
-  </data>
-  <data name="Book Count" xml:space="preserve">
-    <value>Nb. livres</value>
-  </data>
-  <data name="Movie Count" xml:space="preserve">
-    <value>Nb. films</value>
+  <data name="Release Year" xml:space="preserve">
+    <value>Année</value>
   </data>
 </root>

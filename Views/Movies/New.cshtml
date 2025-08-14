@@ -1,0 +1,62 @@
+@model library_management_system.Models.Movie
+
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@{
+	ViewData["Title"] = @Localizer["Add New Movie"];
+	ViewData["ActiveNav"] = "Loans";
+}
+
+<div class="mb-3">
+	<h1 class="display-4">@Localizer["Add New Movie"]</h1>
+</div>
+
+<form method="post" asp-controller="Movies" asp-action="Create" asp-route-loanId="@ViewData["LoanId"]">
+	<div class="row">
+		<div class="col-12 col-md-6 mb-3">
+			<label asp-for="Title" class="form-label">
+				@Html.DisplayNameFor(model => model.Title) *
+			</label>
+			<input asp-for="Title" class="form-control" type="text" required />
+			<span asp-validation-for="Title" class="text-danger"></span>
+		</div>
+		<div class="col-12 col-md-6 mb-3">
+			<label asp-for="Director" class="form-label">
+				@Html.DisplayNameFor(model => model.Director)
+			</label>
+			<input asp-for="Director" class="form-control" type="text" />
+			<span asp-validation-for="Director" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="row mb-3">
+		<div class="col-12 col-md-6 mb-3">
+			<label asp-for="ReleaseYear" class="form-label">
+				@Html.DisplayNameFor(model => model.ReleaseYear)
+			</label>
+			<input asp-for="ReleaseYear" class="form-control" type="number" min="1900" max="9999" />
+			<span asp-validation-for="ReleaseYear" class="text-danger"></span>
+		</div>
+		<div class="col-12 col-md-6 mb-3">
+			<label asp-for="EAN" class="form-label">
+				@Html.DisplayNameFor(model => model.EAN)
+			</label>
+			<input asp-for="EAN" class="form-control" type="text" />
+			<span asp-validation-for="EAN" class="text-danger"></span>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-12 col-md-6">
+			<button type="submit" class="btn btn-primary"><i
+				class="bi bi-book me-2"></i> @Localizer["Create Movie"]</button>
+		</div>
+	</div>
+</form>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

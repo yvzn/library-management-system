@@ -12,6 +12,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 	{
 		var loans = await dbContext.Loans
 			.Include(l => l.LoanBooks)
+			.Include(l => l.LoanMovies)
 			.OrderByDescending(l => l.LoanDate)
 			.AsNoTracking()
 			.ToListAsync(HttpContext.RequestAborted);
@@ -24,6 +25,8 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		var loan = await dbContext.Loans
 			.Include(l => l.LoanBooks)
 				.ThenInclude(lb => lb.Book)
+			.Include(l => l.LoanMovies)
+				.ThenInclude(lm => lm.Movie)
 			.AsNoTracking()
 			.FirstOrDefaultAsync(l => l.ID == id, HttpContext.RequestAborted);
 
@@ -117,6 +120,29 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		return RedirectToAction("Details", new { id = loanId });
 	}
 
+	public async Task<IActionResult> AddMovie(
+		int loanId,
+		int movieId)
+	{
+		var loan = await dbContext.Loans
+			.Include(l => l.LoanMovies)
+			.SingleAsync(l => l.ID == loanId, HttpContext.RequestAborted);
+
+		if (loan.LoanMovies.Any(lm => lm.MovieID == movieId))
+		{
+			return RedirectToAction("Details", new { id = loanId });
+		}
+
+		loan.LoanMovies.Add(new LoanMovie
+		{
+			LoanID = loan.ID,
+			MovieID = movieId
+		});
+		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
+
+		return RedirectToAction("Details", new { id = loanId });
+	}
+
 	public async Task<IActionResult> Return(int loanId)
 	{
 		var loan = await dbContext.Loans
@@ -135,6 +161,12 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 			.ToListAsync(HttpContext.RequestAborted);
 
 		dbContext.LoanBooks.RemoveRange(loanBooks);
+
+		var loanMovies = await dbContext.LoanMovies
+			.Where(lm => lm.LoanID == id)
+			.ToListAsync(HttpContext.RequestAborted);
+
+		dbContext.LoanMovies.RemoveRange(loanMovies);
 
 		var loan = await dbContext.Loans
 			.SingleAsync(l => l.ID == id, HttpContext.RequestAborted);

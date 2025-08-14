@@ -17,6 +17,8 @@ namespace library_management_system.Migrations
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
+                    Director = table.Column<string>(type: "TEXT", nullable: true),
+                    ReleaseYear = table.Column<int>(type: "INTEGER", nullable: true),
                     EAN = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>

@@ -126,4 +126,13 @@
   <data name="ISBN" xml:space="preserve">
     <value>ISBN</value>
   </data>
+  <data name="Director" xml:space="preserve">
+    <value>Réalisateur</value>
+  </data>
+  <data name="EAN" xml:space="preserve">
+    <value>Code barre</value>
+  </data>
+  <data name="Release Year" xml:space="preserve">
+    <value>Année</value>
+  </data>
 </root>

@@ -20,12 +20,14 @@
 				@Html.DisplayNameFor(model => model.Title) *
 			</label>
 			<input asp-for="Title" class="form-control" type="text" required />
+			<span asp-validation-for="Title" class="text-danger"></span>
 		</div>
 		<div class="col-12 col-md-6 mb-3">
 			<label asp-for="Author" class="form-label">
 				@Html.DisplayNameFor(model => model.Author) *
 			</label>
 			<input asp-for="Author" class="form-control" type="text" required />
+			<span asp-validation-for="Author" class="text-danger"></span>
 		</div>
 	</div>
 	<div class="row mb-3">
@@ -34,12 +36,14 @@
 				@Html.DisplayNameFor(model => model.ISBN_13)
 			</label>
 			<input asp-for="ISBN_13" class="form-control" type="text" />
+			<span asp-validation-for="ISBN_13" class="text-danger"></span>
 		</div>
 		<div class="col-12 col-md-6 mb-3">
 			<label asp-for="ISBN_10" class="form-label">
 				@Html.DisplayNameFor(model => model.ISBN_10)
 			</label>
 			<input asp-for="ISBN_10" class="form-control" type="text" />
+			<span asp-validation-for="ISBN_10" class="text-danger"></span>
 		</div>
 	</div>
 
@@ -50,3 +54,9 @@
 		</div>
 	</div>
 </form>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

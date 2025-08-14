@@ -9,6 +9,8 @@ public class BookLoansContext(DbContextOptions options) : DbContext(options)
 	public DbSet<Loan> Loans { get; set; }
 	public DbSet<LoanBook> LoanBooks { get; set; }
 	public DbSet<Book> Books { get; set; }
+	public DbSet<Movie> Movies { get; set; }
+	public DbSet<LoanMovie> LoanMovies { get; set; }
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
@@ -20,6 +22,12 @@ public class BookLoansContext(DbContextOptions options) : DbContext(options)
 
 		modelBuilder.Entity<Book>()
 			.ToTable(nameof(Book));
+
+		modelBuilder.Entity<Movie>()
+			.ToTable(nameof(Movie));
+
+		modelBuilder.Entity<LoanMovie>()
+			.ToTable(nameof(LoanMovie));
 	}
 
 	public static string DbPath

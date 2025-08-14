@@ -1,0 +1,53 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@model library_management_system.Models.SearchViewModel
+
+@{
+	ViewData["Title"] = @Localizer["Search Movies"];
+	ViewData["ActiveNav"] = "Loans";
+}
+
+
+<div class="mb-3">
+	@if (Model.LoanId != null)
+	{
+		<h1 class="display-4">@Localizer["Add Movie to Loan"]</h1>
+	}
+	else
+	{
+		<h1 class="display-4">@Localizer["Search Movies"]</h1>
+	}
+</div>
+
+<search>
+	<form method="get" asp-controller="Movies" asp-action="SearchResults" class="mb-5">
+		@Html.HiddenFor(model => model.LoanId)
+		<div class="row align-items-end">
+			<div class="col-12 col-md-3">
+				<label asp-for="Title" class="form-label">
+					@Html.DisplayNameFor(model => model.Title)
+				</label>
+				<input asp-for="Title" class="form-control" type="search" enterkeyhint="search" />
+			</div>
+			<div class="col-12 col-md-3">
+				<label asp-for="Director" class="form-label">
+					@Html.DisplayNameFor(model => model.Director)
+				</label>
+				<input asp-for="Director" class="form-control" type="search" enterkeyhint="search" />
+			</div>
+			<!-- release year & EAN -->
+			<div class="col-12 col-md-3">
+				<label asp-for="ReleaseYear" class="form-label">
+					@Html.DisplayNameFor(model => model.ReleaseYear)
+				</label>
+				<input asp-for="ReleaseYear" class="form-control" type="number" min="1900" max="9999"
+					enterkeyhint="search" />
+			</div>
+			<div class="col-12 col-md-3 text-md-end">
+				<button type="submit" class="btn btn-primary" type="submit"><i class="bi bi-search me-2"></i>
+					@Localizer["Search"]</button>
+			</div>
+		</div>
+	</form>
+</search>

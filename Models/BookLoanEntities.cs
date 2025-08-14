@@ -65,6 +65,12 @@ public class Movie
 	[Display(Name = "Title")]
 	public string? Title { get; set; }
 
+	[Display(Name = "Director")]
+	public string? Director { get; set; }
+
+	[Display(Name = "Release Year")]
+	public int? ReleaseYear { get; set; }
+
 	[Display(Name = "EAN")]
 	public string? EAN { get; set; }
 }

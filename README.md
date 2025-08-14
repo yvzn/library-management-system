@@ -123,6 +123,20 @@ List all migrations
 dotnet ef migrations list --project library-management-system.csproj
 ```
 
+Remove a migration
+
+```pwsh
+# first revert the migration from database by updating to the last valid migration
+dotnet ef migrations list --project library-management-system.csproj
+dotnet ef database update <<last_valid_migration>> --project library-management-system.csproj
+
+# then remove the last migration from the project
+dotnet ef migrations remove --project library-management-system.csproj
+
+# or remove a specific migration
+dotnet ef migrations remove --project library-management-system.csproj --migration <<migration_name>>
+```
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

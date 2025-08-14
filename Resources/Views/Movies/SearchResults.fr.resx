@@ -117,25 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Book Loans" xml:space="preserve">
-    <value>Emprunts de livres</value>
+  <data name="Add New Movie" xml:space="preserve">
+    <value>Ajouter un nouveau film</value>
   </data>
-  <data name="All Book Loans" xml:space="preserve">
-    <value>Tous les emprunts</value>
+  <data name="Add to Loan" xml:space="preserve">
+    <value>Ajouter à l'emprunt</value>
   </data>
-  <data name="Add New Loan" xml:space="preserve">
-    <value>Nouvel emprunt</value>
+  <data name="Back to Search" xml:space="preserve">
+    <value>Retour à la recherche</value>
   </data>
-  <data name="No book loans." xml:space="preserve">
-    <value>Aucun emprunt.</value>
+  <data name="Search Results" xml:space="preserve">
+    <value>Résultats de recherche</value>
   </data>
-  <data name="Details" xml:space="preserve">
-    <value>Détails</value>
+  <data name="Movie not listed?" xml:space="preserve">
+    <value>Film non répertorié ?</value>
   </data>
-  <data name="Book Count" xml:space="preserve">
-    <value>Nb. livres</value>
-  </data>
-  <data name="Movie Count" xml:space="preserve">
-    <value>Nb. films</value>
+  <data name="Known Movies" xml:space="preserve">
+    <value>Films répertoriés</value>
   </data>
 </root>

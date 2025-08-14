@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Add Book to Loan" xml:space="preserve">
-    <value>Ajouter le livre à l'emprunt</value>
+    <value>Ajouter un livre à l'emprunt</value>
   </data>
   <data name="Search Books" xml:space="preserve">
     <value>Rechercher des livres</value>
