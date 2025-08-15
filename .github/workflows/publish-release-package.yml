@@ -25,8 +25,11 @@ jobs:
     - name: '📦 Publish for win-x64 using DotNet'
       shell: bash
       run: |
-        dotnet publish library-management-system.csproj --configuration Release -r win-x64 --output ./publish
-        zip -r library-management-system-win-x64.zip ./publish
-        gh release upload ${{github.event.release.tag_name}} library-management-system-win-x64.zip
+        tag_name=${{github.event.release.tag_name}}
+        version=${tag_name#v}
+        dotnet publish library-management-system.csproj --configuration Release -r win-x64 /p:Version=$version --output ./$tag_name
+        zip -r library-management-system-win-x64.zip ./$tag_name
+        gh release upload $tag_name library-management-system-win-x64.zip
       env:
         GITHUB_TOKEN: ${{ github.TOKEN }}
+
