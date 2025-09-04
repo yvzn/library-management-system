@@ -22,19 +22,4 @@ public class LoanMoviesController(BookLoansContext dbContext) : Controller
 
 		return RedirectToAction("Details", "Loans", new { id = loanMovie.LoanID });
 	}
-
-	public async Task<IActionResult> Delete(int id)
-	{
-		var loanMovie = await dbContext.LoanMovies.FindAsync(id);
-
-		if (loanMovie == null)
-		{
-			return NotFound();
-		}
-
-		dbContext.LoanMovies.Remove(loanMovie);
-		await dbContext.SaveChangesAsync();
-
-		return RedirectToAction("Details", "Loans", new { id = loanMovie.LoanID });
-	}
 }

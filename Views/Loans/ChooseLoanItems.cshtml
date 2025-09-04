@@ -1,0 +1,89 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@model library_management_system.Models.Loan
+
+@{
+	ViewData["lang"] = System.Globalization.CultureInfo.CurrentCulture.Name;
+	ViewData["Title"] = Localizer["Choose Items from Loan"];
+	ViewData["ActiveNav"] = "Loans";
+}
+
+<form asp-controller="Loans" asp-action="DeleteItems" method="post">
+<input type="hidden" name="LoanId" value="@Model.ID" />
+
+<div class="mb-3 row align-items-center">
+	<h1 class="display-4 col-12 col-md-8">@Localizer["Loan Details"]</h1>
+	<div class="col-12 col-md-4 text-md-end">
+		<button type="submit" class="btn btn-outline-danger"><i class="bi bi-trash me-2"></i> @Localizer["Delete Selected Items"]</button>
+	</div>
+</div>
+
+<div class="row mb-5">
+	<p>@Localizer["Consider marking the loan as returned instead of deleting the items. It will keep the history intact."]</p>
+</div>
+
+@if (Model.LoanBooks.Count > 0)
+{
+	<div class="mb-3">
+		<h2 class="display-5 mb-0">@Localizer["Books"]</h2>
+	</div>
+
+	<div class="table-responsive mb-5">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th></th>
+					<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.Title)</th>
+					<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.Author)</th>
+					<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.ISBN_10)</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var loanBook in Model.LoanBooks.OrderBy(lb => lb.Book!.Title))
+				{
+					<tr>
+						<td><input type="checkbox" name="LoanBookIds" value="@loanBook.ID" /></td>
+						<td>@Html.DisplayFor(model => loanBook.Book!.Title)</td>
+						<td>@Html.DisplayFor(model => loanBook.Book!.Author)</td>
+						<td>@Html.DisplayFor(model => loanBook.Book!.ISBN_10)</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}
+
+@if (Model.LoanMovies.Count > 0)
+{
+	<div class="mb-3">
+		<h2 class="display-5 mb-0">@Localizer["Movies"]</h2>
+	</div>
+
+	<div class="table-responsive mb-5">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th></th>
+					<th scope="col">@Localizer["Title"]</th>
+					<th scope="col">@Html.DisplayNameFor(model => model.LoanMovies.First().Movie!.Director)</th>
+					<th scope="col">@Html.DisplayNameFor(model => model.LoanMovies.First().Movie!.ReleaseYear)</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var loanMovie in Model.LoanMovies.OrderBy(lm => lm.Movie!.Title))
+				{
+					<tr>
+						<td><input type="checkbox" name="LoanMovieIds" value="@loanMovie.ID" /></td>
+						<td>@("fr".Equals(ViewData["lang"]) ? loanMovie.Movie!.TitleFr ?? loanMovie.Movie!.Title :
+												loanMovie.Movie!.Title)</td>
+						<td>@Html.DisplayFor(model => loanMovie.Movie!.Director)</td>
+						<td>@Html.DisplayFor(model => loanMovie.Movie!.ReleaseYear)</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}
+
+</form>

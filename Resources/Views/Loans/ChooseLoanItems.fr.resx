@@ -117,46 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Choose Items from Loan" xml:space="preserve">
+    <value>Choisir les articles</value>
+  </data>
   <data name="Loan Details" xml:space="preserve">
     <value>Détails de l'emprunt</value>
   </data>
-  <data name="Mark as returned" xml:space="preserve">
-    <value>Marquer retourné</value>
+  <data name="Delete Selected Items" xml:space="preserve">
+    <value>Supprimer les articles sélectionnés</value>
   </data>
   <data name="Books" xml:space="preserve">
     <value>Livres</value>
   </data>
-  <data name="Add Book" xml:space="preserve">
-    <value>Ajouter livre</value>
-  </data>
-  <data name="No books have been loaned." xml:space="preserve">
-    <value>Aucun livre n'a été emprunté.</value>
-  </data>
-  <data name="Delete Loan" xml:space="preserve">
-    <value>Supprimer l'emprunt</value>
-  </data>
-  <data name="Edit Dates" xml:space="preserve">
-    <value>Éditer les dates</value>
-  </data>
-  <data name="Add Movie" xml:space="preserve">
-    <value>Ajouter film</value>
-  </data>
   <data name="Movies" xml:space="preserve">
     <value>Films</value>
-  </data>
-  <data name="No movies have been loaned." xml:space="preserve">
-    <value>Aucun film n'a été emprunté.</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Titre</value>
   </data>
-  <data name="More Operations" xml:space="preserve">
-    <value>Autres opérations</value>
-  </data>
-  <data name="Add Item" xml:space="preserve">
-    <value>Ajouter</value>
-  </data>
-  <data name="Remove Items from Loan" xml:space="preserve">
-    <value>Supprimer des articles</value>
+  <data name="Consider marking the loan as returned instead of deleting the items. It will keep the history intact." xml:space="preserve">
+    <value>Envisagez de marquer le prêt comme retourné au lieu de supprimer les éléments. Cela permet de conserver l'historique.</value>
   </data>
 </root>

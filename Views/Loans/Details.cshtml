@@ -50,6 +50,10 @@
 				<li><a class="dropdown-item" asp-controller="Loans" asp-action="Edit" asp-route-loanId="@Model.ID"><i
 							class="bi bi-calendar-week me-2"></i> @Localizer["Edit Dates"]</a></li>
 
+				<!-- link remove items from loan -->
+				<li><a class="dropdown-item" asp-controller="Loans" asp-action="ChooseLoanItems" asp-route-loanId="@Model.ID"><i
+							class="bi bi-journal-minus me-2"></i> @Localizer["Remove Items from Loan"]</a></li>
+
 				<li><button type="submit" class="dropdown-item text-danger" form="delete-loan-form"><i
 							class="bi bi-trash me-2"></i> @Localizer["Delete Loan"]</button>
 				</li>
@@ -95,7 +99,6 @@ else
 					<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.Title)</th>
 					<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.Author)</th>
 					<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.ISBN_10)</th>
-					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -105,8 +108,6 @@ else
 						<td>@Html.DisplayFor(model => loanBook.Book!.Title)</td>
 						<td>@Html.DisplayFor(model => loanBook.Book!.Author)</td>
 						<td>@Html.DisplayFor(model => loanBook.Book!.ISBN_10)</td>
-						<td class="text-md-end"><a class="link-danger" asp-controller="LoanBooks" asp-action="Delete"
-								asp-route-id="@loanBook.ID">@Localizer["Delete"]</a></td>
 					</tr>
 				}
 			</tbody>
@@ -131,7 +132,6 @@ else
 					<th scope="col">@Localizer["Title"]</th>
 					<th scope="col">@Html.DisplayNameFor(model => model.LoanMovies.First().Movie!.Director)</th>
 					<th scope="col">@Html.DisplayNameFor(model => model.LoanMovies.First().Movie!.ReleaseYear)</th>
-					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -142,8 +142,6 @@ else
 												loanMovie.Movie!.Title)</td>
 						<td>@Html.DisplayFor(model => loanMovie.Movie!.Director)</td>
 						<td>@Html.DisplayFor(model => loanMovie.Movie!.ReleaseYear)</td>
-						<td class="text-md-end"><a class="link-danger" asp-controller="LoanMovies" asp-action="Delete"
-								asp-route-id="@loanMovie.ID">@Localizer["Delete"]</a></td>
 					</tr>
 				}
 			</tbody>

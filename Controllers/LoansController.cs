@@ -178,4 +178,50 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 
 		return RedirectToAction("Index");
 	}
+
+	public async Task<IActionResult> ChooseLoanItems(int loanId)
+	{
+		var loan = await dbContext.Loans
+			.Include(l => l.LoanBooks)
+				.ThenInclude(lb => lb.Book)
+			.Include(l => l.LoanMovies)
+				.ThenInclude(lm => lm.Movie)
+			.AsSingleQuery()
+			.AsNoTracking()
+			.FirstOrDefaultAsync(l => l.ID == loanId, HttpContext.RequestAborted);
+
+		if (loan == null)
+		{
+			return NotFound();
+		}
+
+		return View(nameof(ChooseLoanItems), loan);
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> DeleteItems(DeleteItemsViewModel model)
+	{
+		if (model.LoanBookIds?.Length > 0)
+		{
+			var loanBooksToDelete = await dbContext.LoanBooks
+				.Where(lb => model.LoanBookIds.Contains(lb.ID))
+				.ToListAsync(HttpContext.RequestAborted);
+
+			dbContext.LoanBooks.RemoveRange(loanBooksToDelete);
+		}
+
+		if (model.LoanMovieIds?.Length > 0)
+		{
+			var loanMoviesToDelete = await dbContext.LoanMovies
+				.Where(lm => model.LoanMovieIds.Contains(lm.ID))
+				.ToListAsync(HttpContext.RequestAborted);
+
+			dbContext.LoanMovies.RemoveRange(loanMoviesToDelete);
+		}
+
+		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
+
+		// Redirect back to the loan details page
+		return RedirectToAction("Details", new { id = model.LoanId });
+	}
 }
