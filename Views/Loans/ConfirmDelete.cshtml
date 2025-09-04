@@ -1,0 +1,26 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@model library_management_system.Models.Loan
+
+@{
+	ViewData["lang"] = System.Globalization.CultureInfo.CurrentCulture.Name;
+	ViewData["Title"] = Localizer["Confirm Loan Deletion"];
+	ViewData["ActiveNav"] = "Loans";
+}
+
+<form asp-controller="Loans" asp-action="Delete" asp-route-id="@Model.ID" method="post" id="delete-loan-form">
+</form>
+
+<div class="mb-3 row align-items-center">
+	<h1 class="display-4 col-12 col-md-8">@Localizer["Confirm Loan Deletion"]</h1>
+	<div class="col-12 col-md-4 text-md-end">
+		<button type="submit" class="btn btn-outline-danger mb-2 ms-2" form="delete-loan-form">
+			<i class="bi bi-trash me-2"></i> @Localizer["Yes, delete permanently"]
+		</button>
+	</div>
+</div>
+
+<div class="row mb-5">
+	<p>@Localizer["Consider marking the loan as returned instead of deleting. It will keep the history intact."]</p>
+</div>

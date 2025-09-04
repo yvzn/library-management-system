@@ -51,7 +51,7 @@
 							class="bi bi-calendar-week me-2"></i> @Localizer["Edit Dates"]</a></li>
 
 				<!-- link remove items from loan -->
-				<li><a class="dropdown-item" asp-controller="Loans" asp-action="ChooseLoanItems" asp-route-loanId="@Model.ID"><i
+				<li><a class="dropdown-item text-danger" asp-controller="Loans" asp-action="ChooseLoanItems" asp-route-loanId="@Model.ID"><i
 							class="bi bi-journal-minus me-2"></i> @Localizer["Remove Items from Loan"]</a></li>
 
 				<li><button type="submit" class="dropdown-item text-danger" form="delete-loan-form"><i
@@ -149,7 +149,7 @@ else
 	</div>
 }
 
-<form asp-controller="Loans" asp-action="Delete" asp-route-id="@Model.ID" method="post" id="delete-loan-form">
+<form asp-controller="Loans" asp-action="ConfirmDelete" asp-route-id="@Model.ID" method="get" id="delete-loan-form">
 </form>
 </div>
 

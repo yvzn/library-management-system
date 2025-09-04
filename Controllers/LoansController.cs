@@ -156,6 +156,21 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		return RedirectToAction("Details", new { id = loanId });
 	}
 
+	public async Task<IActionResult> ConfirmDelete(int id)
+	{
+		var loan = await dbContext.Loans
+			.AsNoTracking()
+			.FirstOrDefaultAsync(l => l.ID == id, HttpContext.RequestAborted);
+
+		if (loan == null)
+		{
+			return NotFound();
+		}
+
+		return View(loan);
+	}
+
+	[HttpPost]
 	public async Task<IActionResult> Delete(int id)
 	{
 		var loanBooks = await dbContext.LoanBooks
