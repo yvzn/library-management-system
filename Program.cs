@@ -37,6 +37,9 @@ builder.Services.AddDbContext<BookLoansContext>(
 	options => options.UseSqlite(connectionString));
 builder.Services.AddScoped<BookLoansDbInitializer>();
 
+builder.Services.AddHealthChecks()
+	.AddDbContextCheck<BookLoansContext>();
+
 builder.Services.AddHostedService<LaunchBrowserOnStartup>();
 builder.Services.AddHostedService<StartupBanner>();
 
@@ -71,6 +74,8 @@ app.MapControllerRoute(
 		name: "default",
 		pattern: "{controller=Home}/{action=Index}/{id?}")
 		.WithStaticAssets();
+
+app.MapHealthChecks("/healthz");
 
 
 
