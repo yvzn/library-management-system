@@ -84,16 +84,10 @@ dotnet publish library-management-system.csproj --configuration Release -r win-x
 
 ## TODO
 
-- Edit loan dates
-
-- Add DVDs
-
-- About page
-
-- Responsive
-	- Spacing / UX
-
-- Cards instead of tables
+- Detect HTTP Port already in use : reopening the app
+- Add feedback: deleted loan
+- Add CDs (https://musicbrainz.org/ws/2/release/?query=artist:queen%20AND%20recording:queen)
+- Use Open Library instead of Google Books (https://openlibrary.org/search.json?author=tolkien&sort=new)
 
 ## EntityFramework migrations
 

@@ -31,7 +31,7 @@ internal class LaunchBrowserOnStartup(
 			if (browser is null)
 				return;
 
-			_ = Process.Start(browser);
+			TryStartBrowser(browser);
 		});
 
 		await Task.CompletedTask;
@@ -43,11 +43,23 @@ internal class LaunchBrowserOnStartup(
 		return addressesFeature?.Addresses.FirstOrDefault();
 	}
 
-	private static ProcessStartInfo? GetBrowserForCurrentOs(string url)
+	public static ProcessStartInfo? GetBrowserForCurrentOs(string url)
 	{
 		if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return new ProcessStartInfo("cmd", $"/c start {url}");
 		if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return new ProcessStartInfo("xdg-open", url);
 		if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) return new ProcessStartInfo("open", url);
 		return default;
+	}
+
+	public static void TryStartBrowser(ProcessStartInfo browser)
+	{
+		try
+		{
+			_ = Process.Start(browser);
+		}
+		catch
+		{
+			// Ignore exceptions, as this is just a convenience feature.
+		}
 	}
 }

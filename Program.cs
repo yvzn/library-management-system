@@ -1,92 +1,149 @@
-using library_management_system;
 using library_management_system.Infrastructure;
 using library_management_system.Services;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args);
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
+namespace library_management_system;
 
-var supportedCultures = new[] { "en", "fr" };
-
-
-
-// -- Add services to the container. ------------------------------------------
-
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-
-builder.Services.AddControllersWithViews()
-	.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-	.AddDataAnnotationsLocalization();
-
-builder.Services.AddHttpLogging(options =>
+internal class Program
 {
-	options.LoggingFields = HttpLoggingFields.RequestPath | HttpLoggingFields.RequestMethod | HttpLoggingFields.ResponseStatusCode | HttpLoggingFields.ResponseBody;
-	options.ResponseBodyLogLimit = 128;
-	options.CombineLogs = true;
-});
-builder.Services.AddHttpClient();
+	private static async Task Main(string[] args)
+	{
+		var builder = WebApplication.CreateBuilder(args);
+		builder.Logging.ClearProviders();
+		builder.Logging.AddConsole();
 
-builder.Services.Configure<Features>(builder.Configuration.GetSection(nameof(Features)));
-
-var connectionString = builder.Configuration.GetConnectionString("BookLoansDb");
-if (string.IsNullOrEmpty(connectionString)) connectionString = $"Data Source={BookLoansContext.DbPath}";
-builder.Services.AddDbContext<BookLoansContext>(
-	options => options.UseSqlite(connectionString));
-builder.Services.AddScoped<BookLoansDbInitializer>();
-
-builder.Services.AddHealthChecks()
-	.AddDbContextCheck<BookLoansContext>();
-
-builder.Services.AddHostedService<LaunchBrowserOnStartup>();
-builder.Services.AddHostedService<StartupBanner>();
-
-var urls = builder.Configuration.GetSection("urls").Get<string>();
-var app = builder.Build();
+		var supportedCultures = new[] { "en", "fr" };
 
 
 
-// -- Configure the HTTP request pipeline. ------------------------------------
+		// -- Add services to the container. ------------------------------------------
 
-app.UseRequestLocalization(options =>
-{
-	options.SetDefaultCulture(supportedCultures[0])
-		.AddSupportedCultures(supportedCultures)
-		.AddSupportedUICultures(supportedCultures);
-	options.ApplyCurrentCultureToResponseHeaders = true;
-});
+		builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-if (!app.Environment.IsDevelopment())
-{
-	app.UseExceptionHandler("/Home/Error");
+		builder.Services.AddControllersWithViews()
+			.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+			.AddDataAnnotationsLocalization();
+
+		builder.Services.AddHttpLogging(options =>
+		{
+			options.LoggingFields = HttpLoggingFields.RequestPath | HttpLoggingFields.RequestMethod | HttpLoggingFields.ResponseStatusCode | HttpLoggingFields.ResponseBody;
+			options.ResponseBodyLogLimit = 128;
+			options.CombineLogs = true;
+		});
+		builder.Services.AddHttpClient();
+
+		builder.Services.Configure<Features>(builder.Configuration.GetSection(nameof(Features)));
+
+		var connectionString = builder.Configuration.GetConnectionString("BookLoansDb");
+		if (string.IsNullOrEmpty(connectionString)) connectionString = $"Data Source={BookLoansContext.DbPath}";
+		builder.Services.AddDbContext<BookLoansContext>(
+			options => options.UseSqlite(connectionString));
+		builder.Services.AddScoped<BookLoansDbInitializer>();
+
+		builder.Services.AddHealthChecks()
+			.AddDbContextCheck<BookLoansContext>();
+
+		builder.Services.AddHostedService<LaunchBrowserOnStartup>();
+		builder.Services.AddHostedService<StartupBanner>();
+
+		var urls = builder.Configuration.GetSection("urls").Get<string>()
+			?.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+			?? [];
+
+		var app = builder.Build();
+
+
+
+		// -- Check if the application is already running. ----------------------------
+		var (isAlreadyRunning, url) = await IsAlreadyRunning(urls, app);
+		if (isAlreadyRunning && url is not null)
+		{
+			Console.WriteLine("Application is already running.");
+			Console.WriteLine();
+			Console.WriteLine($"Open your browser and visit: {url}.");
+
+			var browser = LaunchBrowserOnStartup.GetBrowserForCurrentOs(url);
+			if (browser is null)
+				return;
+
+			LaunchBrowserOnStartup.TryStartBrowser(browser);
+			return;
+		}
+
+
+
+		// -- Configure the HTTP request pipeline. ------------------------------------
+
+		app.UseRequestLocalization(options =>
+		{
+			options.SetDefaultCulture(supportedCultures[0])
+				.AddSupportedCultures(supportedCultures)
+				.AddSupportedUICultures(supportedCultures);
+			options.ApplyCurrentCultureToResponseHeaders = true;
+		});
+
+		if (!app.Environment.IsDevelopment())
+		{
+			app.UseExceptionHandler("/Home/Error");
+		}
+
+		app.UseRouting();
+
+		app.UseAuthorization();
+
+		app.UseHttpLogging();
+
+		app.MapStaticAssets();
+
+		app.MapControllerRoute(
+				name: "default",
+				pattern: "{controller=Home}/{action=Index}/{id?}")
+				.WithStaticAssets();
+
+		app.MapHealthChecks("/healthz");
+
+
+
+		// -- Run the application. ----------------------------------------------------
+
+		using (var scope = app.Services.CreateScope())
+		{
+			var serviceProvider = scope.ServiceProvider;
+			var dbInitializer = serviceProvider.GetRequiredService<BookLoansDbInitializer>();
+			await dbInitializer.Init(CancellationToken.None);
+		}
+
+		await app.RunAsync();
+	}
+
+	private static async Task<(bool, string?)> IsAlreadyRunning(string[] urls, WebApplication app)
+	{
+		using var scope = app.Services.CreateScope();
+		var serviceProvider = scope.ServiceProvider;
+
+		var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
+		using var httpClient = httpClientFactory.CreateClient();
+		httpClient.Timeout = TimeSpan.FromMilliseconds(100);
+
+		foreach (var url in urls)
+		{
+			try
+			{
+				var response = await httpClient.GetAsync(url + "/healthz");
+				if (response.IsSuccessStatusCode)
+				{
+					return (true, url);
+				}
+			}
+			catch
+			{
+				// Ignore exceptions, as they likely mean that no instance is running.
+			}
+		}
+		return (false, default);
+	}
+
+	protected Program() { }
 }
-
-app.UseRouting();
-
-app.UseAuthorization();
-
-app.UseHttpLogging();
-
-app.MapStaticAssets();
-
-app.MapControllerRoute(
-		name: "default",
-		pattern: "{controller=Home}/{action=Index}/{id?}")
-		.WithStaticAssets();
-
-app.MapHealthChecks("/healthz");
-
-
-
-// -- Run the application. ----------------------------------------------------
-
-using (var scope = app.Services.CreateScope())
-{
-	var serviceProvider = scope.ServiceProvider;
-	var dbInitializer = serviceProvider.GetRequiredService<BookLoansDbInitializer>();
-	await dbInitializer.Init(CancellationToken.None);
-}
-
-await app.RunAsync();
