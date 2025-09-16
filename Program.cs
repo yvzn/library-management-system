@@ -43,6 +43,7 @@ builder.Services.AddHealthChecks()
 builder.Services.AddHostedService<LaunchBrowserOnStartup>();
 builder.Services.AddHostedService<StartupBanner>();
 
+var urls = builder.Configuration.GetSection("urls").Get<string>();
 var app = builder.Build();
 
 
