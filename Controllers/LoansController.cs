@@ -8,7 +8,7 @@ namespace library_management_system.Controllers;
 
 public class LoansController(BookLoansContext dbContext, IOptions<Features> features) : Controller
 {
-	public async Task<IActionResult> Index()
+	public async Task<IActionResult> Index(string? previous)
 	{
 		var loans = await dbContext.Loans
 			.Include(l => l.LoanBooks)
@@ -18,10 +18,12 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 			.AsNoTracking()
 			.ToListAsync(HttpContext.RequestAborted);
 
+		ViewData["PreviousAction"] = previous;
+
 		return View(loans);
 	}
 
-	public async Task<IActionResult> Details(int id)
+	public async Task<IActionResult> Details(int id, string? previous)
 	{
 		var loan = await dbContext.Loans
 			.Include(l => l.LoanBooks)
@@ -38,6 +40,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		}
 
 		ViewData["IsNewLoan"] = (loan.LoanDate.Date >= DateTime.Now.Date).ToString().ToLowerInvariant();
+		ViewData["PreviousAction"] = previous;
 
 		return View(loan);
 	}
@@ -77,7 +80,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		var newlyCreatedLoan = dbContext.Loans.Add(loan);
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
-		return RedirectToAction("Details", "Loans", new { id = newlyCreatedLoan.Entity.ID });
+		return RedirectToAction(nameof(Details), new { id = newlyCreatedLoan.Entity.ID });
 	}
 
 	public async Task<IActionResult> Update(Loan loan)
@@ -96,7 +99,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
-		return RedirectToAction("Details", new { id = existingLoan.ID });
+		return RedirectToAction(nameof(Details), new { id = existingLoan.ID, previous = nameof(Update) });
 	}
 
 	public async Task<IActionResult> AddBook(
@@ -109,7 +112,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 
 		if (loan.LoanBooks.Any(lb => lb.BookID == bookId))
 		{
-			return RedirectToAction("Details", new { id = loanId });
+			return RedirectToAction(nameof(Details), new { id = loanId });
 		}
 
 		loan.LoanBooks.Add(new LoanBook
@@ -119,7 +122,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		});
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
-		return RedirectToAction("Details", new { id = loanId });
+		return RedirectToAction(nameof(Details), new { id = loanId });
 	}
 
 	public async Task<IActionResult> AddMovie(
@@ -132,7 +135,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 
 		if (loan.LoanMovies.Any(lm => lm.MovieID == movieId))
 		{
-			return RedirectToAction("Details", new { id = loanId });
+			return RedirectToAction(nameof(Details), new { id = loanId });
 		}
 
 		loan.LoanMovies.Add(new LoanMovie
@@ -142,7 +145,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		});
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
-		return RedirectToAction("Details", new { id = loanId });
+		return RedirectToAction(nameof(Details), new { id = loanId });
 	}
 
 	public async Task<IActionResult> Return(int loanId)
@@ -153,7 +156,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		loan.ReturnDate = DateTime.Now;
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
-		return RedirectToAction("Details", new { id = loanId });
+		return RedirectToAction(nameof(Details), new { id = loanId, previous = nameof(Return) });
 	}
 
 	public async Task<IActionResult> ConfirmDelete(int id)
@@ -191,7 +194,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		dbContext.Loans.Remove(loan);
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
-		return RedirectToAction("Index");
+		return RedirectToAction(nameof(Index), new { previous = nameof(Delete) });
 	}
 
 	public async Task<IActionResult> ChooseLoanItems(int loanId)
@@ -237,6 +240,6 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
 		// Redirect back to the loan details page
-		return RedirectToAction("Details", new { id = model.LoanId });
+		return RedirectToAction(nameof(Details), new { id = model.LoanId, previous = nameof(DeleteItems) });
 	}
 }

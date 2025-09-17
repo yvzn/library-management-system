@@ -50,7 +50,6 @@
 				<li><a class="dropdown-item" asp-controller="Loans" asp-action="Edit" asp-route-loanId="@Model.ID"><i
 							class="bi bi-calendar-week me-2"></i> @Localizer["Edit Dates"]</a></li>
 
-				<!-- link remove items from loan -->
 				<li><a class="dropdown-item text-danger" asp-controller="Loans" asp-action="ChooseLoanItems" asp-route-loanId="@Model.ID"><i
 							class="bi bi-journal-minus me-2"></i> @Localizer["Remove Items from Loan"]</a></li>
 
@@ -61,6 +60,25 @@
 		</div>
 	</div>
 </div>
+
+@switch (ViewData["PreviousAction"])
+{
+    case "Update":
+        <div class="p-2 mb-5 border rounded-3 border-success bg-success-subtle">
+            @Localizer["Loan updated"]
+        </div>
+        break;
+    case "Return":
+        <div class="p-2 mb-5 border rounded-3 border-success bg-success-subtle">
+            @Localizer["Loan marked as returned"]
+        </div>
+        break;
+    case "DeleteItems":
+        <div class="p-2 mb-5 border rounded-3 border-danger bg-danger-subtle">
+            @Localizer["Items removed from loan"]
+        </div>
+        break;
+}
 
 <div class="row mb-5">
 	<div class="col-12 col-md-8">

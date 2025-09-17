@@ -1,11 +1,10 @@
 # Libre Library - Open Source Integrated Library System (ILS)
 
-_Libr(e)ary_ is a simple library management system (LMS) built with ASP.NET Core MVC and Entity Framework. It allows users to manage book loans, including adding new loans, viewing loan details, and marking loans as returned.
+_Libr(e)ary_ is a simple library management system (LMS) built with ASP.NET Core MVC and Entity Framework. It allows to manage book loans, including adding new loans, viewing loan details, and marking loans as returned.
 
-It can be used:
+As a library manager, _Libr(e)ary_ can be used to manage book loans and inventory.
 
-- as a library manager, to manage book loans and inventory
-- as a library patron, to manage their active loans and returns
+As a library patron, _Libr(e)ary_ can be used to track their current loans and return dates.
 
 ## Installation instructions
 
@@ -84,8 +83,8 @@ dotnet publish library-management-system.csproj --configuration Release -r win-x
 
 ## TODO
 
-- Detect HTTP Port already in use : reopening the app
-- Add feedback: deleted loan
+Feature requests welcomed ! Please [Open an Issue on Github](https://github.com/yvzn/library-management-system/issues).
+
 - Add CDs (https://musicbrainz.org/ws/2/release/?query=artist:queen%20AND%20recording:queen)
 - Use Open Library instead of Google Books (https://openlibrary.org/search.json?author=tolkien&sort=new)
 
