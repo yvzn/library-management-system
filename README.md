@@ -85,7 +85,7 @@ dotnet publish library-management-system.csproj --configuration Release -r win-x
 
 Feature requests welcomed ! Please [Open an Issue on Github](https://github.com/yvzn/library-management-system/issues).
 
-- Add CDs (https://musicbrainz.org/ws/2/release/?query=artist:queen%20AND%20recording:queen)
+- Add CDs (https://musicbrainz.org/ws/2/release/?query=artist:queen%20AND%20recording:queen%20AND%20barcode:602547024534%20AND%20format:cd)
 - Use Open Library instead of Google Books (https://openlibrary.org/search.json?author=tolkien&sort=new)
 
 ## EntityFramework migrations

@@ -12,7 +12,7 @@ public class BookLoansDbInitializer(BookLoansContext context)
 		await context.Database.MigrateAsync(cancellationToken);
 		await context.Database.EnsureCreatedAsync(cancellationToken);
 
-		if (await context.Loans.AnyAsync())
+		if (await context.Loans.AnyAsync(cancellationToken))
 		{
 			return;
 		}

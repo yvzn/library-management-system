@@ -11,6 +11,8 @@ public class BookLoansContext(DbContextOptions options) : DbContext(options)
 	public DbSet<Book> Books { get; set; }
 	public DbSet<Movie> Movies { get; set; }
 	public DbSet<LoanMovie> LoanMovies { get; set; }
+	public DbSet<MusicDisc> MusicDiscs { get; set; }
+	public DbSet<LoanMusicDisc> LoanMusicDiscs { get; set; }
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
@@ -28,6 +30,12 @@ public class BookLoansContext(DbContextOptions options) : DbContext(options)
 
 		modelBuilder.Entity<LoanMovie>()
 			.ToTable(nameof(LoanMovie));
+
+		modelBuilder.Entity<MusicDisc>()
+			.ToTable(nameof(MusicDisc));
+
+		modelBuilder.Entity<LoanMusicDisc>()
+			.ToTable(nameof(LoanMusicDisc));
 	}
 
 	public static string DbPath

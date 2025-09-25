@@ -44,6 +44,8 @@ public class Loan
 	public ICollection<LoanBook> LoanBooks { get; set; } = [];
 
 	public ICollection<LoanMovie> LoanMovies { get; set; } = [];
+
+	public ICollection<LoanMusicDisc> LoanMusicDiscs { get; set; } = [];
 }
 
 public class LoanBook
@@ -95,4 +97,35 @@ public class LoanMovie
 	public int MovieID { get; set; }
 
 	public Movie? Movie { get; set; }
+}
+
+public class MusicDisc
+{
+	public int ID { get; set; }
+
+	[Required]
+	[Display(Name = "Title")]
+	public string? Title { get; set; }
+
+	[Required]
+	[Display(Name = "Artist")]
+	public string? Artist { get; set; }
+
+	[Display(Name = "Version")]
+	public string? Version { get; set; }
+
+	[Display(Name = "EAN")]
+	public string? EAN { get; set; }
+}
+
+public class LoanMusicDisc
+{
+	public int ID { get; set; }
+
+	[Required]
+	public int LoanID { get; set; }
+
+	public int MusicDiscID { get; set; }
+
+	public MusicDisc? MusicDisc { get; set; }
 }
