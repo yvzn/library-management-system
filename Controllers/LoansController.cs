@@ -13,6 +13,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		var loans = await dbContext.Loans
 			.Include(l => l.LoanBooks)
 			.Include(l => l.LoanMovies)
+			.Include(l => l.LoanMusicDiscs)
 			.OrderByDescending(l => l.LoanDate)
 			.AsSplitQuery()
 			.AsNoTracking()
@@ -30,6 +31,8 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 				.ThenInclude(lb => lb.Book)
 			.Include(l => l.LoanMovies)
 				.ThenInclude(lm => lm.Movie)
+			.Include(l => l.LoanMusicDiscs)
+				.ThenInclude(lmd => lmd.MusicDisc)
 			.AsSingleQuery()
 			.AsNoTracking()
 			.FirstOrDefaultAsync(l => l.ID == id, HttpContext.RequestAborted);
@@ -148,6 +151,29 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		return RedirectToAction(nameof(Details), new { id = loanId });
 	}
 
+	public async Task<IActionResult> AddMusicDisc(
+		int loanId,
+		int musicDiscId)
+	{
+		var loan = await dbContext.Loans
+			.Include(l => l.LoanMusicDiscs)
+			.SingleAsync(l => l.ID == loanId, HttpContext.RequestAborted);
+
+		if (loan.LoanMusicDiscs.Any(lmd => lmd.MusicDiscID == musicDiscId))
+		{
+			return RedirectToAction(nameof(Details), new { id = loanId });
+		}
+
+		loan.LoanMusicDiscs.Add(new LoanMusicDisc
+		{
+			LoanID = loan.ID,
+			MusicDiscID = musicDiscId
+		});
+		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
+
+		return RedirectToAction(nameof(Details), new { id = loanId });
+	}
+
 	public async Task<IActionResult> Return(int loanId)
 	{
 		var loan = await dbContext.Loans
@@ -188,6 +214,12 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 
 		dbContext.LoanMovies.RemoveRange(loanMovies);
 
+		var loanMusicDiscs = await dbContext.LoanMusicDiscs
+			.Where(lmd => lmd.LoanID == id)
+			.ToListAsync(HttpContext.RequestAborted);
+
+		dbContext.LoanMusicDiscs.RemoveRange(loanMusicDiscs);
+
 		var loan = await dbContext.Loans
 			.SingleAsync(l => l.ID == id, HttpContext.RequestAborted);
 
@@ -204,6 +236,8 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 				.ThenInclude(lb => lb.Book)
 			.Include(l => l.LoanMovies)
 				.ThenInclude(lm => lm.Movie)
+			.Include(l => l.LoanMusicDiscs)
+				.ThenInclude(lmd => lmd.MusicDisc)
 			.AsSingleQuery()
 			.AsNoTracking()
 			.FirstOrDefaultAsync(l => l.ID == loanId, HttpContext.RequestAborted);
@@ -235,6 +269,15 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 				.ToListAsync(HttpContext.RequestAborted);
 
 			dbContext.LoanMovies.RemoveRange(loanMoviesToDelete);
+		}
+
+		if (model.LoanMusicDiscIds?.Length > 0)
+		{
+			var loanMusicDiscsToDelete = await dbContext.LoanMusicDiscs
+				.Where(lmd => model.LoanMusicDiscIds.Contains(lmd.ID))
+				.ToListAsync(HttpContext.RequestAborted);
+
+			dbContext.LoanMusicDiscs.RemoveRange(loanMusicDiscsToDelete);
 		}
 
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);

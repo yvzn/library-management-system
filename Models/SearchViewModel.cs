@@ -1,5 +1,3 @@
-
-
 using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.Localization;
 
@@ -59,4 +57,6 @@ public record SearchResultsViewModel : SearchViewModel
 	public List<Book> Books { get; set; } = [];
 
 	public List<Movie> Movies { get; set; } = [];
+
+	public List<MusicDisc> MusicDiscs { get; set; } = [];
 }
