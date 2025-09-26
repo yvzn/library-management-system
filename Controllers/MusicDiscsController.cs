@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using System.Linq;
+using System.Reflection;
 
 namespace library_management_system.Controllers;
 
@@ -64,10 +66,68 @@ public class MusicDiscsController(
 
 	public async Task<IActionResult> SearchResultsOnline(SearchViewModel model)
 	{
-		// TODO: Implement MusicBrainz API integration
-		// This method will be implemented later
-		return PartialView("_MusicDiscSearchResultsOnlinePartial", 
-			new SearchResultsViewModel(model));
+		var cacheKey = $"SearchResultsOnline_MusicDiscs_{model.CacheKey}";
+		if (memoryCache.TryGetValue(cacheKey, out SearchResultsViewModel? cachedResults))
+		{
+			return PartialView("_MusicDiscSearchResultsOnlinePartial", cachedResults);
+		}
+
+		// build MusicBrainz query
+		var queryParts = new List<string>();
+		if (!string.IsNullOrWhiteSpace(model.Author))
+		{
+			queryParts.Add($"artist:{model.Author}");
+		}
+		if (!string.IsNullOrWhiteSpace(model.Title))
+		{
+			// use recording to match track/release title
+			queryParts.Add($"recording:{model.Title}");
+		}
+		if (!string.IsNullOrWhiteSpace(model.EAN))
+		{
+			queryParts.Add($"barcode:{model.EAN}");
+		}
+
+		if (queryParts.Count == 0)
+		{
+			// nothing to search for
+			var emptyResults = new SearchResultsViewModel(model);
+			memoryCache.Set(cacheKey, emptyResults, TimeSpan.FromMinutes(5));
+			return PartialView("_MusicDiscSearchResultsOnlinePartial", emptyResults);
+		}
+
+		queryParts.Add($"format:cd");
+
+		var uriBuilder = new UriBuilder("https://musicbrainz.org/ws/2/release/");
+		var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
+		query["query"] = string.Join(" AND ", queryParts);
+		query["fmt"] = "json";
+		uriBuilder.Query = query.ToString();
+
+		var client = httpClientFactory.CreateClient();
+		client.DefaultRequestHeaders.UserAgent.ParseAdd(
+			$"LibreLibrary/{Assembly.GetExecutingAssembly().GetName().Version} (https://github.com/yvznd/library-management-system)");
+
+		var response = await client.GetFromJsonAsync<MusicBrainzApiResponse>(uriBuilder.Uri, HttpContext.RequestAborted);
+
+		var results = response?.Releases?
+			.Select(r => new MusicDisc
+			{
+				Title = r.Title,
+				Artist = string.Join(", ", r.ArtistCredit.Select(a => a.Name).Distinct()),
+				Version = r.Version,
+				EAN = string.IsNullOrEmpty(r.BarCode) ? r.Asin : r.BarCode
+			})
+			.Take(20) ?? [];
+
+		var searchResults = new SearchResultsViewModel(model)
+		{
+			MusicDiscs = [..results]
+		};
+
+		memoryCache.Set(cacheKey, searchResults, TimeSpan.FromMinutes(5));
+
+		return PartialView("_MusicDiscSearchResultsOnlinePartial", searchResults);
 	}
 
 	public IActionResult New(MusicDisc musicDisc, int? loanId)

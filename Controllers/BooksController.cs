@@ -63,7 +63,7 @@ public class BooksController(
 
 	public async Task<IActionResult> SearchResultsOnline(SearchViewModel model)
 	{
-		var cacheKey = $"SearchResultsOnline_{model.Title}_{model.Author}_{model.ISBN}";
+		var cacheKey = $"SearchResultsOnline_Books_{model.CacheKey}";
 		if (memoryCache.TryGetValue(cacheKey, out SearchResultsViewModel? cachedResults))
 		{
 			return PartialView("_BookSearchResultsOnlinePartial", cachedResults);
@@ -106,7 +106,8 @@ public class BooksController(
 				Author = string.Join(", ", volumeInfo.Authors),
 				ISBN_13 = volumeInfo.IndustryIdentifiers.FirstOrDefault(i => i.Type == "ISBN_13")?.Identifier,
 				ISBN_10 = volumeInfo.IndustryIdentifiers.FirstOrDefault(i => i.Type == "ISBN_10")?.Identifier,
-			}) ?? [];
+			})
+			.Take(20) ?? [];
 
 		var searchResults = new SearchResultsViewModel(model)
 		{

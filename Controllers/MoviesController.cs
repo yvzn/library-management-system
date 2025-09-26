@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace library_management_system.Controllers;
@@ -69,7 +70,7 @@ public class MoviesController(
 
 	public async Task<IActionResult> SearchResultsOnline(SearchViewModel model)
 	{
-		var cacheKey = $"SearchResultsOnline_{model.Title}_{model.EAN}";
+		var cacheKey = $"SearchResultsOnline_Movies_{model.CacheKey}";
 		if (memoryCache.TryGetValue(cacheKey, out SearchResultsViewModel? cachedResults))
 		{
 			return PartialView("_MovieSearchResultsOnlinePartial", cachedResults);
@@ -97,7 +98,8 @@ public class MoviesController(
 
 		uriBuilder.Query = queryString;
 		var client = httpClientFactory.CreateClient();
-		client.DefaultRequestHeaders.UserAgent.ParseAdd("LibreLibrary/1.0 (https://github.com/yvznd/library-management-system)");
+		client.DefaultRequestHeaders.UserAgent.ParseAdd(
+			$"LibreLibrary/{Assembly.GetExecutingAssembly().GetName().Version} (https://github.com/yvznd/library-management-system)");
 
 		using var response = await client.GetAsync(uriBuilder.Uri, HttpContext.RequestAborted);
 		response.EnsureSuccessStatusCode();
@@ -105,7 +107,7 @@ public class MoviesController(
 		var xmlContent = await response.Content.ReadAsStringAsync(HttpContext.RequestAborted);
 		var movies = ParseMoviesFromXml(xmlContent);
 
-		movies = [.. movies.DistinctBy(m => m.Title + m.Director + m.ReleaseYear + m.Media)];
+		movies = [.. movies.DistinctBy(m => m.Title + m.Director + m.ReleaseYear + m.Media).Take(20)];
 
 		if (!string.IsNullOrWhiteSpace(model.EAN))
 		{

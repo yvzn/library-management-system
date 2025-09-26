@@ -1,9 +1,11 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.Localization;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace library_management_system.Models;
 
-public record SearchViewModel: IValidatableObject
+public record SearchViewModel : IValidatableObject
 {
 	[Display(Name = "Title")]
 	public string? Title { get; set; }
@@ -25,11 +27,14 @@ public record SearchViewModel: IValidatableObject
 
 	public int? LoanId { get; set; }
 
+	public string CacheKey => Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes(
+		string.Join('_', SearchProperties.Where(s => !string.IsNullOrEmpty(s))))));
+
+	private string?[] SearchProperties => [Title, Author, ISBN, Director, EAN];
+
 	public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 	{
-		if (new string?[] { Title, Author, ISBN, Director, EAN }.All(string.IsNullOrEmpty)
-			&& !ReleaseYear.HasValue
-		)
+		if (SearchProperties.All(string.IsNullOrEmpty) && !ReleaseYear.HasValue)
 		{
 			var stringLocalizer = validationContext.GetService(typeof(IStringLocalizer<SearchViewModel>)) as IStringLocalizer<SearchViewModel>;
 
