@@ -86,4 +86,37 @@
 	</div>
 }
 
+@if (Model.LoanMusicDiscs.Count > 0)
+{
+	<div class="mb-3">
+		<h2 class="display-5 mb-0">@Localizer["Music Discs"]</h2>
+	</div>
+
+	<div class="table-responsive mb-5">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th></th>
+					<th scope="col">@Html.DisplayNameFor(model => model.LoanMusicDiscs.First().MusicDisc!.Title)</th>
+					<th scope="col">@Html.DisplayNameFor(model => model.LoanMusicDiscs.First().MusicDisc!.Artist)</th>
+					<th scope="col">@Html.DisplayNameFor(model => model.LoanMusicDiscs.First().MusicDisc!.Version)</th>
+					<th scope="col">@Html.DisplayNameFor(model => model.LoanMusicDiscs.First().MusicDisc!.EAN)</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var loanMusicDisc in Model.LoanMusicDiscs.OrderBy(lmd => lmd.MusicDisc!.Title))
+				{
+					<tr>
+						<td><input type="checkbox" name="LoanMusicDiscIds" value="@loanMusicDisc.ID" /></td>
+						<td>@Html.DisplayFor(model => loanMusicDisc.MusicDisc!.Title)</td>
+						<td>@Html.DisplayFor(model => loanMusicDisc.MusicDisc!.Artist)</td>
+						<td>@Html.DisplayFor(model => loanMusicDisc.MusicDisc!.Version)</td>
+						<td>@Html.DisplayFor(model => loanMusicDisc.MusicDisc!.EAN)</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}
+
 </form>

@@ -1,0 +1,69 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@model library_management_system.Models.SearchResultsViewModel
+
+<section class="mb-5">
+	<h2 class="display-5">@Localizer["New Music Discs"]</h2>
+	@if (Model.MusicDiscs.Count > 0)
+	{
+		<output class="row">
+			<table class="table">
+				<colgroup>
+					<col class="col-4">
+					</col>
+					<col class="col-3">
+					</col>
+					<col class="col-2">
+					</col>
+					<col class="col-1">
+					</col>
+					<col class="col-2">
+					</col>
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().Title)</th>
+						<th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().Artist)</th>
+						<th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().Version)</th>
+						<th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().EAN)</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var musicDisc in Model.MusicDiscs)
+					{
+						<tr>
+							<td class="align-middle">@Html.DisplayFor(model => musicDisc.Title)</td>
+							<td class="align-middle">@Html.DisplayFor(model => musicDisc.Artist)</td>
+							<td class="align-middle">@Html.DisplayFor(model => musicDisc.Version)</td>
+							<td class="align-middle">@Html.DisplayFor(model => musicDisc.EAN)</td>
+							<td class="text-md-end">
+								@if (Model.LoanId != null)
+								{
+									<form asp-controller="LoanMusicDiscs" asp-action="Create">
+										<input type="hidden" name="LoanId" value="@Model.LoanId" />
+										<input type="hidden" name="MusicDisc.Title" value="@musicDisc.Title" />
+										<input type="hidden" name="MusicDisc.Artist" value="@musicDisc.Artist" />
+										<input type="hidden" name="MusicDisc.Version" value="@musicDisc.Version" />
+										<input type="hidden" name="MusicDisc.EAN" value="@musicDisc.EAN" />
+
+										<button type="submit" class="btn btn-outline-primary text-nowrap"
+											autofocus="@(Model.MusicDiscs.Count == 1)"
+											>@Localizer["Add to Loan"]</button>
+									</form>
+								}
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</output>
+	}
+	else
+	{
+		<div>
+			@Localizer["No music discs found."]
+		</div>
+	}
+</section>
