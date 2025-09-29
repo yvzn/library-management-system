@@ -132,13 +132,10 @@
   <data name="Details" xml:space="preserve">
     <value>Détails</value>
   </data>
-  <data name="Book Count" xml:space="preserve">
-    <value>Nb. livres</value>
-  </data>
-  <data name="Movie Count" xml:space="preserve">
-    <value>Nb. films</value>
-  </data>
   <data name="Loan deleted" xml:space="preserve">
     <value>Emprunt supprimé</value>
+  </data>
+  <data name="Items" xml:space="preserve">
+    <value>Articles</value>
   </data>
 </root>
