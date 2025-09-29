@@ -51,13 +51,15 @@ internal class Program
 		var urls = builder.Configuration.GetSection("urls").Get<string>()
 			?.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
 			?? [];
+		var healthCheckTimeout = builder.Configuration.GetSection("Technical")?.GetValue<int?>("HealthCheckTimeout")
+			?? 500;
 
 		var app = builder.Build();
 
 
 
 		// -- Check if the application is already running. ----------------------------
-		var (isAlreadyRunning, url) = await IsAlreadyRunning(urls, app);
+		var (isAlreadyRunning, url) = await IsAlreadyRunning(urls, healthCheckTimeout, app);
 		if (isAlreadyRunning && url is not null)
 		{
 			Console.WriteLine("Application is already running.");
@@ -118,14 +120,14 @@ internal class Program
 		await app.RunAsync();
 	}
 
-	private static async Task<(bool, string?)> IsAlreadyRunning(string[] urls, WebApplication app)
+	private static async Task<(bool, string?)> IsAlreadyRunning(string[] urls, int timeoutInMilliseconds, WebApplication app)
 	{
 		using var scope = app.Services.CreateScope();
 		var serviceProvider = scope.ServiceProvider;
 
 		var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
 		using var httpClient = httpClientFactory.CreateClient();
-		httpClient.Timeout = TimeSpan.FromMilliseconds(100);
+		httpClient.Timeout = TimeSpan.FromMilliseconds(timeoutInMilliseconds);
 
 		foreach (var url in urls)
 		{
@@ -137,9 +139,11 @@ internal class Program
 					return (true, url);
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
-				// Ignore exceptions, as they likely mean that no instance is running.
+				serviceProvider
+					.GetRequiredService<ILogger<Program>>()
+					.LogDebug(ex, "IsAlreadyRunning could not reach {Url}", url);
 			}
 		}
 		return (false, default);
