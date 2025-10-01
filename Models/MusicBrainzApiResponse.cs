@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace library_management_system.Models;
 
 public class MusicBrainzApiResponse
@@ -8,12 +10,12 @@ public class MusicBrainzApiResponse
 public class Release
 {
 	public string? Title { get; set; }
-	public ArtistCredit[] ArtistCredit { get; set; } = [];
+	[JsonPropertyName("artist-credit")] public ArtistCredit[] ArtistCredit { get; set; } = [];
 	public string? Date { get; set; }
 	public string? Country { get; set; }
 	public string? BarCode { get; set; }
-	public LabelInfo[] LabelInfo { get; set; } = [];
-	public int TrackCount { get; set; }
+	[JsonPropertyName("label-info")] public LabelInfo[] LabelInfo { get; set; } = [];
+	[JsonPropertyName("track-count")]public int TrackCount { get; set; }
 	public Medium[] Media { get; set; } = [];
 	public string? Asin { get; set; }
 	public string? Disambiguation { get; set; }
@@ -40,6 +42,6 @@ public class Label
 public class Medium
 {
 	public string? Format { get; set; }
-	public int DiscCount { get; set; }
-	public int TrackCount { get; set; }
+	[JsonPropertyName("disc-count")] public int DiscCount { get; set; }
+	[JsonPropertyName("track-count")] public int TrackCount { get; set; }
 }
