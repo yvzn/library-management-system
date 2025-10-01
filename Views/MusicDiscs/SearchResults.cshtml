@@ -58,10 +58,10 @@
 								<td class="text-md-end">
 									@if (Model.LoanId != null)
 									{
-										<a class="btn btn-outline-primary text-nowrap" asp-controller="Loans" asp-action="AddMusicDisc"
-											asp-route-loanId="@Model.LoanId" asp-route-musicDiscId="@musicDisc.ID"
-											autofocus="@(Model.MusicDiscs.Count == 1)"
-											>@Localizer["Add to Loan"]</a>
+										<a class="btn btn-outline-primary text-nowrap" asp-controller="Loans"
+											asp-action="AddMusicDisc" asp-route-loanId="@Model.LoanId"
+											asp-route-musicDiscId="@musicDisc.ID"
+											autofocus="@(Model.MusicDiscs.Count == 1)">@Localizer["Add to Loan"]</a>
 									}
 								</td>
 							</tr>
@@ -93,7 +93,8 @@
 
 	<p>@Localizer["Music disc not listed?"]</p>
 
-	<button type="submit" class="btn btn-outline-primary text-nowrap"><i class="bi bi-disc me-2"></i> @Localizer["Add New Music Disc"]</button>
+	<button type="submit" class="btn btn-outline-primary text-nowrap"><i class="bi bi-disc me-2" aria-hidden="true"></i>
+		@Localizer["Add New Music Disc"]</button>
 </form>
 
 @section Scripts {

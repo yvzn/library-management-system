@@ -1,4 +1,3 @@
-
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
 
@@ -54,7 +53,8 @@
 						@foreach (var movie in Model.Movies.OrderBy(m => m.Title))
 						{
 							<tr>
-								<td class="align-middle">@("fr".Equals(ViewData["lang"]) ? movie.TitleFr ?? movie.Title : movie.Title)</td>
+								<td class="align-middle">@("fr".Equals(ViewData["lang"]) ? movie.TitleFr ?? movie.Title :
+																movie.Title)</td>
 								<td class="align-middle">@Html.DisplayFor(model => movie.Director)</td>
 								<td class="align-middle">@Html.DisplayFor(model => movie.ReleaseYear)</td>
 								<td class="align-middle">@Html.DisplayFor(model => movie.Media)</td>
@@ -63,8 +63,7 @@
 									{
 										<a class="btn btn-outline-primary text-nowrap" asp-controller="Loans" asp-action="AddMovie"
 											asp-route-loanId="@Model.LoanId" asp-route-movieId="@movie.ID"
-											autofocus="@(Model.Movies.Count == 1)"
-											>@Localizer["Add to Loan"]</a>
+											autofocus="@(Model.Movies.Count == 1)">@Localizer["Add to Loan"]</a>
 									}
 								</td>
 							</tr>
@@ -97,8 +96,8 @@
 
 	<p>@Localizer["Movie not listed?"]</p>
 
-	<button type="submit" class="btn btn-outline-primary text-nowrap"><i
-				class="bi bi-book me-2"></i> @Localizer["Add New Movie"]</button>
+	<button type="submit" class="btn btn-outline-primary text-nowrap"><i class="bi bi-book me-2" aria-hidden="true"></i>
+		@Localizer["Add New Movie"]</button>
 </form>
 
 @section Scripts {

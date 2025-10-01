@@ -16,45 +16,45 @@
 		{
 			<a class="btn @("true".Equals(ViewData["IsNewLoan"]) ? "btn-outline-primary" : "btn-primary") mb-2 ms-2"
 				asp-controller="Loans" asp-action="Return" asp-route-loanId="@Model.ID"><i
-					class="bi bi-calendar-check me-2"></i> @Localizer["Mark as returned"]</a>
+					class="bi bi-calendar-check me-2" aria-hidden="true"></i> @Localizer["Mark as returned"]</a>
 		}
 
 		<a class="d-none d-lg-inline-block btn @("true".Equals(ViewData["IsNewLoan"]) ? "btn-primary" : "btn-outline-primary") mb-2 ms-2"
-			asp-controller="Books" asp-action="Search" asp-route-loanId="@Model.ID"><i class="bi bi-book me-2"></i>
+			asp-controller="Books" asp-action="Search" asp-route-loanId="@Model.ID"><i class="bi bi-book me-2" aria-hidden="true"></i>
 			@Localizer["Add Book"]</a>
 
 		<div class="dropdown d-inline-block align-top mb-2 ms-2" role="menu">
 			<button
 				class="btn @("true".Equals(ViewData["IsNewLoan"]) ? "btn-primary" : "btn-outline-primary") dropdown-toggle"
 				type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="@Localizer["Add Item"]">
-				<i class="bi bi-cart-plus" data-bs-toggle="tooltip" data-bs-offset="0,10" data-bs-title="@Localizer["Add Item"]"></i>
+				<i class="bi bi-cart-plus" aria-hidden="true" data-bs-toggle="tooltip" data-bs-offset="0,10" data-bs-title="@Localizer["Add Item"]"></i>
 			</button>
 			<ul class="dropdown-menu">
 				<li class="d-lg-none"><a class="dropdown-item" asp-controller="Books" asp-action="Search" asp-route-loanId="@Model.ID"><i
-							class="bi bi-book me-2"></i> @Localizer["Add Book"]</a></li>
+							class="bi bi-book me-2" aria-hidden="true"></i> @Localizer["Add Book"]</a></li>
 
 				<li><a class="dropdown-item" asp-controller="Movies" asp-action="Search" asp-route-loanId="@Model.ID"><i
-							class="bi bi-film me-2"></i> @Localizer["Add Movie"]</a></li>
+							class="bi bi-film me-2" aria-hidden="true"></i> @Localizer["Add Movie"]</a></li>
 
 				<li><a class="dropdown-item" asp-controller="MusicDiscs" asp-action="Search" asp-route-loanId="@Model.ID"><i
-							class="bi bi-disc me-2"></i> @Localizer["Add Music Disc"]</a></li>
+							class="bi bi-disc me-2" aria-hidden="true"></i> @Localizer["Add Music Disc"]</a></li>
 			</ul>
 		</div>
 
 		<div class="dropdown d-inline-block align-top mb-2 ms-2" role="menu">
 			<button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
 				aria-expanded="false" aria-label="@Localizer["More Operations"]">
-				<i class="bi bi-three-dots" data-bs-toggle="tooltip" data-bs-offset="0,10" data-bs-title="@Localizer["More Operations"]"></i>
+				<i class="bi bi-three-dots" aria-hidden="true" data-bs-toggle="tooltip" data-bs-offset="0,10" data-bs-title="@Localizer["More Operations"]"></i>
 			</button>
 			<ul class="dropdown-menu">
 				<li><a class="dropdown-item" asp-controller="Loans" asp-action="Edit" asp-route-loanId="@Model.ID"><i
-							class="bi bi-calendar-week me-2"></i> @Localizer["Edit Dates"]</a></li>
+							class="bi bi-calendar-week me-2" aria-hidden="true"></i> @Localizer["Edit Dates"]</a></li>
 
 				<li><a class="dropdown-item text-danger" asp-controller="Loans" asp-action="ChooseLoanItems" asp-route-loanId="@Model.ID"><i
-							class="bi bi-journal-minus me-2"></i> @Localizer["Remove Items from Loan"]</a></li>
+							class="bi bi-journal-minus me-2" aria-hidden="true"></i> @Localizer["Remove Items from Loan"]</a></li>
 
 				<li><button type="submit" class="dropdown-item text-danger" form="delete-loan-form"><i
-							class="bi bi-trash me-2"></i> @Localizer["Delete Loan"]</button>
+							class="bi bi-trash me-2" aria-hidden="true"></i> @Localizer["Delete Loan"]</button>
 				</li>
 			</ul>
 		</div>
@@ -65,19 +65,19 @@
 {
     case "Update":
         <div class="p-2 mb-5 border rounded-3 border-success bg-success-subtle">
-			<i class="bi bi-check-circle"></i>
+			<i class="bi bi-check-circle" aria-hidden="true"></i>
             @Localizer["Loan updated"]
         </div>
         break;
     case "Return":
         <div class="p-2 mb-5 border rounded-3 border-success bg-success-subtle">
-			<i class="bi bi-check-circle"></i>
+			<i class="bi bi-check-circle" aria-hidden="true"></i>
             @Localizer["Loan marked as returned"]
         </div>
         break;
     case "DeleteItems":
         <div class="p-2 mb-5 border rounded-3 border-info bg-info-subtle">
-			<i class="bi bi-info-circle"></i>
+			<i class="bi bi-info-circle" aria-hidden="true"></i>
             @Localizer["Items removed from loan"]
         </div>
         break;
