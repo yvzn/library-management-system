@@ -28,8 +28,18 @@
 				</label>
 				<input asp-for="DueDate" class="form-control" type="date" required />
 			</div>
+			<div class="mb-3">
+				<p><i class="bi bi-info-circle" aria-hidden="true"></i> @Localizer["You will be able to add items to this loan on the next page..."]</p>
+			</div>
 			<button type="submit" class="btn btn-primary"><i
 				class="bi bi-calendar-plus me-2" aria-hidden="true"></i> @Localizer["Create Loan"]</button>
 		</div>
 	</div>
 </form>
+
+@section Scripts {
+	<script>
+	const defaultLoanDuration = @ViewData["DefaultLoanDuration"];
+	</script>
+	<script src="~/js/loans/edit.js" asp-append-version="true" defer></script>
+}

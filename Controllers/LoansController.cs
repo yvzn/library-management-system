@@ -56,6 +56,8 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 			DueDate = DateTime.Now.AddDays(features.Value.DefaultLoanDuration),
 		};
 
+		ViewData["DefaultLoanDuration"] = features.Value.DefaultLoanDuration;
+
 		return View(loan);
 	}
 
@@ -70,6 +72,8 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 			return NotFound();
 		}
 
+		ViewData["DefaultLoanDuration"] = features.Value.DefaultLoanDuration;
+
 		return View(loan);
 	}
 
@@ -83,7 +87,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		var newlyCreatedLoan = dbContext.Loans.Add(loan);
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
-		return RedirectToAction(nameof(Details), new { id = newlyCreatedLoan.Entity.ID });
+		return RedirectToAction(nameof(Details), new { id = newlyCreatedLoan.Entity.ID, previous = nameof(Create) });
 	}
 
 	public async Task<IActionResult> Update(Loan loan)

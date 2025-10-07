@@ -34,7 +34,14 @@
 					<label asp-for="ReturnDate" class="form-label">
 						@Html.DisplayNameFor(model => model.ReturnDate)
 					</label>
-					<input asp-for="ReturnDate" class="form-control" type="date" />
+					<div class="input-group">
+						<input asp-for="ReturnDate" class="form-control" type="date" />
+						<button class="btn btn-outline-secondary" type="button" id="ClearReturnDate"
+							data-bs-toggle="tooltip" data-bs-offset="0,10" data-bs-title="@Localizer["Clear"]"
+							aria-label="@Localizer["Clear"]">
+							<i class="bi bi-x-circle" aria-hidden="true"></i>
+						</button>
+					</div>
 				</div>
 			}
 			<button type="submit" class="btn btn-primary"><i class="bi bi-calendar-week me-2" aria-hidden="true"></i>
@@ -42,3 +49,16 @@
 		</div>
 	</div>
 </form>
+
+@section Scripts {
+	<script>
+		const defaultLoanDuration = @ViewData["DefaultLoanDuration"];
+
+		// https://getbootstrap.com/docs/5.3/components/tooltips/#enable-tooltips
+		document.addEventListener("DOMContentLoaded", function () {
+			const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+			const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+		});
+	</script>
+	<script src="~/js/loans/edit.js" asp-append-version="true" defer></script>
+}
