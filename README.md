@@ -27,9 +27,16 @@ Repeat the installation instructions above to download the latest version of the
 Requirements:
 - .NET SDK 9.0 or later
 
-To run the project, navigate to the project directory and use the following command:
+To run the project, navigate to the project directory and use the following commands:
 
 ```pwsh
+# restore tooling
+dotnet tool restore
+
+# restore front-end dependencies
+dotnet libman restore
+
+# run the project in watch mode
 dotnet watch run --launch-profile http --project library-management-system.csproj
 ```
 
@@ -85,7 +92,11 @@ dotnet publish library-management-system.csproj --configuration Release -r win-x
 
 Feature requests welcomed ! Please [Open an Issue on Github](https://github.com/yvzn/library-management-system/issues).
 
-- Package front-end dependencies with [LibMan](https://learn.microsoft.com/en-us/aspnet/core/client-side/libman/?view=aspnetcore-9.0)
+- Display music disc count on home page
+- Display number of items in each category on loan details page
+- Feedbacks
+- Undo
+
 - Use Open Library instead of Google Books (https://openlibrary.org/search.json?author=tolkien&sort=new)
 
 ## EntityFramework migrations
