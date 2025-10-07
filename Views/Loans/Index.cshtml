@@ -54,18 +54,24 @@ else
 						<td>
 							@if (loan.LoanBooks.Count > 0)
 							{
-								<i class="bi bi-book" aria-label="Books"></i>
-								@Html.DisplayFor(model => loan.LoanBooks.Count)
+								<span title="@Localizer["Books"]">
+									<i class="bi bi-book" aria-hidden="true"></i>
+									@Html.DisplayFor(model => loan.LoanBooks.Count)
+								</span>
 							}
 							@if (loan.LoanMovies.Count > 0)
 							{
-								<i class="bi bi-film" aria-label="Movies"></i>
-								@Html.DisplayFor(model => loan.LoanMovies.Count)
+								<span title="@Localizer["Movies"]">
+									<i class="bi bi-film" aria-hidden="true"></i>
+									@Html.DisplayFor(model => loan.LoanMovies.Count)
+								</span>
 							}
 							@if (loan.LoanMusicDiscs.Count > 0)
 							{
-								<i class="bi bi-disc" aria-label="Music Discs"></i>
-								@Html.DisplayFor(model => loan.LoanMusicDiscs.Count)
+								<span title="@Localizer["Music Discs"]">
+									<i class="bi bi-disc" aria-hidden="true"></i>
+									@Html.DisplayFor(model => loan.LoanMusicDiscs.Count)
+								</span>
 							}
 						</td>
 						<td class="text-md-end">

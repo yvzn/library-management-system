@@ -92,7 +92,6 @@ dotnet publish library-management-system.csproj --configuration Release -r win-x
 
 Feature requests welcomed ! Please [Open an Issue on Github](https://github.com/yvzn/library-management-system/issues).
 
-- Display music disc count on home page
 - Display number of items in each category on loan details page
 - Feedbacks
 - Undo

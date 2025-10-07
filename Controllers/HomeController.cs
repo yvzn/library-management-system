@@ -14,6 +14,7 @@ public class HomeController(BookLoansContext dbContext) : Controller
 			.Where(loan => loan.ReturnDate == null)
 			.Include(loan => loan.LoanBooks)
 			.Include(loan => loan.LoanMovies)
+			.Include(loan => loan.LoanMusicDiscs)
 			.OrderByDescending(loan => loan.DueDate)
 			.Take(5)
 			.AsSplitQuery()
