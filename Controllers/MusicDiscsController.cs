@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using System.Linq;
 using System.Reflection;
 
 namespace library_management_system.Controllers;
@@ -39,17 +38,17 @@ public class MusicDiscsController(
 		var musicDiscs = dbContext.MusicDiscs.AsQueryable();
 		if (!string.IsNullOrEmpty(model.Title))
 		{
-			musicDiscs = musicDiscs.Where(m => 
+			musicDiscs = musicDiscs.Where(m =>
 				m.Title != null && m.Title.ToLower().Contains(model.Title.ToLower()));
 		}
 		if (!string.IsNullOrEmpty(model.Author))
 		{
-			musicDiscs = musicDiscs.Where(m => 
+			musicDiscs = musicDiscs.Where(m =>
 				m.Artist != null && m.Artist.ToLower().Contains(model.Author.ToLower()));
 		}
 		if (!string.IsNullOrEmpty(model.EAN))
 		{
-			musicDiscs = musicDiscs.Where(m => 
+			musicDiscs = musicDiscs.Where(m =>
 				m.EAN != null && m.EAN.Equals(model.EAN));
 		}
 
@@ -106,7 +105,7 @@ public class MusicDiscsController(
 
 		var client = httpClientFactory.CreateClient();
 		client.DefaultRequestHeaders.UserAgent.ParseAdd(
-			$"LibreLibrary/{Assembly.GetExecutingAssembly().GetName().Version} (https://github.com/yvznd/library-management-system)");
+			$"LibreLibrary/{Assembly.GetExecutingAssembly().GetName().Version} (https://github.com/yvzn/library-management-system)");
 
 		var response = await client.GetFromJsonAsync<MusicBrainzApiResponse>(uriBuilder.Uri, HttpContext.RequestAborted);
 

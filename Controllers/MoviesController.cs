@@ -99,7 +99,7 @@ public class MoviesController(
 		uriBuilder.Query = queryString;
 		var client = httpClientFactory.CreateClient();
 		client.DefaultRequestHeaders.UserAgent.ParseAdd(
-			$"LibreLibrary/{Assembly.GetExecutingAssembly().GetName().Version} (https://github.com/yvznd/library-management-system)");
+			$"LibreLibrary/{Assembly.GetExecutingAssembly().GetName().Version} (https://github.com/yvzn/library-management-system)");
 
 		using var response = await client.GetAsync(uriBuilder.Uri, HttpContext.RequestAborted);
 		response.EnsureSuccessStatusCode();

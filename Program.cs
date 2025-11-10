@@ -48,6 +48,8 @@ internal class Program
 		builder.Services.AddHostedService<LaunchBrowserOnStartup>();
 		builder.Services.AddHostedService<StartupBanner>();
 
+		builder.Services.AddScoped<IOpenLibraryService, OpenLibraryService>();
+
 		var urls = builder.Configuration.GetSection("urls").Get<string>()
 			?.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
 			?? [];

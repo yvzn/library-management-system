@@ -1,16 +1,18 @@
 using library_management_system.Infrastructure;
 using library_management_system.Models;
+using library_management_system.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 
 namespace library_management_system.Controllers;
 
 public class BooksController(
 	BookLoansContext dbContext,
 	IMemoryCache memoryCache,
-	IHttpClientFactory httpClientFactory,
-	IConfiguration configuration) : Controller
+	IOptions<Features> features,
+	IOpenLibraryService openLibraryService) : Controller
 {
 	public IActionResult Search(int? loanId)
 	{
@@ -51,8 +53,7 @@ public class BooksController(
 
 		var result = await books.AsNoTracking().ToListAsync(HttpContext.RequestAborted);
 
-		var apiKey = configuration.GetConnectionString("BookSearchApiKey");
-		ViewData["OnlineSearchEnabled"] = (!string.IsNullOrEmpty(apiKey)).ToString().ToLowerInvariant();
+		ViewData["OnlineSearchEnabled"] = features.Value.OnlineBookSearch.ToString().ToLowerInvariant();
 
 		return View(
 			new SearchResultsViewModel(model)
@@ -69,49 +70,17 @@ public class BooksController(
 			return PartialView("_BookSearchResultsOnlinePartial", cachedResults);
 		}
 
-		var apiKey = configuration.GetConnectionString("BookSearchApiKey");
-		var uriBuilder = new UriBuilder("https://www.googleapis.com/books/v1/volumes");
+		// Prepare search parameters
+		var title = model.Title?.Trim();
+		var author = model.Author?.Trim();
+		var isbn = model.ISBN?.Trim().Replace("-", "");
 
-		var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
-		query[nameof(apiKey)] = apiKey;
-
-		var q = new List<string>();
-		if (!string.IsNullOrWhiteSpace(model.Author))
-		{
-			q.Add($"inauthor:{model.Author}");
-		}
-		if (!string.IsNullOrWhiteSpace(model.Title))
-		{
-			q.Add($"intitle:{model.Title}");
-		}
-		if (!string.IsNullOrWhiteSpace(model.ISBN))
-		{
-			q.Add($"isbn:{model.ISBN}");
-		}
-		if (q.Count > 0)
-		{
-			query[nameof(q)] = string.Join("+", q);
-		}
-
-		uriBuilder.Query = query.ToString();
-		var client = httpClientFactory.CreateClient();
-
-		var response = await client.GetFromJsonAsync<GoogleBooksApiResponse>(uriBuilder.Uri, HttpContext.RequestAborted);
-
-		var result = response?.Items
-			.Select(item => item.VolumeInfo)
-			.Select(volumeInfo => new Book
-			{
-				Title = volumeInfo.Title,
-				Author = string.Join(", ", volumeInfo.Authors),
-				ISBN_13 = volumeInfo.IndustryIdentifiers.FirstOrDefault(i => i.Type == "ISBN_13")?.Identifier,
-				ISBN_10 = volumeInfo.IndustryIdentifiers.FirstOrDefault(i => i.Type == "ISBN_10")?.Identifier,
-			})
-			.Take(20) ?? [];
+		// Use OpenLibrary service to search for books
+		var books = await openLibraryService.SearchBooksAsync(title, author, isbn, HttpContext.RequestAborted);
 
 		var searchResults = new SearchResultsViewModel(model)
 		{
-			Books = [.. result]
+			Books = books
 		};
 
 		memoryCache.Set(cacheKey, searchResults, TimeSpan.FromMinutes(5));
