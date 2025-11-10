@@ -64,7 +64,9 @@ internal class Program
 		{
 			Console.WriteLine("Application is already running.");
 			Console.WriteLine();
-			Console.WriteLine($"Open your browser and visit: {url}.");
+			Console.WriteLine($"Open your internet browser and go to: {url}.");
+			Console.WriteLine();
+			Console.WriteLine($"Ouvrez votre navigateur internet et allez sur : {url}.");
 
 			var browser = LaunchBrowserOnStartup.GetBrowserForCurrentOs(url);
 			if (browser is null)

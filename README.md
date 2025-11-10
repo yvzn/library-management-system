@@ -92,11 +92,11 @@ dotnet publish library-management-system.csproj --configuration Release -r win-x
 
 Feature requests welcomed ! Please [Open an Issue on Github](https://github.com/yvzn/library-management-system/issues).
 
-- Feedbacks
-- Batch add items (enter key)
-- Undo
-
-- Use Open Library instead of Google Books (https://openlibrary.org/search.json?author=tolkien&sort=new)
+- Repeat search parameters + edit search button
+- Feedback after adding a book/movie/disc
+- Use Open Library instead of Google Books
+	- https://openlibrary.org/search.json?author=tolkien&sort=new
+	- https://openlibrary.org/isbn/9780140328721.json
 
 ## EntityFramework migrations
 

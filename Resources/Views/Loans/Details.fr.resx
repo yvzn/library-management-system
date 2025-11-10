@@ -177,4 +177,7 @@
   <data name="New loan created. You can add items to this loan using the above buttons." xml:space="preserve">
     <value>Nouvel emprunt créé. Vous pouvez ajouter des articles en utilisant les boutons ci-dessus.</value>
   </data>
+  <data name="Undo" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
 </root>

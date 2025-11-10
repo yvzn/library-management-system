@@ -21,7 +21,7 @@
 
 		<a class="d-none d-lg-inline-block btn @("true".Equals(ViewData["IsNewLoan"]) ? "btn-primary" : "btn-outline-primary") mb-2 ms-2"
 			asp-controller="Books" asp-action="Search" asp-route-loanId="@Model.ID"><i class="bi bi-book me-2" aria-hidden="true"></i>
-			@Localizer["Add Book"]</a>
+			@Localizer["Add Book"] <kbd class="align-text-bottom text-primary-emphasis bg-secondary-subtle border border-secondary">B</kbd></a>
 
 		<div class="dropdown d-inline-block align-top mb-2 ms-2" role="menu">
 			<button
@@ -30,8 +30,8 @@
 				<i class="bi bi-cart-plus" aria-hidden="true" data-bs-toggle="tooltip" data-bs-offset="0,10" data-bs-title="@Localizer["Add Item"]"></i>
 			</button>
 			<ul class="dropdown-menu">
-				<li class="d-lg-none"><a class="dropdown-item" asp-controller="Books" asp-action="Search" asp-route-loanId="@Model.ID"><i
-							class="bi bi-book me-2" aria-hidden="true"></i> @Localizer["Add Book"]</a></li>
+				<li class="d-lg-none"><a class="dropdown-item" asp-controller="Books" asp-action="Search" asp-route-loanId="@Model.ID" accesskey="b"><i
+							class="bi bi-book me-2" aria-hidden="true"></i> @Localizer["Add Book"] <kbd class="align-text-bottom text-primary-emphasis bg-secondary-subtle border border-secondary">B</kbd></a></li>
 
 				<li><a class="dropdown-item" asp-controller="Movies" asp-action="Search" asp-route-loanId="@Model.ID"><i
 							class="bi bi-film me-2" aria-hidden="true"></i> @Localizer["Add Movie"]</a></li>
@@ -72,7 +72,8 @@
 	case "Return":
 		<div class="p-2 mb-5 border rounded-3 border-success bg-success-subtle">
 			<i class="bi bi-check-circle" aria-hidden="true"></i>
-			@Localizer["Loan marked as returned"]
+			@Localizer["Loan marked as returned"] &ndash;
+			<a asp-controller="Loans" asp-action="UndoReturn" asp-route-loanId="@Model.ID" class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">@Localizer["Undo"]</a>
 		</div>
 		break;
 	case "DeleteItems":
@@ -112,7 +113,7 @@
 <div class="mb-3">
 	<h2 class="display-5 mb-0">
 	@Localizer["Books"]
-	@(Model.LoanBooks.Count > 0 ? $"({Model.LoanBooks.Count})" : "")
+	<span class="fs-3">@(Model.LoanBooks.Count > 0 ? $"({Model.LoanBooks.Count})" : "")</span>
 	</h2>
 </div>
 
@@ -148,7 +149,7 @@ else
 <div class="mb-3">
 	<h2 class="display-5 mb-0">
 	@Localizer["Movies"]
-	@(Model.LoanMovies.Count > 0 ? $"({Model.LoanMovies.Count})" : "")
+	<span class="fs-3">@(Model.LoanMovies.Count > 0 ? $"({Model.LoanMovies.Count})" : "")</span>
 	</h2>
 </div>
 
@@ -185,7 +186,7 @@ else
 <div class="mb-3">
 	<h2 class="display-5 mb-0">
 	@Localizer["Music Discs"]
-	@(Model.LoanMusicDiscs.Count > 0 ? $"({Model.LoanMusicDiscs.Count})" : "")
+	<span class="fs-3">@(Model.LoanMusicDiscs.Count > 0 ? $"({Model.LoanMusicDiscs.Count})" : "")</span>
 	</h2>
 </div>
 

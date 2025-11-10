@@ -189,6 +189,17 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		return RedirectToAction(nameof(Details), new { id = loanId, previous = nameof(Return) });
 	}
 
+	public async Task<IActionResult> UndoReturn(int loanId)
+	{
+		var loan = await dbContext.Loans
+			.SingleAsync(l => l.ID == loanId, HttpContext.RequestAborted);
+
+		loan.ReturnDate = null;
+		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
+
+		return RedirectToAction(nameof(Details), new { id = loanId });
+	}
+
 	public async Task<IActionResult> ConfirmDelete(int id)
 	{
 		var loan = await dbContext.Loans

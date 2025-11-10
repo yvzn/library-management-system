@@ -17,7 +17,9 @@ public class StartupBanner(
 
  Libr(e)ary - Library Management System
 
- {Url}
+ {UrlPrompt}
+
+ {UrlInvite}
 
  Press <Ctrl+C> to shut down.
 ";
@@ -29,7 +31,8 @@ public class StartupBanner(
 			var url = GetServerUrl();
 
 			logger.LogInformation(Banner,
-				url is null ? "" : $"Open your browser and visit: {url}"
+				url is null ? "" : $"Open your internet browser and go to: {url}.",
+				url is null ? "" : $"Ouvrez votre navigateur internet et allez sur : {url}."
 			);
 		});
 
