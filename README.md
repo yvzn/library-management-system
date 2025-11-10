@@ -56,30 +56,6 @@ Change the database location by modifying the connection string in the `appsetti
 }
 ```
 
-### Configuration
-
-Optional: Book search is provided by the [Google Books API](https://developers.google.com/books/docs/overview). An API key is required to use the search functionality. You can obtain an API key by following the instructions in the [Google Books API documentation](https://developers.google.com/books/docs/v1/using#APIKey).
-
-Store the API key in user-secrets or environment variables:
-
-```pwsh
-# Set the API key in user-secrets
-dotnet user-secrets set "ConnectionStrings:BookSearchApiKey" "YOUR_API_KEY"
-
-# Or set the API key in environment variables
-$env:ConnectionStrings__BookSearchApiKey = "YOUR_API_KEY"
-```
-
-You can also set the API key in the `appsettings.json` file, but this is not recommended for production environments:
-
-```json
-{
-  "ConnectionStrings": {
-    "BookSearchApiKey": "YOUR_API_KEY"
-  }
-}
-```
-
 ## Publishing the project
 
 To publish the project, use the following command:
@@ -94,10 +70,8 @@ Feature requests welcomed ! Please [Open an Issue on Github](https://github.com/
 
 - Repeat search parameters + edit search button
 - Feedback after adding a book/movie/disc
-- Use Open Library instead of Google Books
-	- https://openlibrary.org/search.json?title=flammable&sort=title
-	- https://openlibrary.org/search.json?author=tolkien&sort=title
-	- https://openlibrary.org/isbn/9780140328721.json
+- SignalR
+- Optional online search, if results found in local database, do not query external APIs automatically
 
 ## EntityFramework migrations
 
@@ -150,4 +124,11 @@ Icon credits:
 - [Brackets SVG Vector](https://www.svgrepo.com/author/wishforge.games/) by [Wishforge Games](https://wishforge.games/)
 - [Book Check SVG Vector](https://www.svgrepo.com/author/Leonid%20Tsvetkov/) by [Leonid Tsvetkov](https://www.figma.com/@leonid?ref=svgrepo.com)
 
+## Third-party APIs
+
+Online book search is powered by the [Open Library API](https://openlibrary.org/developers/api).
+
+Movie search is powered by [DvdFR API](https://www.dvdfr.com/api).
+
+Music disc search is powered by [MusicBrainz API](https://musicbrainz.org/doc/MusicBrainz_API).
 

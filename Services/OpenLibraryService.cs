@@ -45,10 +45,13 @@ public class OpenLibraryService(
 				return [];
 			}
 
+			var authorNames = await ResolveAuthorNamesAsync(response.Authors, cancellationToken);
+			var authorNamesString = authorNames.Count > 0 ? string.Join(", ", authorNames) : "Unknown";
+
 			var book = new Book
 			{
 				Title = response.Title,
-				Author = "Unknown", // We'll need to resolve author keys separately
+				Author = authorNamesString,
 				ISBN_13 = response.Isbn_13.FirstOrDefault(),
 				ISBN_10 = response.Isbn_10.FirstOrDefault()
 			};
@@ -71,9 +74,37 @@ public class OpenLibraryService(
 		}
 		catch (HttpRequestException ex) when (ex.Message.Contains("404"))
 		{
-			logger.LogInformation("Book not found for ISBN: {Isbn}", isbn);
+			logger.LogInformation(ex, "Book not found for ISBN: {Isbn}", isbn);
 			return [];
 		}
+	}
+
+	private async Task<List<string>> ResolveAuthorNamesAsync(List<OpenLibraryAuthorRef> authorRefs, CancellationToken cancellationToken)
+	{
+		var authorNames = new List<string>();
+
+		foreach (var authorRef in authorRefs)
+		{
+			if (string.IsNullOrEmpty(authorRef.Key))
+				continue;
+
+			try
+			{
+				var url = $"https://openlibrary.org{authorRef.Key}.json";
+				var authorResponse = await HttpClient.GetFromJsonAsync<OpenLibraryAuthor>(url, cancellationToken);
+
+				if (authorResponse?.Name != null)
+				{
+					authorNames.Add(authorResponse.Name);
+				}
+			}
+			catch (Exception ex)
+			{
+				logger.LogWarning(ex, "Failed to resolve author key: {AuthorKey}", authorRef.Key);
+			}
+		}
+
+		return authorNames;
 	}
 
 	private async Task<List<Book>> SearchByTitleAndAuthorAsync(string? title, string? author, CancellationToken cancellationToken)

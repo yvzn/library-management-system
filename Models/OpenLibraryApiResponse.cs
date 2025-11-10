@@ -35,3 +35,12 @@ public class OpenLibraryAuthorRef
 {
 	public string? Key { get; set; }
 }
+
+// Response model for OpenLibrary Authors API (https://openlibrary.org/authors/{key}.json)
+public class OpenLibraryAuthor
+{
+	public string? Name { get; set; }
+	public string? Key { get; set; }
+	public string? Birth_date { get; set; }
+	public string? Death_date { get; set; }
+}
