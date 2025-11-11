@@ -25,6 +25,14 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
+    - name: 'Restore dotnet tools'
+      shell: bash
+      run: dotnet tool restore
+
+    - name: 'Restore libman libraries'
+      shell: bash
+      run: dotnet libman restore
+
     - name: '📦 Publish for ${{ matrix.platform }} using DotNet'
       shell: bash
       run: |
