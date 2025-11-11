@@ -13,6 +13,9 @@ env:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [win-x64, linux-x64]
     steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v4
@@ -22,14 +25,14 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: '📦 Publish for win-x64 using DotNet'
+    - name: '📦 Publish for ${{ matrix.platform }} using DotNet'
       shell: bash
       run: |
         tag_name=${{github.event.release.tag_name}}
         version=${tag_name#v}
-        dotnet publish library-management-system.csproj --configuration Release -r win-x64 /p:Version=$version --output ./$tag_name
-        zip -r library-management-system-win-x64.zip ./$tag_name
-        gh release upload $tag_name library-management-system-win-x64.zip
+        dotnet publish library-management-system.csproj --configuration Release -r ${{ matrix.platform }} /p:Version=$version --output ./$tag_name
+        zip -r library-management-system-${{ matrix.platform }}.zip ./$tag_name
+        gh release upload $tag_name library-management-system-${{ matrix.platform }}.zip
       env:
         GITHUB_TOKEN: ${{ github.TOKEN }}
 
