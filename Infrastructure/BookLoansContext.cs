@@ -44,5 +44,5 @@ public class BookLoansContext(DbContextOptions options) : DbContext(options)
 	public static string DbDirectory
 		=> Path.Join(
 			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-			Assembly.GetExecutingAssembly().GetName().Name);
+			"library-management-system");
 }

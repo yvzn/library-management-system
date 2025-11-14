@@ -1,13 +1,14 @@
 using library_management_system.Models;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace library_management_system.Infrastructure;
 
 public class BookLoansDbInitializer(BookLoansContext context)
 {
-	internal async Task Init(CancellationToken cancellationToken = default)
+	internal async Task Init(string? connectionString, CancellationToken cancellationToken = default)
 	{
-		Directory.CreateDirectory(BookLoansContext.DbDirectory);
+		Directory.CreateDirectory(GetDatabaseDirectory(connectionString));
 
 		await context.Database.MigrateAsync(cancellationToken);
 		await context.Database.EnsureCreatedAsync(cancellationToken);
@@ -53,5 +54,17 @@ public class BookLoansDbInitializer(BookLoansContext context)
 		await context.LoanBooks.AddRangeAsync(loanBooks, cancellationToken);
 
 		await context.SaveChangesAsync(cancellationToken);
+	}
+
+	private static string GetDatabaseDirectory(string? connectionString)
+	{
+		if (string.IsNullOrEmpty(connectionString))
+		{
+			return BookLoansContext.DbDirectory;
+		}
+
+		var builder = new SqliteConnectionStringBuilder(connectionString);
+		return Path.GetDirectoryName(builder.DataSource)
+			?? throw new ArgumentException("Invalid connection string, no directory specified", nameof(connectionString));
 	}
 }

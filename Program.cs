@@ -3,6 +3,7 @@ using library_management_system.Services;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace library_management_system;
 
@@ -117,8 +118,11 @@ internal class Program
 		using (var scope = app.Services.CreateScope())
 		{
 			var serviceProvider = scope.ServiceProvider;
+
 			var dbInitializer = serviceProvider.GetRequiredService<BookLoansDbInitializer>();
-			await dbInitializer.Init(CancellationToken.None);
+			var dbConnectionString = builder.Configuration.GetConnectionString("BookLoansDb");
+
+			await dbInitializer.Init(dbConnectionString, CancellationToken.None);
 		}
 
 		await app.RunAsync();
