@@ -14,11 +14,14 @@ public class BooksController(
 	IOptions<Features> features,
 	IOpenLibraryService openLibraryService) : Controller
 {
-	public IActionResult Search(int? loanId)
+	public IActionResult Search(int? loanId, string? title, string? author, string? ISBN)
 	{
 		var model = new SearchViewModel
 		{
-			LoanId = loanId
+			LoanId = loanId,
+			Title = title,
+			Author = author,
+			ISBN = ISBN,
 		};
 
 		return View(model);

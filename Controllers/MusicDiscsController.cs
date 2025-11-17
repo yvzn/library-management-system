@@ -14,11 +14,14 @@ public class MusicDiscsController(
 	IHttpClientFactory httpClientFactory,
 	IOptions<Features> features) : Controller
 {
-	public IActionResult Search(int? loanId)
+	public IActionResult Search(int? loanId, string? title, string? author, string? EAN)
 	{
 		var model = new SearchViewModel
 		{
-			LoanId = loanId
+			LoanId = loanId,
+			Title = title,
+			Author = author,
+			EAN = EAN
 		};
 
 		return View(model);

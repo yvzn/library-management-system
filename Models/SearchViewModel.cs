@@ -30,7 +30,9 @@ public record SearchViewModel : IValidatableObject
 	public string CacheKey => Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes(
 		string.Join('_', SearchProperties.Where(s => !string.IsNullOrEmpty(s))))));
 
-	private string?[] SearchProperties => [Title, Author, ISBN, Director, EAN];
+	public string Description => string.Join(", ", SearchProperties.Where(s => !string.IsNullOrEmpty(s)));
+
+	private string?[] SearchProperties => [Title, Author, ISBN, Director, ReleaseYear?.ToString(), EAN];
 
 	public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 	{

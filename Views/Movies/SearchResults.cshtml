@@ -22,68 +22,75 @@
 		</form>
 	}
 
-	@if (Model.Movies.Count > 0)
-	{
-		<section class="mb-5">
-			<h2 class="display-5">@Localizer["Known Movies"]</h2>
-			<output class="row">
-				<table class="table">
-					<colgroup>
-						<col class="col-5">
-						</col>
-						<col class="col-3">
-						</col>
-						<col class="col-1">
-						</col>
-						<col class="col-1">
-						</col>
-						<col class="col-2">
-						</col>
-					</colgroup>
-					<thead>
-						<tr>
-							<th scope="col">@Localizer["Title"]</th>
-							<th scope="col">@Html.DisplayNameFor(model => model.Movies.First().Director)</th>
-							<th scope="col">@Html.DisplayNameFor(model => model.Movies.First().ReleaseYear)</th>
-							<th scope="col">@Html.DisplayNameFor(model => model.Movies.First().Media)</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach (var movie in Model.Movies.OrderBy(m => m.Title))
-						{
-							<tr>
-								<td class="align-middle">@("fr".Equals(ViewData["lang"]) ? movie.TitleFr ?? movie.Title :
-																movie.Title)</td>
-								<td class="align-middle">@Html.DisplayFor(model => movie.Director)</td>
-								<td class="align-middle">@Html.DisplayFor(model => movie.ReleaseYear)</td>
-								<td class="align-middle">@Html.DisplayFor(model => movie.Media)</td>
-								<td class="text-md-end">
-									@if (Model.LoanId != null)
-									{
-										<a class="btn btn-outline-primary text-nowrap" asp-controller="Loans" asp-action="AddMovie"
-											asp-route-loanId="@Model.LoanId" asp-route-movieId="@movie.ID"
-											autofocus="@(Model.Movies.Count == 1)">@Localizer["Add to Loan"]</a>
-									}
-								</td>
-							</tr>
-						}
-					</tbody>
-				</table>
-			</output>
-		</section>
-	}
-
-	@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
-	{
-		<section class="mb-5" id="searchResultsOnline">
-			<h2 class="display-5">@Localizer["New Movies"]</h2>
-			<div class="spinner-border text-primary" role="status">
-				<span class="visually-hidden">@Localizer["Loading..."]</span>
-			</div>
-		</section>
-	}
+	@await Html.PartialAsync(
+	"_SearchParametersPartial",
+		Model,
+		new ViewDataDictionary(ViewData) {
+		{"Controller", "Movies"}
+		})
 </search>
+
+@if (Model.Movies.Count > 0)
+{
+	<section class="mb-5">
+		<h2 class="display-5">@Localizer["Known Movies"]</h2>
+		<div class="row" role="status">
+			<table class="table">
+				<colgroup>
+					<col class="col-5">
+					</col>
+					<col class="col-3">
+					</col>
+					<col class="col-1">
+					</col>
+					<col class="col-1">
+					</col>
+					<col class="col-2">
+					</col>
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">@Localizer["Title"]</th>
+						<th scope="col">@Html.DisplayNameFor(model => model.Movies.First().Director)</th>
+						<th scope="col">@Html.DisplayNameFor(model => model.Movies.First().ReleaseYear)</th>
+						<th scope="col">@Html.DisplayNameFor(model => model.Movies.First().Media)</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var movie in Model.Movies.OrderBy(m => m.Title))
+					{
+						<tr>
+							<td class="align-middle">@("fr".Equals(ViewData["lang"]) ? movie.TitleFr ?? movie.Title :
+														movie.Title)</td>
+							<td class="align-middle">@Html.DisplayFor(model => movie.Director)</td>
+							<td class="align-middle">@Html.DisplayFor(model => movie.ReleaseYear)</td>
+							<td class="align-middle">@Html.DisplayFor(model => movie.Media)</td>
+							<td class="text-md-end">
+								@if (Model.LoanId != null)
+								{
+									<a class="btn btn-outline-primary text-nowrap" asp-controller="Loans" asp-action="AddMovie"
+										asp-route-loanId="@Model.LoanId" asp-route-movieId="@movie.ID"
+										autofocus="@(Model.Movies.Count == 1)">@Localizer["Add to Loan"]</a>
+								}
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</section>
+}
+
+@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
+{
+	<section class="mb-5" id="searchResultsOnline">
+		<h2 class="display-5">@Localizer["New Movies"]</h2>
+		<div class="spinner-border text-primary" role="status">
+			<span class="visually-hidden">@Localizer["Loading..."]</span>
+		</div>
+	</section>
+}
 
 <form asp-controller="Movies" asp-action="New" class="mb-5">
 	<h2 class="display-5">@Localizer["Add New Movie"]</h2>
@@ -101,6 +108,6 @@
 </form>
 
 @section Scripts {
-	<script src="~/lib/htmx.org/dist/htmx.min.js"
-		integrity="sha256-YCMa5rqds4JesVomESLV9VkhxNU7Zr9jfcGLTuJ8efk=" crossorigin="anonymous"></script>
+	<script src="~/lib/htmx.org/dist/htmx.min.js" integrity="sha256-YCMa5rqds4JesVomESLV9VkhxNU7Zr9jfcGLTuJ8efk="
+		crossorigin="anonymous"></script>
 }

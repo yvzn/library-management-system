@@ -15,11 +15,15 @@ public class MoviesController(
 	IHttpClientFactory httpClientFactory,
 	IOptions<Features> features) : Controller
 {
-	public IActionResult Search(int? loanId)
+	public IActionResult Search(int? loanId, string? title, string? director, int? releaseYear, string? EAN)
 	{
 		var model = new SearchViewModel
 		{
-			LoanId = loanId
+			LoanId = loanId,
+			Title = title,
+			Director = director,
+			ReleaseYear = releaseYear,
+			EAN = EAN
 		};
 
 		return View(model);

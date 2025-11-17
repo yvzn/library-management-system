@@ -1,0 +1,20 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@model library_management_system.Models.SearchResultsViewModel
+
+<div>
+	<p>
+		@Localizer["These are the search results for"] <q>@Model.Description</q>
+		&ndash;
+		<a asp-controller="@ViewData["Controller"]" asp-action="Search"
+			asp-route-loanId="@Model.LoanId"
+			asp-route-title="@Model.Title"
+			asp-route-author="@Model.Author"
+			asp-route-ISBN="@Model.ISBN"
+			asp-route-director="@Model.Director"
+			asp-route-releaseYear="@Model.ReleaseYear"
+			asp-route-EAN="@Model.EAN"
+			class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">@Localizer["Search again"]</a>
+	</p>
+</div>
