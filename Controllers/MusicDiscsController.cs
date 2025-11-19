@@ -158,13 +158,10 @@ public class MusicDiscsController(
 				MusicDiscID = newlyCreatedMusicDisc.Entity.ID
 			};
 
-			await dbContext.LoanMusicDiscs.AddAsync(loanMusicDisc, HttpContext.RequestAborted);
+			var newlyCreatedLoanMusicDisc = await dbContext.LoanMusicDiscs.AddAsync(loanMusicDisc, HttpContext.RequestAborted);
 			await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
-		}
 
-		if (loanId.HasValue)
-		{
-			return RedirectToAction("Details", "Loans", new { id = loanId.Value });
+			return RedirectToAction("Details", "Loans", new { id = loanId.Value, previous = "AddMusicDisc", relationshipId = newlyCreatedLoanMusicDisc.Entity.ID });
 		}
 
 		return RedirectToAction("Index", "Loans");

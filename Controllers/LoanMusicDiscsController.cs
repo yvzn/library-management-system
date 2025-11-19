@@ -16,10 +16,10 @@ public class LoanMusicDiscsController(BookLoansContext dbContext) : Controller
 		var newlyCreatedMusicDisc = await dbContext.MusicDiscs.AddAsync(loanMusicDisc.MusicDisc!, HttpContext.RequestAborted);
 
 		loanMusicDisc.MusicDiscID = newlyCreatedMusicDisc.Entity.ID;
-		await dbContext.LoanMusicDiscs.AddAsync(loanMusicDisc, HttpContext.RequestAborted);
+		var newlyCreatedLoanMusicDisc = await dbContext.LoanMusicDiscs.AddAsync(loanMusicDisc, HttpContext.RequestAborted);
 
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
-		return RedirectToAction("Details", "Loans", new { id = loanMusicDisc.LoanID });
+		return RedirectToAction("Details", "Loans", new { id = loanMusicDisc.LoanID, previous = "AddMusicDisc", relationshipId = newlyCreatedLoanMusicDisc.Entity.ID });
 	}
 }

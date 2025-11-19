@@ -117,13 +117,10 @@ public class BooksController(
 				BookID = newlyCreatedBook.Entity.ID
 			};
 
-			await dbContext.LoanBooks.AddAsync(loanBook, HttpContext.RequestAborted);
+			var newlyCreatedLoanBook = await dbContext.LoanBooks.AddAsync(loanBook, HttpContext.RequestAborted);
 			await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
-		}
 
-		if (loanId.HasValue)
-		{
-			return RedirectToAction("Details", "Loans", new { id = loanId.Value });
+			return RedirectToAction("Details", "Loans", new { id = loanId.Value, previous = "AddBook", relationshipId = newlyCreatedLoanBook.Entity.ID });
 		}
 
 		return RedirectToAction("Index");

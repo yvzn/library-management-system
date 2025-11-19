@@ -180,4 +180,13 @@
   <data name="Undo" xml:space="preserve">
     <value>Annuler</value>
   </data>
+  <data name="Book added to loan" xml:space="preserve">
+    <value>Livre ajouté</value>
+  </data>
+  <data name="Movie added to loan" xml:space="preserve">
+    <value>Film ajouté</value>
+  </data>
+  <data name="Music disc added to loan" xml:space="preserve">
+    <value>Disque ajouté</value>
+  </data>
 </root>

@@ -16,10 +16,10 @@ public class LoanMoviesController(BookLoansContext dbContext) : Controller
 		var newlyCreatedMovie = await dbContext.Movies.AddAsync(loanMovie.Movie!, HttpContext.RequestAborted);
 
 		loanMovie.MovieID = newlyCreatedMovie.Entity.ID;
-		await dbContext.LoanMovies.AddAsync(loanMovie, HttpContext.RequestAborted);
+		var newlyCreatedLoanMovie = await dbContext.LoanMovies.AddAsync(loanMovie, HttpContext.RequestAborted);
 
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
-		return RedirectToAction("Details", "Loans", new { id = loanMovie.LoanID });
+		return RedirectToAction("Details", "Loans", new { id = loanMovie.LoanID, previous = "AddMovie", relationshipId = newlyCreatedLoanMovie.Entity.ID });
 	}
 }

@@ -24,7 +24,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		return View(loans);
 	}
 
-	public async Task<IActionResult> Details(int id, string? previous)
+	public async Task<IActionResult> Details(int id, string? previous, int? relationshipId)
 	{
 		var loan = await dbContext.Loans
 			.Include(l => l.LoanBooks)
@@ -44,6 +44,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 
 		ViewData["IsNewLoan"] = (loan.LoanDate.Date >= DateTime.Now.Date).ToString().ToLowerInvariant();
 		ViewData["PreviousAction"] = previous;
+		ViewData["RelationshipId"] = relationshipId;
 
 		return View(loan);
 	}
@@ -122,14 +123,16 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 			return RedirectToAction(nameof(Details), new { id = loanId });
 		}
 
-		loan.LoanBooks.Add(new LoanBook
+		var loanBook = new LoanBook
 		{
 			LoanID = loan.ID,
 			BookID = bookId
-		});
+		};
+		loan.LoanBooks.Add(loanBook);
+
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
-		return RedirectToAction(nameof(Details), new { id = loanId });
+		return RedirectToAction(nameof(Details), new { id = loanId, previous = nameof(AddBook), relationshipId = loanBook.ID });
 	}
 
 	public async Task<IActionResult> AddMovie(
@@ -145,14 +148,16 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 			return RedirectToAction(nameof(Details), new { id = loanId });
 		}
 
-		loan.LoanMovies.Add(new LoanMovie
+		var loanMovie = new LoanMovie
 		{
 			LoanID = loan.ID,
 			MovieID = movieId
-		});
+		};
+		loan.LoanMovies.Add(loanMovie);
+
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
-		return RedirectToAction(nameof(Details), new { id = loanId });
+		return RedirectToAction(nameof(Details), new { id = loanId, previous = nameof(AddMovie), relationshipId = loanMovie.ID });
 	}
 
 	public async Task<IActionResult> AddMusicDisc(
@@ -168,14 +173,15 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 			return RedirectToAction(nameof(Details), new { id = loanId });
 		}
 
-		loan.LoanMusicDiscs.Add(new LoanMusicDisc
+		var loanMusicDisc = new LoanMusicDisc
 		{
 			LoanID = loan.ID,
 			MusicDiscID = musicDiscId
-		});
+		};
+		loan.LoanMusicDiscs.Add(loanMusicDisc);
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
-		return RedirectToAction(nameof(Details), new { id = loanId });
+		return RedirectToAction(nameof(Details), new { id = loanId, previous = nameof(AddMusicDisc), relationshipId = loanMusicDisc.ID });
 	}
 
 	public async Task<IActionResult> Return(int loanId)

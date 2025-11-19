@@ -154,13 +154,10 @@ public class MoviesController(
 				MovieID = newlyCreatedMovie.Entity.ID
 			};
 
-			await dbContext.LoanMovies.AddAsync(loanMovie, HttpContext.RequestAborted);
+			var newlyCreatedLoanMovie = await dbContext.LoanMovies.AddAsync(loanMovie, HttpContext.RequestAborted);
 			await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
-		}
 
-		if (loanId.HasValue)
-		{
-			return RedirectToAction("Details", "Loans", new { id = loanId.Value });
+			return RedirectToAction("Details", "Loans", new { id = loanId.Value, previous = "AddMovie", relationshipId = newlyCreatedLoanMovie.Entity.ID });
 		}
 
 		return RedirectToAction("Index", "Loans");
