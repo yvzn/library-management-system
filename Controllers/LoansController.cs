@@ -45,6 +45,15 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 		ViewData["IsNewLoan"] = (loan.LoanDate.Date >= DateTime.Now.Date).ToString().ToLowerInvariant();
 		ViewData["PreviousAction"] = previous;
 		ViewData["RelationshipId"] = relationshipId;
+		ViewData["ActiveTab"] = "Books";
+		if (nameof(AddMovie).Equals(previous))
+		{
+			ViewData["ActiveTab"] = "Movies";
+		}
+		else if (nameof(AddMusicDisc).Equals(previous))
+		{
+			ViewData["ActiveTab"] = "MusicDiscs";
+		}
 
 		return View(loan);
 	}

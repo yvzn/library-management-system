@@ -71,7 +71,6 @@ Feature requests welcomed ! Please [Open an Issue on Github](https://github.com/
 - SignalR
 - Optional online search, if results found in local database, do not query external APIs automatically
 - Check if a new version is available
-- Display details as tabs
 
 ## EntityFramework migrations
 

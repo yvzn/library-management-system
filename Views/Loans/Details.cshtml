@@ -149,137 +149,167 @@
 	</div>
 </div>
 
-<div class="mb-3">
-	<h2 class="display-5 mb-0">
-		@Localizer["Books"]
-		<span class="fs-3">@(Model.LoanBooks.Count > 0 ? $"({Model.LoanBooks.Count})" : "")</span>
-	</h2>
-</div>
+<ul class="nav nav-tabs mb-3" id="loanItemsTabs" role="tablist">
+	<li class="nav-item" role="presentation">
+		<button class="fs-4 nav-link @("Books".Equals(ViewData["ActiveTab"]) ? "active" : "")" id="books-tab" data-bs-toggle="tab"
+			data-bs-target="#books-tab-pane" type="button" role="tab" aria-controls="books-tab-pane"
+			aria-selected="@("Books".Equals(ViewData["ActiveTab"]) ? "true" : "false")">
+			@Localizer["Books"]
+			@if (Model.LoanBooks.Count > 0)
+			{
+				<span>(@Model.LoanBooks.Count)</span>
+			}
+		</button>
+	</li>
+	<li class="nav-item" role="presentation">
+		<button class="fs-4 nav-link @("Movies".Equals(ViewData["ActiveTab"]) ? "active" : "")" id="movies-tab" data-bs-toggle="tab"
+			data-bs-target="#movies-tab-pane" type="button" role="tab" aria-controls="movies-tab-pane"
+			aria-selected="@("Movies".Equals(ViewData["ActiveTab"]) ? "true" : "false")">
+			@Localizer["Movies"]
+			@if (Model.LoanMovies.Count > 0)
+			{
+				<span>(@Model.LoanMovies.Count)</span>
+			}
+		</button>
+	</li>
+	<li class="nav-item" role="presentation">
+		<button class="fs-4 nav-link @("MusicDiscs".Equals(ViewData["ActiveTab"]) ? "active" : "")" id="music-discs-tab"
+			data-bs-toggle="tab" data-bs-target="#music-discs-tab-pane" type="button" role="tab"
+			aria-controls="music-discs-tab-pane" aria-selected="@("MusicDiscs".Equals(ViewData["ActiveTab"]) ? "true" : "false")">
+			@Localizer["Music Discs"]
+			@if (Model.LoanMusicDiscs.Count > 0)
+			{
+				<span>(@Model.LoanMusicDiscs.Count)</span>
+			}
+		</button>
+	</li>
+</ul>
 
-@if (Model.LoanBooks.Count == 0)
-{
-	<p class="mb-5">@Localizer["No books have been loaned."]</p>
-}
-else
-{
-	<div class="table-responsive mb-5">
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.Title)</th>
-					<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.Author)</th>
-					<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.ISBN_10)</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var loanBook in Model.LoanBooks.OrderBy(lb => lb.Book!.Title))
-				{
-					<tr>
-						<td>
-							@if ("AddBook".Equals(ViewData["PreviousAction"]) && loanBook.ID.Equals(ViewData["RelationshipId"]))
-							{
-								<i class="bi bi-check-circle text-success" aria-hidden="true"></i>
-							}
-							@Html.DisplayFor(model => loanBook.Book!.Title)
-						</td>
-						<td>@Html.DisplayFor(model => loanBook.Book!.Author)</td>
-						<td>@Html.DisplayFor(model => loanBook.Book!.ISBN_10)</td>
-					</tr>
-				}
-			</tbody>
-		</table>
+<div class="tab-content mb-5" id="loanItemsTabsContent">
+	<div class="tab-pane fade @("Books".Equals(ViewData["ActiveTab"]) ? "show active" : "")" id="books-tab-pane" role="tabpanel"
+		aria-labelledby="books-tab" tabindex="0">
+		@if (Model.LoanBooks.Count == 0)
+		{
+			<p>@Localizer["No books have been loaned."]</p>
+		}
+		else
+		{
+			<div class="table-responsive">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.Title)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.Author)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.LoanBooks.First().Book!.ISBN_10)</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var loanBook in Model.LoanBooks.OrderBy(lb => lb.Book!.Title))
+						{
+							<tr>
+								<td>
+									@if ("AddBook".Equals(ViewData["PreviousAction"]) &&
+																loanBook.ID.Equals(ViewData["RelationshipId"]))
+									{
+										<i class="bi bi-check-circle text-success" aria-hidden="true"></i>
+									}
+									@Html.DisplayFor(model => loanBook.Book!.Title)
+								</td>
+								<td>@Html.DisplayFor(model => loanBook.Book!.Author)</td>
+								<td>@Html.DisplayFor(model => loanBook.Book!.ISBN_10)</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		}
 	</div>
-}
 
-<div class="mb-3">
-	<h2 class="display-5 mb-0">
-		@Localizer["Movies"]
-		<span class="fs-3">@(Model.LoanMovies.Count > 0 ? $"({Model.LoanMovies.Count})" : "")</span>
-	</h2>
-</div>
-
-@if (Model.LoanMovies.Count == 0)
-{
-	<p class="mb-5">@Localizer["No movies have been loaned."]</p>
-}
-else
-{
-	<div class="table-responsive mb-5">
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th scope="col">@Localizer["Title"]</th>
-					<th scope="col">@Html.DisplayNameFor(model => model.LoanMovies.First().Movie!.Director)</th>
-					<th scope="col">@Html.DisplayNameFor(model => model.LoanMovies.First().Movie!.ReleaseYear)</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var loanMovie in Model.LoanMovies.OrderBy(lm => lm.Movie!.Title))
-				{
-					<tr>
-						<td>
-							@if ("AddMovie".Equals(ViewData["PreviousAction"]) &&
-												loanMovie.ID.Equals(ViewData["RelationshipId"]))
-							{
-								<i class="bi bi-check-circle text-success" aria-hidden="true"></i>
-							}
-						@("fr".Equals(ViewData["lang"])
-											? loanMovie.Movie!.TitleFr ?? loanMovie.Movie!.Title
-											: loanMovie.Movie!.Title)
-						</td>
-						<td>@Html.DisplayFor(model => loanMovie.Movie!.Director)</td>
-						<td>@Html.DisplayFor(model => loanMovie.Movie!.ReleaseYear)</td>
-					</tr>
-				}
-			</tbody>
-		</table>
+	<div class="tab-pane fade @("Movies".Equals(ViewData["ActiveTab"]) ? "show active" : "")" id="movies-tab-pane" role="tabpanel"
+		aria-labelledby="movies-tab" tabindex="0">
+		@if (Model.LoanMovies.Count == 0)
+		{
+			<p>@Localizer["No movies have been loaned."]</p>
+		}
+		else
+		{
+			<div class="table-responsive">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th scope="col">@Localizer["Title"]</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.LoanMovies.First().Movie!.Director)</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.LoanMovies.First().Movie!.ReleaseYear)</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var loanMovie in Model.LoanMovies.OrderBy(lm => lm.Movie!.Title))
+						{
+							<tr>
+								<td>
+									@if ("AddMovie".Equals(ViewData["PreviousAction"]) &&
+																loanMovie.ID.Equals(ViewData["RelationshipId"]))
+									{
+										<i class="bi bi-check-circle text-success" aria-hidden="true"></i>
+									}
+								@("fr".Equals(ViewData["lang"])
+															? loanMovie.Movie!.TitleFr ?? loanMovie.Movie!.Title
+															: loanMovie.Movie!.Title)
+								</td>
+								<td>@Html.DisplayFor(model => loanMovie.Movie!.Director)</td>
+								<td>@Html.DisplayFor(model => loanMovie.Movie!.ReleaseYear)</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		}
 	</div>
-}
 
-<div class="mb-3">
-	<h2 class="display-5 mb-0">
-		@Localizer["Music Discs"]
-		<span class="fs-3">@(Model.LoanMusicDiscs.Count > 0 ? $"({Model.LoanMusicDiscs.Count})" : "")</span>
-	</h2>
-</div>
-
-@if (Model.LoanMusicDiscs.Count == 0)
-{
-	<p class="mb-5">@Localizer["No music discs have been loaned."]</p>
-}
-else
-{
-	<div class="table-responsive mb-5">
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th scope="col">@Html.DisplayNameFor(model => model.LoanMusicDiscs.First().MusicDisc!.Title)</th>
-					<th scope="col">@Html.DisplayNameFor(model => model.LoanMusicDiscs.First().MusicDisc!.Artist)</th>
-					<th scope="col">@Html.DisplayNameFor(model => model.LoanMusicDiscs.First().MusicDisc!.Version)</th>
-					<th scope="col">@Html.DisplayNameFor(model => model.LoanMusicDiscs.First().MusicDisc!.EAN)</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var loanMusicDisc in Model.LoanMusicDiscs.OrderBy(lmd => lmd.MusicDisc!.Title))
-				{
-					<tr>
-						<td>
-							@if ("AddMusicDisc".Equals(ViewData["PreviousAction"]) &&
-												loanMusicDisc.ID.Equals(ViewData["RelationshipId"]))
-							{
-								<i class="bi bi-check-circle text-success" aria-hidden="true"></i>
-							}
-							@Html.DisplayFor(model => loanMusicDisc.MusicDisc!.Title)
-						</td>
-						<td>@Html.DisplayFor(model => loanMusicDisc.MusicDisc!.Artist)</td>
-						<td>@Html.DisplayFor(model => loanMusicDisc.MusicDisc!.Version)</td>
-						<td>@Html.DisplayFor(model => loanMusicDisc.MusicDisc!.EAN)</td>
-					</tr>
-				}
-			</tbody>
-		</table>
+	<div class="tab-pane fade @("MusicDiscs".Equals(ViewData["ActiveTab"]) ? "show active" : "")" id="music-discs-tab-pane"
+		role="tabpanel" aria-labelledby="music-discs-tab" tabindex="0">
+		@if (Model.LoanMusicDiscs.Count == 0)
+		{
+			<p>@Localizer["No music discs have been loaned."]</p>
+		}
+		else
+		{
+			<div class="table-responsive">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th scope="col">@Html.DisplayNameFor(model => model.LoanMusicDiscs.First().MusicDisc!.Title)
+							</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.LoanMusicDiscs.First().MusicDisc!.Artist)
+							</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.LoanMusicDiscs.First().MusicDisc!.Version)
+							</th>
+							<th scope="col">@Html.DisplayNameFor(model => model.LoanMusicDiscs.First().MusicDisc!.EAN)</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var loanMusicDisc in Model.LoanMusicDiscs.OrderBy(lmd => lmd.MusicDisc!.Title))
+						{
+							<tr>
+								<td>
+									@if ("AddMusicDisc".Equals(ViewData["PreviousAction"]) &&
+																loanMusicDisc.ID.Equals(ViewData["RelationshipId"]))
+									{
+										<i class="bi bi-check-circle text-success" aria-hidden="true"></i>
+									}
+									@Html.DisplayFor(model => loanMusicDisc.MusicDisc!.Title)
+								</td>
+								<td>@Html.DisplayFor(model => loanMusicDisc.MusicDisc!.Artist)</td>
+								<td>@Html.DisplayFor(model => loanMusicDisc.MusicDisc!.Version)</td>
+								<td>@Html.DisplayFor(model => loanMusicDisc.MusicDisc!.EAN)</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		}
 	</div>
-}
+</div>
 
 <form asp-controller="Loans" asp-action="ConfirmDelete" asp-route-id="@Model.ID" method="get" id="delete-loan-form">
 </form>
