@@ -141,4 +141,13 @@
   <data name="Music Discs" xml:space="preserve">
     <value>Disques</value>
   </data>
+  <data name="No music discs have been loaned." xml:space="preserve">
+    <value>Aucun disque n'a été emprunté.</value>
+  </data>
+  <data name="No movies have been loaned." xml:space="preserve">
+    <value>Aucun film n'a été emprunté.</value>
+  </data>
+  <data name="No books have been loaned." xml:space="preserve">
+    <value>Aucun livre n'a été emprunté.</value>
+  </data>
 </root>
