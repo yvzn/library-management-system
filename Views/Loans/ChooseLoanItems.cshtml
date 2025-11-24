@@ -30,9 +30,7 @@
 				type="button" role="tab" aria-controls="books-tab-pane" aria-selected="true">
 				@Localizer["Books"]
 				(<span class="selected-count" data-group="LoanBookIds">0</span>@if (Model.LoanBooks.Count > 0)
-				{
-					<span>/ @Model.LoanBooks.Count</span>
-				})
+				{<span>/@Model.LoanBooks.Count</span>})
 			</button>
 		</li>
 		<li class="nav-item" role="presentation">
@@ -40,9 +38,7 @@
 				type="button" role="tab" aria-controls="movies-tab-pane" aria-selected="false">
 				@Localizer["Movies"]
 				(<span class="selected-count" data-group="LoanMovieIds">0</span>@if (Model.LoanMovies.Count > 0)
-				{
-					<span>/ @Model.LoanMovies.Count</span>
-				})
+				{<span>/@Model.LoanMovies.Count</span>})
 			</button>
 		</li>
 		<li class="nav-item" role="presentation">
@@ -51,9 +47,7 @@
 				aria-selected="false">
 				@Localizer["Music Discs"]
 				(<span class="selected-count" data-group="LoanMusicDiscIds">0</span>@if (Model.LoanMusicDiscs.Count > 0)
-				{
-					<span>/ @Model.LoanMusicDiscs.Count</span>
-				})
+				{<span>/@Model.LoanMusicDiscs.Count</span>})
 			</button>
 		</li>
 	</ul>

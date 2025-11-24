@@ -14,27 +14,53 @@
 	<div class="col-12 col-md-8 text-md-end">
 		@if (@Model.ReturnDate == null)
 		{
-			<a class="btn @("true".Equals(ViewData["IsNewLoan"]) ? "btn-outline-primary" : "btn-primary") mb-2 ms-2"
-				asp-controller="Loans" asp-action="Return" asp-route-loanId="@Model.ID"><i class="bi bi-calendar-check me-2"
-					aria-hidden="true"></i> @Localizer["Mark as returned"]</a>
+			@if ("true".Equals(ViewData["IsNewLoan"]))
+			{
+				<a class="btn btn-outline-primary mb-2 ms-2" asp-controller="Loans" asp-action="Return"
+					asp-route-loanId="@Model.ID"><i class="bi bi-calendar-check" data-bs-toggle="tooltip" data-bs-offset="0,10"
+						data-bs-title="@Localizer["Mark as returned"]"></i></a>
+			}
+			else
+			{
+				<a class="btn btn-primary mb-2 ms-2" asp-controller="Loans" asp-action="Return" asp-route-loanId="@Model.ID"><i
+						class="bi bi-calendar-check me-2" aria-hidden="true"></i> @Localizer["Mark as returned"]</a>
+			}
 		}
 
-		<a class="d-none d-lg-inline-block btn @("true".Equals(ViewData["IsNewLoan"]) ? "btn-primary" : "btn-outline-primary") mb-2 ms-2"
-			asp-controller="Books" asp-action="Search" asp-route-loanId="@Model.ID"><i class="bi bi-book me-2"
-				aria-hidden="true"></i>
-			@Localizer["Add Book"] <kbd
-				class="align-text-bottom text-primary-emphasis bg-secondary-subtle border border-secondary">B</kbd></a>
+		@if ("true".Equals(ViewData["IsNewLoan"]))
+		{
+			<div class="d-none d-lg-inline-block">
+				<a class="d-none @("Books".Equals(ViewData["ActiveTab"]) ? "d-lg-inline-block" : "") btn @("true".Equals(ViewData["IsNewLoan"]) ? "btn-primary" : "btn-outline-primary") mb-2 ms-2"
+					asp-controller="Books" asp-action="Search" asp-route-loanId="@Model.ID"><i class="bi bi-book me-2"
+						aria-hidden="true"></i>
+					@Localizer["Add Book"] <kbd
+						class="align-text-bottom text-primary-emphasis bg-secondary-subtle border border-secondary">B</kbd></a>
+
+				<a class="d-none @("Movies".Equals(ViewData["ActiveTab"]) ? "d-lg-inline-block" : "") btn @("true".Equals(ViewData["IsNewLoan"]) ? "btn-primary" : "btn-outline-primary") mb-2 ms-2"
+					asp-controller="Movies" asp-action="Search" asp-route-loanId="@Model.ID"><i class="bi bi-film me-2"
+						aria-hidden="true"></i> @Localizer["Add Movie"]</a>
+
+				<a class="d-none @("MusicDiscs".Equals(ViewData["ActiveTab"]) ? "d-lg-inline-block" : "") btn @("true".Equals(ViewData["IsNewLoan"]) ? "btn-primary" : "btn-outline-primary") mb-2 ms-2"
+					asp-controller="MusicDiscs" asp-action="Search" asp-route-loanId="@Model.ID"><i class="bi bi-disc me-2"
+						aria-hidden="true"></i> @Localizer["Add Music Disc"]</a>
+			</div>
+		}
 
 		<div class="dropdown d-inline-block align-top mb-2 ms-2" role="menu">
 			<button
-				class="btn @("true".Equals(ViewData["IsNewLoan"]) ? "btn-primary" : "btn-outline-primary") dropdown-toggle"
+				class="btn d-lg-none @("true".Equals(ViewData["IsNewLoan"]) ? "btn-primary" : "btn-outline-primary") dropdown-toggle"
 				type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="@Localizer["Add Item"]">
-				<i class="bi bi-cart-plus" aria-hidden="true" data-bs-toggle="tooltip" data-bs-offset="0,10"
+				<i class="bi bi-cart-plus" data-bs-toggle="tooltip" data-bs-offset="0,10"
+					data-bs-title="@Localizer["Add Item"]"></i>
+			</button>
+			<button class="btn d-none d-lg-inline-block btn-outline-primary dropdown-toggle" type="button"
+				data-bs-toggle="dropdown" aria-expanded="false" aria-label="@Localizer["Add Item"]">
+				<i class="bi bi-cart-plus" data-bs-toggle="tooltip" data-bs-offset="0,10"
 					data-bs-title="@Localizer["Add Item"]"></i>
 			</button>
 			<ul class="dropdown-menu">
-				<li class="d-lg-none"><a class="dropdown-item" asp-controller="Books" asp-action="Search"
-						asp-route-loanId="@Model.ID" accesskey="b"><i class="bi bi-book me-2" aria-hidden="true"></i>
+				<li><a class="dropdown-item" asp-controller="Books" asp-action="Search" asp-route-loanId="@Model.ID"
+						accesskey="b"><i class="bi bi-book me-2" aria-hidden="true"></i>
 						@Localizer["Add Book"] <kbd
 							class="align-text-bottom text-primary-emphasis bg-secondary-subtle border border-secondary">B</kbd></a>
 				</li>
@@ -50,7 +76,7 @@
 		<div class="dropdown d-inline-block align-top mb-2 ms-2" role="menu">
 			<button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
 				aria-expanded="false" aria-label="@Localizer["More Operations"]">
-				<i class="bi bi-three-dots" aria-hidden="true" data-bs-toggle="tooltip" data-bs-offset="0,10"
+				<i class="bi bi-list" data-bs-toggle="tooltip" data-bs-offset="0,10"
 					data-bs-title="@Localizer["More Operations"]"></i>
 			</button>
 			<ul class="dropdown-menu">
@@ -151,9 +177,9 @@
 
 <ul class="nav nav-tabs mb-3" id="loanItemsTabs" role="tablist">
 	<li class="nav-item" role="presentation">
-		<button class="fs-4 nav-link @("Books".Equals(ViewData["ActiveTab"]) ? "active" : "")" id="books-tab" data-bs-toggle="tab"
-			data-bs-target="#books-tab-pane" type="button" role="tab" aria-controls="books-tab-pane"
-			aria-selected="@("Books".Equals(ViewData["ActiveTab"]) ? "true" : "false")">
+		<button class="fs-4 nav-link @("Books".Equals(ViewData["ActiveTab"]) ? "active" : "")" id="books-tab"
+			data-bs-toggle="tab" data-bs-target="#books-tab-pane" type="button" role="tab"
+			aria-controls="books-tab-pane" aria-selected="@("Books".Equals(ViewData["ActiveTab"]) ? "true" : "false")">
 			@Localizer["Books"]
 			@if (Model.LoanBooks.Count > 0)
 			{
@@ -162,8 +188,9 @@
 		</button>
 	</li>
 	<li class="nav-item" role="presentation">
-		<button class="fs-4 nav-link @("Movies".Equals(ViewData["ActiveTab"]) ? "active" : "")" id="movies-tab" data-bs-toggle="tab"
-			data-bs-target="#movies-tab-pane" type="button" role="tab" aria-controls="movies-tab-pane"
+		<button class="fs-4 nav-link @("Movies".Equals(ViewData["ActiveTab"]) ? "active" : "")" id="movies-tab"
+			data-bs-toggle="tab" data-bs-target="#movies-tab-pane" type="button" role="tab"
+			aria-controls="movies-tab-pane"
 			aria-selected="@("Movies".Equals(ViewData["ActiveTab"]) ? "true" : "false")">
 			@Localizer["Movies"]
 			@if (Model.LoanMovies.Count > 0)
@@ -175,7 +202,8 @@
 	<li class="nav-item" role="presentation">
 		<button class="fs-4 nav-link @("MusicDiscs".Equals(ViewData["ActiveTab"]) ? "active" : "")" id="music-discs-tab"
 			data-bs-toggle="tab" data-bs-target="#music-discs-tab-pane" type="button" role="tab"
-			aria-controls="music-discs-tab-pane" aria-selected="@("MusicDiscs".Equals(ViewData["ActiveTab"]) ? "true" : "false")">
+			aria-controls="music-discs-tab-pane"
+			aria-selected="@("MusicDiscs".Equals(ViewData["ActiveTab"]) ? "true" : "false")">
 			@Localizer["Music Discs"]
 			@if (Model.LoanMusicDiscs.Count > 0)
 			{
@@ -186,8 +214,8 @@
 </ul>
 
 <div class="tab-content mb-5" id="loanItemsTabsContent">
-	<div class="tab-pane fade @("Books".Equals(ViewData["ActiveTab"]) ? "show active" : "")" id="books-tab-pane" role="tabpanel"
-		aria-labelledby="books-tab" tabindex="0">
+	<div class="tab-pane fade @("Books".Equals(ViewData["ActiveTab"]) ? "show active" : "")" id="books-tab-pane"
+		role="tabpanel" aria-labelledby="books-tab" tabindex="0">
 		@if (Model.LoanBooks.Count == 0)
 		{
 			<p>@Localizer["No books have been loaned."]</p>
@@ -225,8 +253,8 @@
 		}
 	</div>
 
-	<div class="tab-pane fade @("Movies".Equals(ViewData["ActiveTab"]) ? "show active" : "")" id="movies-tab-pane" role="tabpanel"
-		aria-labelledby="movies-tab" tabindex="0">
+	<div class="tab-pane fade @("Movies".Equals(ViewData["ActiveTab"]) ? "show active" : "")" id="movies-tab-pane"
+		role="tabpanel" aria-labelledby="movies-tab" tabindex="0">
 		@if (Model.LoanMovies.Count == 0)
 		{
 			<p>@Localizer["No movies have been loaned."]</p>
@@ -266,8 +294,8 @@
 		}
 	</div>
 
-	<div class="tab-pane fade @("MusicDiscs".Equals(ViewData["ActiveTab"]) ? "show active" : "")" id="music-discs-tab-pane"
-		role="tabpanel" aria-labelledby="music-discs-tab" tabindex="0">
+	<div class="tab-pane fade @("MusicDiscs".Equals(ViewData["ActiveTab"]) ? "show active" : "")"
+		id="music-discs-tab-pane" role="tabpanel" aria-labelledby="music-discs-tab" tabindex="0">
 		@if (Model.LoanMusicDiscs.Count == 0)
 		{
 			<p>@Localizer["No music discs have been loaned."]</p>
