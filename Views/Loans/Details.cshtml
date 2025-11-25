@@ -177,9 +177,10 @@
 
 <ul class="nav nav-tabs mb-3" id="loanItemsTabs" role="tablist">
 	<li class="nav-item" role="presentation">
-		<button class="fs-4 nav-link @("Books".Equals(ViewData["ActiveTab"]) ? "active" : "")" id="books-tab"
+		<button class="fs-5 nav-link @("Books".Equals(ViewData["ActiveTab"]) ? "active" : "")" id="books-tab"
 			data-bs-toggle="tab" data-bs-target="#books-tab-pane" type="button" role="tab"
 			aria-controls="books-tab-pane" aria-selected="@("Books".Equals(ViewData["ActiveTab"]) ? "true" : "false")">
+			<i class="bi bi-book me-1" aria-hidden="true"></i>
 			@Localizer["Books"]
 			@if (Model.LoanBooks.Count > 0)
 			{
@@ -188,10 +189,11 @@
 		</button>
 	</li>
 	<li class="nav-item" role="presentation">
-		<button class="fs-4 nav-link @("Movies".Equals(ViewData["ActiveTab"]) ? "active" : "")" id="movies-tab"
+		<button class="fs-5 nav-link @("Movies".Equals(ViewData["ActiveTab"]) ? "active" : "")" id="movies-tab"
 			data-bs-toggle="tab" data-bs-target="#movies-tab-pane" type="button" role="tab"
 			aria-controls="movies-tab-pane"
 			aria-selected="@("Movies".Equals(ViewData["ActiveTab"]) ? "true" : "false")">
+			<i class="bi bi-film me-1" aria-hidden="true"></i>
 			@Localizer["Movies"]
 			@if (Model.LoanMovies.Count > 0)
 			{
@@ -200,10 +202,11 @@
 		</button>
 	</li>
 	<li class="nav-item" role="presentation">
-		<button class="fs-4 nav-link @("MusicDiscs".Equals(ViewData["ActiveTab"]) ? "active" : "")" id="music-discs-tab"
+		<button class="fs-5 nav-link @("MusicDiscs".Equals(ViewData["ActiveTab"]) ? "active" : "")" id="music-discs-tab"
 			data-bs-toggle="tab" data-bs-target="#music-discs-tab-pane" type="button" role="tab"
 			aria-controls="music-discs-tab-pane"
 			aria-selected="@("MusicDiscs".Equals(ViewData["ActiveTab"]) ? "true" : "false")">
+			<i class="bi bi-disc me-1" aria-hidden="true"></i>
 			@Localizer["Music Discs"]
 			@if (Model.LoanMusicDiscs.Count > 0)
 			{
