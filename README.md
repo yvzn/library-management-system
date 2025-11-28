@@ -25,7 +25,7 @@ Repeat the installation instructions above to download the latest version of the
 ## Running the project locally
 
 Requirements:
-- .NET SDK 9.0 or later
+- .NET SDK 10.0 or later
 
 To run the project, navigate to the project directory and use the following commands:
 
