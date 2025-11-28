@@ -34,6 +34,7 @@ internal class Program
 			options.CombineLogs = true;
 		});
 		builder.Services.AddHttpClient();
+		builder.Services.AddSignalR();
 
 		builder.Services.Configure<Features>(builder.Configuration.GetSection(nameof(Features)));
 
@@ -111,6 +112,7 @@ internal class Program
 
 		app.MapHealthChecks("/healthz");
 
+		app.MapHub<ActiveUsersHub>("/userz");
 
 
 		// -- Run the application. ----------------------------------------------------
