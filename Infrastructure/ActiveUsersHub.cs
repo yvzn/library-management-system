@@ -1,9 +1,13 @@
 using System.Collections.Concurrent;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
 
 namespace library_management_system.Infrastructure;
 
-public class ActiveUsersHub(IHostApplicationLifetime appLifetime, ILogger<ActiveUsersHub> logger) : Hub
+public class ActiveUsersHub(
+	IHostApplicationLifetime appLifetime,
+	IOptions<Features> features,
+	ILogger<ActiveUsersHub> logger) : Hub
 {
 	private static readonly ConcurrentDictionary<string, byte> connectedUsers = new();
 
@@ -22,7 +26,7 @@ public class ActiveUsersHub(IHostApplicationLifetime appLifetime, ILogger<Active
 		if (connectedUsers.ContainsKey(Context.ConnectionId))
 			connectedUsers.Remove(Context.ConnectionId, out _);
 
-		if (connectedUsers.IsEmpty)
+		if (connectedUsers.IsEmpty && features.Value.ShutdownIfNoActiveUsers)
 		{
 			_ = ScheduleApplicationShutdown();
 		}
@@ -34,7 +38,8 @@ public class ActiveUsersHub(IHostApplicationLifetime appLifetime, ILogger<Active
 	{
 		await Task.Delay(TimeSpan.FromSeconds(30));
 
-		if (connectedUsers.IsEmpty) // Check again before shutting down
+		// Check again before shutting down
+		if (connectedUsers.IsEmpty && features.Value.ShutdownIfNoActiveUsers)
 		{
 			logger.LogWarning("No more connected users. Application will shutdown...");
 			appLifetime.StopApplication();
