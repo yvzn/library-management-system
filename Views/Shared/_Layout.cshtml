@@ -1,13 +1,16 @@
 @using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
 
 @inject IViewLocalizer Localizer
+@inject IOptions<Features> FeaturesOptions
 
 @{
 	ViewData["lang"] = System.Globalization.CultureInfo.CurrentCulture.Name;
+	var features = FeaturesOptions.Value;
 }
 
 <!DOCTYPE html>
-<html lang="@ViewData["lang"]" data-bs-theme="dark">
+<html lang="@ViewData["lang"]" data-bs-theme="@features.DefaultBootstrapTheme">
 
 <head>
 	<meta charset="utf-8" />
