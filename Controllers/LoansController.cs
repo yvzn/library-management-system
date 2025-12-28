@@ -42,7 +42,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 			return NotFound();
 		}
 
-		ViewData["IsNewLoan"] = (loan.LoanDate.Date >= DateTime.Now.Date).ToString().ToLowerInvariant();
+		ViewData["IsNewLoan"] = (loan.CreationDate.Date >= DateTime.Now.Date).ToString().ToLowerInvariant();
 		ViewData["PreviousAction"] = previous;
 		ViewData["RelationshipId"] = relationshipId;
 		ViewData["ActiveTab"] = "Books";
@@ -94,6 +94,7 @@ public class LoansController(BookLoansContext dbContext, IOptions<Features> feat
 			return View(nameof(New), loan);
 		}
 
+		loan.CreationDate = DateTime.Now;
 		var newlyCreatedLoan = dbContext.Loans.Add(loan);
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
 
