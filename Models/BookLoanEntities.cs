@@ -41,7 +41,6 @@ public class Loan
 	public DateTime? ReturnDate { get; set; }
 
 	[Required]
-	[ScaffoldColumn(false)]
 	public DateTime CreationDate { get; set; }
 
 	public ICollection<LoanBook> LoanBooks { get; set; } = [];
