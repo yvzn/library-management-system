@@ -1,12 +1,13 @@
 using library_management_system.Infrastructure;
 using library_management_system.Models;
+using library_management_system.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace library_management_system.Controllers;
 
-public class HomeController(BookLoansContext dbContext) : Controller
+public class HomeController(BookLoansContext dbContext, ApplicationVersionService applicationVersionService) : Controller
 {
 	public async Task<IActionResult> Index()
 	{
@@ -28,5 +29,19 @@ public class HomeController(BookLoansContext dbContext) : Controller
 	public IActionResult Error()
 	{
 		return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+	}
+
+	public async Task<IActionResult> CheckVersion()
+	{
+		var (isNewVersionAvailable, newVersionUri) = await applicationVersionService.IsNewVersionAvailable();
+
+		var model = new VersionInfoViewModel
+		{
+			CurrentVersion = applicationVersionService.CurrentVersion,
+			IsNewVersionAvailable = isNewVersionAvailable,
+			NewVersionUri = newVersionUri
+		};
+
+		return PartialView("_VersionInfoPartial", model);
 	}
 }

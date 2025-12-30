@@ -1,5 +1,6 @@
 using library_management_system.Infrastructure;
 using library_management_system.Models;
+using library_management_system.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -12,6 +13,7 @@ public class MusicDiscsController(
 	BookLoansContext dbContext,
 	IMemoryCache memoryCache,
 	IHttpClientFactory httpClientFactory,
+	ApplicationVersionService applicationVersionService,
 	IOptions<Features> features) : Controller
 {
 	public IActionResult Search(int? loanId, string? title, string? author, string? EAN)
@@ -108,7 +110,7 @@ public class MusicDiscsController(
 
 		var client = httpClientFactory.CreateClient();
 		client.DefaultRequestHeaders.UserAgent.ParseAdd(
-			$"LibreLibrary/{Assembly.GetExecutingAssembly().GetName().Version} (https://github.com/yvzn/library-management-system)");
+			$"LibreLibrary/{applicationVersionService.CurrentVersion} (https://github.com/yvzn/library-management-system)");
 
 		var response = await client.GetFromJsonAsync<MusicBrainzApiResponse>(uriBuilder.Uri, HttpContext.RequestAborted);
 

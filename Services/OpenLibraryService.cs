@@ -1,16 +1,11 @@
-using System.Reflection;
 using library_management_system.Models;
 
 namespace library_management_system.Services;
 
-public interface IOpenLibraryService
-{
-	Task<List<Book>> SearchBooksAsync(string? title, string? author, string? isbn, CancellationToken cancellationToken = default);
-}
-
 public class OpenLibraryService(
 	IHttpClientFactory httpClientFactory,
-	ILogger<OpenLibraryService> logger) : IOpenLibraryService
+	ApplicationVersionService applicationVersionService,
+	ILogger<OpenLibraryService> logger)
 {
 	private HttpClient HttpClient
 	{
@@ -18,7 +13,7 @@ public class OpenLibraryService(
 		{
 			var client = httpClientFactory.CreateClient();
 			client.DefaultRequestHeaders.UserAgent.ParseAdd(
-				$"LibreLibrary/{Assembly.GetExecutingAssembly().GetName().Version} (https://github.com/yvzn/library-management-system)");
+				$"LibreLibrary/{applicationVersionService.CurrentVersion} (https://github.com/yvzn/library-management-system)");
 			return client;
 		}
 	}

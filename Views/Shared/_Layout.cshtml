@@ -1,12 +1,15 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Options
+@using library_management_system.Services;
 
 @inject IViewLocalizer Localizer
 @inject IOptions<Features> FeaturesOptions
+@inject ApplicationVersionService applicationVersionService
 
 @{
 	ViewData["lang"] = System.Globalization.CultureInfo.CurrentCulture.Name;
 	var features = FeaturesOptions.Value;
+	var applicationVersion = applicationVersionService.CurrentVersion;
 }
 
 <!DOCTYPE html>
@@ -34,7 +37,8 @@
 
 <body>
 	<div class="visually-hidden-focusable position-fixed z-1 overflow-hidden bg-body row w-100 p-2 border-bottom">
-		<div class="col-12"><a class="d-inline-flex p-2 m-1" href="#content">@Localizer["Skip to main content"]</a></div>
+		<div class="col-12"><a class="d-inline-flex p-2 m-1" href="#content">@Localizer["Skip to main content"]</a>
+		</div>
 	</div>
 
 	<header>
@@ -72,16 +76,30 @@
 
 	<footer class="border-top footer text-muted mb-4">
 		<div class="container mt-3">
-			&copy; 2025 - Yvan Razafindramanana - <a target="_blank" rel="noopener noreferrer"
+			&copy; 2025 - Yvan Razafindramanana
+			&mdash; @if ("true".Equals(ViewData["VersionCheckEnabled"]))
+			{
+				<span id="applicationVersion" hx-get="/Home/CheckVersion" hx-trigger="intersect once" hx-swap="innerHTML">@applicationVersion</span>
+			}
+			else
+			{
+				<span id="applicationVersion">@applicationVersion</span>
+			}
+			&mdash; <a target="_blank" rel="noopener noreferrer"
 				href="https://github.com/yvzn/library-management-system">@Localizer["Source code"]</a>
 		</div>
 	</footer>
-	<script src="~/lib/jquery/dist/jquery.min.js"
-		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<script src="~/lib/jquery/dist/jquery.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+		crossorigin="anonymous"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
 		integrity="sha256-5P1JGBOIxI7FBAvT/mb1fCnI5n/NhQKzNUuW7Hq0fMc=" crossorigin="anonymous"></script>
 	<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"
 		integrity="sha256-EN12gUIeRjilWjNnporA6sGXO+G0RxuRsbniMGuwsFA=" crossorigin="anonymous"></script>
+	@if ("true".Equals(ViewData["VersionCheckEnabled"]))
+	{
+		<script src="~/lib/htmx.org/dist/htmx.min.js" integrity="sha256-YCMa5rqds4JesVomESLV9VkhxNU7Zr9jfcGLTuJ8efk="
+			crossorigin="anonymous"></script>
+	}
 	<script src="~/js/site.js" asp-append-version="true" defer></script>
 	@await RenderSectionAsync("Scripts", required: false)
 </body>

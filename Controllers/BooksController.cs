@@ -12,7 +12,7 @@ public class BooksController(
 	BookLoansContext dbContext,
 	IMemoryCache memoryCache,
 	IOptions<Features> features,
-	IOpenLibraryService openLibraryService) : Controller
+	OpenLibraryService openLibraryService) : Controller
 {
 	public IActionResult Search(int? loanId, string? title, string? author, string? ISBN)
 	{

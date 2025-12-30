@@ -1,0 +1,13 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@model library_management_system.Models.VersionInfoViewModel
+
+@if (Model.IsNewVersionAvailable && Model.NewVersionUri != null)
+{
+	@Model.CurrentVersion <a href="@Model.NewVersionUri" target="_blank" rel="noopener noreferrer">(@Localizer["New version available!"])</a>
+}
+else
+{
+	@Model.CurrentVersion
+}
