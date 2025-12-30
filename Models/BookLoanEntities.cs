@@ -40,6 +40,9 @@ public class Loan
 	[DisplayFormat(DataFormatString = "{0:d}")]
 	public DateTime? ReturnDate { get; set; }
 
+	[Required]
+	public DateTime CreationDate { get; set; }
+
 	public ICollection<LoanBook> LoanBooks { get; set; } = [];
 
 	public ICollection<LoanMovie> LoanMovies { get; set; } = [];
