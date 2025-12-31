@@ -50,6 +50,10 @@ internal class Program
 		builder.Services.AddHostedService<LaunchBrowserOnStartup>();
 		builder.Services.AddHostedService<StartupBanner>();
 
+		if (string.IsNullOrEmpty(builder.Configuration.GetConnectionString("BookSearchApiKey")))
+			builder.Services.AddScoped<IBookSearchService, OpenLibraryService>();
+		else
+			builder.Services.AddScoped<IBookSearchService, GoogleBooksService>();
 		builder.Services.AddScoped<OpenLibraryService>();
 		builder.Services.AddScoped<ApplicationVersionService>();
 

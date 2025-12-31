@@ -56,6 +56,33 @@ Change the database location by modifying the connection string in the `appsetti
 }
 ```
 
+### Configuration
+
+Optional: By default, book search is provided by [Open Library API](https://openlibrary.org/developers/api). No extra configuration is required to use the Open Library functionality.
+
+However, you can also choose to use the [Google Books API](https://developers.google.com/books/docs/overview). An API key is required to use the Google Books functionality. You can obtain an API key by following the instructions in the [Google Books API documentation](https://developers.google.com/books/docs/v1/using#APIKey).
+
+Store the API key in user-secrets or environment variables:
+
+```pwsh
+# If you want to use the Google Books API, set the Api key in user-secrets
+dotnet user-secrets set "ConnectionStrings:BookSearchApiKey" "YOUR_API_KEY"
+
+# Or set the API key in environment variables
+$env:ConnectionStrings__BookSearchApiKey = "YOUR_API_KEY"
+```
+
+You can also set the API key in the `appsettings.json` file, but this is not recommended for production environments:
+
+```json
+{
+  "ConnectionStrings": {
+    "// Google Books API key": "If you want to use the Google Books API, set your API key here",
+    "BookSearchApiKey": "YOUR_API_KEY"
+  }
+}
+```
+
 ## Publishing the project
 
 To publish the project, use the following command:

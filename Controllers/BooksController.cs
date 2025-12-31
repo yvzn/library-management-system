@@ -12,7 +12,7 @@ public class BooksController(
 	BookLoansContext dbContext,
 	IMemoryCache memoryCache,
 	IOptions<Features> features,
-	OpenLibraryService openLibraryService) : Controller
+	IBookSearchService bookSearchService) : Controller
 {
 	public IActionResult Search(int? loanId, string? title, string? author, string? ISBN)
 	{
@@ -73,13 +73,11 @@ public class BooksController(
 			return PartialView("_BookSearchResultsOnlinePartial", cachedResults);
 		}
 
-		// Prepare search parameters
 		var title = model.Title?.Trim();
 		var author = model.Author?.Trim();
 		var isbn = model.ISBN?.Trim().Replace("-", "");
 
-		// Use OpenLibrary service to search for books
-		var books = await openLibraryService.SearchBooksAsync(title, author, isbn, HttpContext.RequestAborted);
+		var books = await bookSearchService.SearchBooksAsync(title, author, isbn, HttpContext.RequestAborted);
 
 		var searchResults = new SearchResultsViewModel(model)
 		{

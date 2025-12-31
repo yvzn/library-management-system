@@ -5,7 +5,7 @@ namespace library_management_system.Services;
 public class OpenLibraryService(
 	IHttpClientFactory httpClientFactory,
 	ApplicationVersionService applicationVersionService,
-	ILogger<OpenLibraryService> logger)
+	ILogger<OpenLibraryService> logger): IBookSearchService
 {
 	private HttpClient HttpClient
 	{

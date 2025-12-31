@@ -34,6 +34,7 @@ public class BookLoansDbInitializer(BookLoansContext context)
 			LoanDate = DateTime.UtcNow.AddDays(-1),
 			DueDate = DateTime.UtcNow.AddDays(14),
 			ReturnDate = null,
+			CreationDate = DateTime.UtcNow.AddDays(-1),
 		};
 		var returnedLoan = new Loan
 		{
@@ -41,6 +42,7 @@ public class BookLoansDbInitializer(BookLoansContext context)
 			LoanDate = DateTime.UtcNow.AddDays(-10),
 			DueDate = DateTime.UtcNow.AddDays(4),
 			ReturnDate = DateTime.UtcNow.AddDays(-5),
+			CreationDate = DateTime.UtcNow.AddDays(-10),
 		};
 		await context.Loans.AddRangeAsync([activeLoan, returnedLoan], cancellationToken);
 
