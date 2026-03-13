@@ -28,22 +28,19 @@
 				</label>
 				<input asp-for="DueDate" class="form-control" type="date" required />
 			</div>
-			@if (@Model.ReturnDate != null)
-			{
-				<div class="mb-3">
-					<label asp-for="ReturnDate" class="form-label">
-						@Html.DisplayNameFor(model => model.ReturnDate)
-					</label>
-					<div class="input-group">
-						<input asp-for="ReturnDate" class="form-control" type="date" />
-						<button class="btn btn-outline-secondary" type="button" id="ClearReturnDate"
-							data-bs-toggle="tooltip" data-bs-offset="0,10" data-bs-title="@Localizer["Clear"]"
-							aria-label="@Localizer["Clear"]">
-							<i class="bi bi-x-circle" aria-hidden="true"></i>
-						</button>
-					</div>
+			<div class="mb-3">
+				<label asp-for="ReturnDate" class="form-label">
+					@Html.DisplayNameFor(model => model.ReturnDate)
+				</label>
+				<div class="input-group">
+					<input asp-for="ReturnDate" class="form-control" type="date" />
+					<button class="btn btn-outline-secondary" type="button" id="ClearReturnDate"
+						data-bs-toggle="tooltip" data-bs-offset="0,10" data-bs-title="@Localizer["Clear"]"
+						aria-label="@Localizer["Clear"]">
+						<i class="bi bi-x-circle" aria-hidden="true"></i>
+					</button>
 				</div>
-			}
+			</div>
 			<button type="submit" class="btn btn-primary"><i class="bi bi-calendar-week me-2" aria-hidden="true"></i>
 				@Localizer["Update Loan"]</button>
 		</div>
