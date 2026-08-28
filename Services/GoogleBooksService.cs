@@ -20,11 +20,11 @@ public class GoogleBooksService(
 
 	public async Task<List<Book>> SearchBooksAsync(string? title, string? author, string? isbn, CancellationToken cancellationToken = default)
 	{
-		var apiKey = configuration.GetConnectionString("BookSearchApiKey");
+		var key = configuration.GetConnectionString("BookSearchApiKey");
 		var uriBuilder = new UriBuilder("https://www.googleapis.com/books/v1/volumes");
 
 		var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
-		query[nameof(apiKey)] = apiKey;
+		query[nameof(key)] = key;
 
 		var q = new List<string>();
 		if (!string.IsNullOrWhiteSpace(author))
