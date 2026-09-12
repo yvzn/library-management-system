@@ -91,25 +91,7 @@ public class BooksController(
 
 			return PartialView("_BookSearchResultsOnlinePartial", searchResults);
 		}
-		catch (OperationCanceledException ex) when (!HttpContext.RequestAborted.IsCancellationRequested)
-		{
-			logger.LogError(ex, "Online book search timed out for {Description}", model.Description);
-			return PartialView("_BookSearchResultsOnlinePartial", new SearchResultsViewModel(model)
-			{
-				OnlineSearchFailed = true,
-				ManualAddAnchorId = "add-new-book-form"
-			});
-		}
-		catch (HttpRequestException ex)
-		{
-			logger.LogError(ex, "Online book search request failed for {Description}", model.Description);
-			return PartialView("_BookSearchResultsOnlinePartial", new SearchResultsViewModel(model)
-			{
-				OnlineSearchFailed = true,
-				ManualAddAnchorId = "add-new-book-form"
-			});
-		}
-		catch (Exception ex)
+		catch (Exception ex) when (!HttpContext.RequestAborted.IsCancellationRequested)
 		{
 			logger.LogError(ex, "Online book search failed for {Description}", model.Description);
 			return PartialView("_BookSearchResultsOnlinePartial", new SearchResultsViewModel(model)

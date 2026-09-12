@@ -137,25 +137,7 @@ public class MusicDiscsController(
 
 			return PartialView("_MusicDiscSearchResultsOnlinePartial", searchResults);
 		}
-		catch (OperationCanceledException ex) when (!HttpContext.RequestAborted.IsCancellationRequested)
-		{
-			logger.LogError(ex, "Online music disc search timed out for {Description}", model.Description);
-			return PartialView("_MusicDiscSearchResultsOnlinePartial", new SearchResultsViewModel(model)
-			{
-				OnlineSearchFailed = true,
-				ManualAddAnchorId = "add-new-music-disc-form"
-			});
-		}
-		catch (HttpRequestException ex)
-		{
-			logger.LogError(ex, "Online music disc search request failed for {Description}", model.Description);
-			return PartialView("_MusicDiscSearchResultsOnlinePartial", new SearchResultsViewModel(model)
-			{
-				OnlineSearchFailed = true,
-				ManualAddAnchorId = "add-new-music-disc-form"
-			});
-		}
-		catch (Exception ex)
+		catch (Exception ex) when (!HttpContext.RequestAborted.IsCancellationRequested)
 		{
 			logger.LogError(ex, "Online music disc search failed for {Description}", model.Description);
 			return PartialView("_MusicDiscSearchResultsOnlinePartial", new SearchResultsViewModel(model)

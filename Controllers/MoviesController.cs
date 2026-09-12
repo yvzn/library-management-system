@@ -133,25 +133,7 @@ public class MoviesController(
 
 			return PartialView("_MovieSearchResultsOnlinePartial", searchResults);
 		}
-		catch (OperationCanceledException ex) when (!HttpContext.RequestAborted.IsCancellationRequested)
-		{
-			logger.LogError(ex, "Online movie search timed out for {Description}", model.Description);
-			return PartialView("_MovieSearchResultsOnlinePartial", new SearchResultsViewModel(model)
-			{
-				OnlineSearchFailed = true,
-				ManualAddAnchorId = "add-new-movie-form"
-			});
-		}
-		catch (HttpRequestException ex)
-		{
-			logger.LogError(ex, "Online movie search request failed for {Description}", model.Description);
-			return PartialView("_MovieSearchResultsOnlinePartial", new SearchResultsViewModel(model)
-			{
-				OnlineSearchFailed = true,
-				ManualAddAnchorId = "add-new-movie-form"
-			});
-		}
-		catch (Exception ex)
+		catch (Exception ex) when (!HttpContext.RequestAborted.IsCancellationRequested)
 		{
 			logger.LogError(ex, "Online movie search failed for {Description}", model.Description);
 			return PartialView("_MovieSearchResultsOnlinePartial", new SearchResultsViewModel(model)
