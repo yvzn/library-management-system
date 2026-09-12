@@ -12,6 +12,7 @@ public class OpenLibraryService(
 		get
 		{
 			var client = httpClientFactory.CreateClient();
+			client.Timeout = TimeSpan.FromSeconds(60);
 			client.DefaultRequestHeaders.UserAgent.ParseAdd(
 				$"LibreLibrary/{applicationVersionService.CurrentVersion} (https://github.com/yvzn/library-management-system)");
 			return client;

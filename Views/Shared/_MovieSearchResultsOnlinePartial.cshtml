@@ -9,7 +9,23 @@
 
 <section class="mb-5">
 	<h2 class="display-5">@Localizer["New Movies"]</h2>
-	@if (Model.Movies.Count > 0)
+	@if (Model.OnlineSearchFailed)
+	{
+		<div class="alert alert-warning" role="alert">
+			<p class="mb-2">@Localizer["We couldn't retrieve information about this item from our online sources. This isn't your fault—these things sometimes happen."]</p>
+			<p class="mb-3">@Localizer["Would you like to try again or add the item manually?"]</p>
+			<form hx-post="/Movies/SearchResultsOnline" hx-target="#searchResultsOnline" class="d-inline-block">
+				<input type="hidden" name="LoanId" value="@Model.LoanId" />
+				<input type="hidden" name="Title" value="@Model.Title" />
+				<input type="hidden" name="Director" value="@Model.Director" />
+				<input type="hidden" name="ReleaseYear" value="@Model.ReleaseYear" />
+				<input type="hidden" name="EAN" value="@Model.EAN" />
+				<button type="submit" class="btn btn-primary">@Localizer["Retry"]</button>
+			</form>
+			<a href="#@Model.ManualAddAnchorId" class="btn btn-outline-primary ms-2">@Localizer["Add item manually"]</a>
+		</div>
+	}
+	else if (Model.Movies.Count > 0)
 	{
 		<output class="row">
 			<table class="table">

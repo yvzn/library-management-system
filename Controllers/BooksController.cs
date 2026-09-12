@@ -12,7 +12,8 @@ public class BooksController(
 	BookLoansContext dbContext,
 	IMemoryCache memoryCache,
 	IOptions<Features> features,
-	IBookSearchService bookSearchService) : Controller
+	IBookSearchService bookSearchService,
+	ILogger<BooksController> logger) : Controller
 {
 	public IActionResult Search(int? loanId, string? title, string? author, string? ISBN)
 	{
@@ -77,16 +78,46 @@ public class BooksController(
 		var author = model.Author?.Trim();
 		var isbn = model.ISBN?.Trim().Replace("-", "");
 
-		var books = await bookSearchService.SearchBooksAsync(title, author, isbn, HttpContext.RequestAborted);
-
-		var searchResults = new SearchResultsViewModel(model)
+		try
 		{
-			Books = books
-		};
+			var books = await bookSearchService.SearchBooksAsync(title, author, isbn, HttpContext.RequestAborted);
 
-		memoryCache.Set(cacheKey, searchResults, TimeSpan.FromMinutes(5));
+			var searchResults = new SearchResultsViewModel(model)
+			{
+				Books = books
+			};
 
-		return PartialView("_BookSearchResultsOnlinePartial", searchResults);
+			memoryCache.Set(cacheKey, searchResults, TimeSpan.FromMinutes(5));
+
+			return PartialView("_BookSearchResultsOnlinePartial", searchResults);
+		}
+		catch (OperationCanceledException ex) when (!HttpContext.RequestAborted.IsCancellationRequested)
+		{
+			logger.LogError(ex, "Online book search timed out for {Description}", model.Description);
+			return PartialView("_BookSearchResultsOnlinePartial", new SearchResultsViewModel(model)
+			{
+				OnlineSearchFailed = true,
+				ManualAddAnchorId = "add-new-book-form"
+			});
+		}
+		catch (HttpRequestException ex)
+		{
+			logger.LogError(ex, "Online book search request failed for {Description}", model.Description);
+			return PartialView("_BookSearchResultsOnlinePartial", new SearchResultsViewModel(model)
+			{
+				OnlineSearchFailed = true,
+				ManualAddAnchorId = "add-new-book-form"
+			});
+		}
+		catch (Exception ex)
+		{
+			logger.LogError(ex, "Online book search failed for {Description}", model.Description);
+			return PartialView("_BookSearchResultsOnlinePartial", new SearchResultsViewModel(model)
+			{
+				OnlineSearchFailed = true,
+				ManualAddAnchorId = "add-new-book-form"
+			});
+		}
 	}
 
 	public IActionResult New(Book book, int? loanId)

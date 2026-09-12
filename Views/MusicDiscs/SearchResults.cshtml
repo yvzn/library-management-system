@@ -88,7 +88,7 @@
 	</section>
 }
 
-<form asp-controller="MusicDiscs" asp-action="New" class="mb-5">
+<form id="add-new-music-disc-form" asp-controller="MusicDiscs" asp-action="New" class="mb-5">
 	<h2 class="display-5">@Localizer["Add New Music Disc"]</h2>
 
 	<input type="hidden" name="LoanId" value="@Model.LoanId" />

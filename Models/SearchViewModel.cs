@@ -27,6 +27,10 @@ public record SearchViewModel : IValidatableObject
 
 	public int? LoanId { get; set; }
 
+	public bool OnlineSearchFailed { get; set; }
+
+	public string ManualAddAnchorId { get; set; } = string.Empty;
+
 	public string CacheKey => Convert.ToHexString(MD5.HashData(Encoding.UTF8.GetBytes(
 		string.Join('_', SearchProperties.Where(s => !string.IsNullOrEmpty(s))))));
 
