@@ -83,7 +83,7 @@
 	</section>
 }
 
-<form asp-controller="Books" asp-action="New" class="mb-5">
+<form id="add-new-book-form" asp-controller="Books" asp-action="New" class="mb-5">
 	<h2 class="display-5">@Localizer["Add New Book"]</h2>
 
 	<input type="hidden" name="LoanId" value="@Model.LoanId" />

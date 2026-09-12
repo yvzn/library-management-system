@@ -92,7 +92,7 @@
 	</section>
 }
 
-<form asp-controller="Movies" asp-action="New" class="mb-5">
+<form id="add-new-movie-form" asp-controller="Movies" asp-action="New" class="mb-5">
 	<h2 class="display-5">@Localizer["Add New Movie"]</h2>
 
 	<input type="hidden" name="LoanId" value="@Model.LoanId" />

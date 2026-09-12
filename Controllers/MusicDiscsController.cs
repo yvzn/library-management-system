@@ -14,7 +14,8 @@ public class MusicDiscsController(
 	IMemoryCache memoryCache,
 	IHttpClientFactory httpClientFactory,
 	ApplicationVersionService applicationVersionService,
-	IOptions<Features> features) : Controller
+	IOptions<Features> features,
+	ILogger<MusicDiscsController> logger) : Controller
 {
 	public IActionResult Search(int? loanId, string? title, string? author, string? EAN)
 	{
@@ -108,30 +109,43 @@ public class MusicDiscsController(
 		query["fmt"] = "json";
 		uriBuilder.Query = query.ToString();
 
-		var client = httpClientFactory.CreateClient();
-		client.DefaultRequestHeaders.UserAgent.ParseAdd(
-			$"LibreLibrary/{applicationVersionService.CurrentVersion} (https://github.com/yvzn/library-management-system)");
-
-		var response = await client.GetFromJsonAsync<MusicBrainzApiResponse>(uriBuilder.Uri, HttpContext.RequestAborted);
-
-		var results = response?.Releases?
-			.Select(r => new MusicDisc
-			{
-				Title = r.Title,
-				Artist = string.Join(", ", r.ArtistCredit.Select(a => a.Name).Distinct()),
-				Version = r.Version,
-				EAN = string.IsNullOrEmpty(r.BarCode) ? r.Asin : r.BarCode
-			})
-			.Take(20) ?? [];
-
-		var searchResults = new SearchResultsViewModel(model)
+		try
 		{
-			MusicDiscs = [..results]
-		};
+			var client = httpClientFactory.CreateClient();
+			client.Timeout = TimeSpan.FromSeconds(60);
+			client.DefaultRequestHeaders.UserAgent.ParseAdd(
+				$"LibreLibrary/{applicationVersionService.CurrentVersion} (https://github.com/yvzn/library-management-system)");
 
-		memoryCache.Set(cacheKey, searchResults, TimeSpan.FromMinutes(5));
+			var response = await client.GetFromJsonAsync<MusicBrainzApiResponse>(uriBuilder.Uri, HttpContext.RequestAborted);
 
-		return PartialView("_MusicDiscSearchResultsOnlinePartial", searchResults);
+			var results = response?.Releases?
+				.Select(r => new MusicDisc
+				{
+					Title = r.Title,
+					Artist = string.Join(", ", r.ArtistCredit.Select(a => a.Name).Distinct()),
+					Version = r.Version,
+					EAN = string.IsNullOrEmpty(r.BarCode) ? r.Asin : r.BarCode
+				})
+				.Take(20) ?? [];
+
+			var searchResults = new SearchResultsViewModel(model)
+			{
+				MusicDiscs = [..results]
+			};
+
+			memoryCache.Set(cacheKey, searchResults, TimeSpan.FromMinutes(5));
+
+			return PartialView("_MusicDiscSearchResultsOnlinePartial", searchResults);
+		}
+		catch (Exception ex) when (!HttpContext.RequestAborted.IsCancellationRequested)
+		{
+			logger.LogError(ex, "Online music disc search failed for {Description}", model.Description);
+			return PartialView("_MusicDiscSearchResultsOnlinePartial", new SearchResultsViewModel(model)
+			{
+				OnlineSearchFailed = true,
+				ManualAddAnchorId = "add-new-music-disc-form"
+			});
+		}
 	}
 
 	public IActionResult New(MusicDisc musicDisc, int? loanId)

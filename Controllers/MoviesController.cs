@@ -15,7 +15,8 @@ public class MoviesController(
 	IMemoryCache memoryCache,
 	IHttpClientFactory httpClientFactory,
 	ApplicationVersionService applicationVersionService,
-	IOptions<Features> features) : Controller
+	IOptions<Features> features,
+	ILogger<MoviesController> logger) : Controller
 {
 	public IActionResult Search(int? loanId, string? title, string? director, int? releaseYear, string? EAN)
 	{
@@ -102,32 +103,45 @@ public class MoviesController(
 				new SearchResultsViewModel(model));
 		}
 
-		uriBuilder.Query = queryString;
-		var client = httpClientFactory.CreateClient();
-		client.DefaultRequestHeaders.UserAgent.ParseAdd(
-			$"LibreLibrary/{applicationVersionService.CurrentVersion} (https://github.com/yvzn/library-management-system)");
-
-		using var response = await client.GetAsync(uriBuilder.Uri, HttpContext.RequestAborted);
-		response.EnsureSuccessStatusCode();
-
-		var xmlContent = await response.Content.ReadAsStringAsync(HttpContext.RequestAborted);
-		var movies = ParseMoviesFromXml(xmlContent);
-
-		movies = [.. movies.DistinctBy(m => m.Title + m.Director + m.ReleaseYear + m.Media).Take(20)];
-
-		if (!string.IsNullOrWhiteSpace(model.EAN))
+		try
 		{
-			movies = [.. movies.Select(x => { x.EAN = model.EAN; return x; })];
+			uriBuilder.Query = queryString;
+			var client = httpClientFactory.CreateClient();
+			client.Timeout = TimeSpan.FromSeconds(60);
+			client.DefaultRequestHeaders.UserAgent.ParseAdd(
+				$"LibreLibrary/{applicationVersionService.CurrentVersion} (https://github.com/yvzn/library-management-system)");
+
+			using var response = await client.GetAsync(uriBuilder.Uri, HttpContext.RequestAborted);
+			response.EnsureSuccessStatusCode();
+
+			var xmlContent = await response.Content.ReadAsStringAsync(HttpContext.RequestAborted);
+			var movies = ParseMoviesFromXml(xmlContent);
+
+			movies = [.. movies.DistinctBy(m => m.Title + m.Director + m.ReleaseYear + m.Media).Take(20)];
+
+			if (!string.IsNullOrWhiteSpace(model.EAN))
+			{
+				movies = [.. movies.Select(x => { x.EAN = model.EAN; return x; })];
+			}
+
+			var searchResults = new SearchResultsViewModel(model)
+			{
+				Movies = [.. movies]
+			};
+
+			memoryCache.Set(cacheKey, searchResults, TimeSpan.FromMinutes(5));
+
+			return PartialView("_MovieSearchResultsOnlinePartial", searchResults);
 		}
-
-		var searchResults = new SearchResultsViewModel(model)
+		catch (Exception ex) when (!HttpContext.RequestAborted.IsCancellationRequested)
 		{
-			Movies = [.. movies]
-		};
-
-		memoryCache.Set(cacheKey, searchResults, TimeSpan.FromMinutes(5));
-
-		return PartialView("_MovieSearchResultsOnlinePartial", searchResults);
+			logger.LogError(ex, "Online movie search failed for {Description}", model.Description);
+			return PartialView("_MovieSearchResultsOnlinePartial", new SearchResultsViewModel(model)
+			{
+				OnlineSearchFailed = true,
+				ManualAddAnchorId = "add-new-movie-form"
+			});
+		}
 	}
 
 	public IActionResult New(Movie movie, int? loanId)
