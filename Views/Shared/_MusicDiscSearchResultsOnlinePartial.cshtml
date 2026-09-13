@@ -8,17 +8,35 @@
 	@if (Model.OnlineSearchFailed)
 	{
 		<div class="alert alert-warning" role="alert">
-			<p class="mb-2">@Localizer["We couldn't retrieve information about this item from our online sources. This isn't your fault—these things sometimes happen."]</p>
+			<p class="mb-2">@Localizer["The online music disc search failed on this attempt."]</p>
 			<p class="mb-3">@Localizer["Would you like to try again or add the item manually?"]</p>
-			<form hx-post="/MusicDiscs/SearchResultsOnline" hx-target="#searchResultsOnline" class="d-inline-block">
+			<form hx-post="/MusicDiscs/SearchResultsOnline" hx-target="#searchResultsOnline" hx-indicator="#retryIndicator-MusicDisc-@Model.CacheKey" class="d-inline-block">
 				<input type="hidden" name="LoanId" value="@Model.LoanId" />
 				<input type="hidden" name="Title" value="@Model.Title" />
 				<input type="hidden" name="Author" value="@Model.Author" />
 				<input type="hidden" name="EAN" value="@Model.EAN" />
-				<button type="submit" class="btn btn-primary">@Localizer["Retry"]</button>
+				<button type="submit" class="btn btn-primary">
+					<span id="retryIndicator-MusicDisc-@Model.CacheKey" class="retry-indicator spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" aria-label="@Localizer["Loading..."]"></span>
+					<span>@Localizer["Retry"]</span>
+				</button>
 			</form>
-			<a href="#@Model.ManualAddAnchorId" class="btn btn-outline-primary ms-2">@Localizer["Add item manually"]</a>
+			<form method="get" asp-controller="MusicDiscs" asp-action="New" class="d-inline-block ms-2">
+				<input type="hidden" name="LoanId" value="@Model.LoanId" />
+				<input type="hidden" name="MusicDisc.Title" value="@Model.Title" />
+				<input type="hidden" name="MusicDisc.Artist" value="@Model.Author" />
+				<input type="hidden" name="MusicDisc.EAN" value="@Model.EAN" />
+				<button type="submit" class="btn btn-outline-primary">@Localizer["Add item manually"]</button>
+			</form>
 		</div>
+		<style>
+			.retry-indicator {
+				display: none;
+			}
+			.htmx-request .retry-indicator,
+			.htmx-request.retry-indicator {
+				display: inline-block;
+			}
+		</style>
 	}
 	else if (Model.MusicDiscs.Count > 0)
 	{

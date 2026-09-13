@@ -142,8 +142,7 @@ public class MusicDiscsController(
 			logger.LogError(ex, "Online music disc search failed for {Description}", model.Description);
 			return PartialView("_MusicDiscSearchResultsOnlinePartial", new SearchResultsViewModel(model)
 			{
-				OnlineSearchFailed = true,
-				ManualAddAnchorId = "add-new-music-disc-form"
+				OnlineSearchFailed = true
 			});
 		}
 	}

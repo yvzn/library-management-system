@@ -138,8 +138,7 @@ public class MoviesController(
 			logger.LogError(ex, "Online movie search failed for {Description}", model.Description);
 			return PartialView("_MovieSearchResultsOnlinePartial", new SearchResultsViewModel(model)
 			{
-				OnlineSearchFailed = true,
-				ManualAddAnchorId = "add-new-movie-form"
+				OnlineSearchFailed = true
 			});
 		}
 	}
