@@ -132,14 +132,11 @@
   <data name="The online movie search failed on this attempt." xml:space="preserve">
     <value>La recherche en ligne de film a échoué lors de cette tentative.</value>
   </data>
-  <data name="Would you like to try again or add the item manually?" xml:space="preserve">
-    <value>Voulez-vous réessayer ou ajouter l'élément manuellement ?</value>
+  <data name="Would you like to try again? You can also add the item manually using the button below." xml:space="preserve">
+    <value>Voulez-vous réessayer ? Vous pouvez également ajouter l'élément manuellement en utilisant le bouton ci-dessous.</value>
   </data>
   <data name="Retry" xml:space="preserve">
     <value>Réessayer</value>
-  </data>
-  <data name="Add item manually" xml:space="preserve">
-    <value>Ajouter manuellement</value>
   </data>
   <data name="Loading..." xml:space="preserve">
     <value>Chargement...</value>

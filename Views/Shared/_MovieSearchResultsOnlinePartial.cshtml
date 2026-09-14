@@ -13,7 +13,7 @@
 	{
 		<div class="alert alert-warning" role="alert">
 			<p class="mb-2">@Localizer["The online movie search failed on this attempt."]</p>
-			<p class="mb-3">@Localizer["Would you like to try again or add the item manually?"]</p>
+			<p class="mb-3">@Localizer["Would you like to try again? You can also add the item manually using the button below."]</p>
 			<form hx-post="/Movies/SearchResultsOnline" hx-target="#searchResultsOnline" hx-indicator="#retryIndicator-Movie-@Model.CacheKey" class="d-inline-block">
 				<input type="hidden" name="LoanId" value="@Model.LoanId" />
 				<input type="hidden" name="Title" value="@Model.Title" />
@@ -24,14 +24,6 @@
 					<span id="retryIndicator-Movie-@Model.CacheKey" class="retry-indicator spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" aria-label="@Localizer["Loading..."]"></span>
 					<span>@Localizer["Retry"]</span>
 				</button>
-			</form>
-			<form method="get" asp-controller="Movies" asp-action="New" class="d-inline-block ms-2">
-				<input type="hidden" name="LoanId" value="@Model.LoanId" />
-				<input type="hidden" name="Movie.Title" value="@Model.Title" />
-				<input type="hidden" name="Movie.Director" value="@Model.Director" />
-				<input type="hidden" name="Movie.ReleaseYear" value="@Model.ReleaseYear" />
-				<input type="hidden" name="Movie.EAN" value="@Model.EAN" />
-				<button type="submit" class="btn btn-outline-primary">@Localizer["Add item manually"]</button>
 			</form>
 		</div>
 		<style>
