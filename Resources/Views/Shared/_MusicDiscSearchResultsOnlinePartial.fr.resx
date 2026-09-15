@@ -126,4 +126,16 @@
   <data name="No music discs found." xml:space="preserve">
     <value>Aucun disque trouvé.</value>
   </data>
+  <data name="The online music disc search failed on this attempt." xml:space="preserve">
+    <value>La recherche en ligne de disque a échoué lors de cette tentative.</value>
+  </data>
+  <data name="Would you like to try again? You can also add the item manually using the button below." xml:space="preserve">
+    <value>Voulez-vous réessayer ? Vous pouvez également ajouter l'élément manuellement en utilisant le bouton ci-dessous.</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Réessayer</value>
+  </data>
+  <data name="Loading..." xml:space="preserve">
+    <value>Chargement...</value>
+  </data>
 </root>

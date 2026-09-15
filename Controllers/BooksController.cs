@@ -96,8 +96,7 @@ public class BooksController(
 			logger.LogError(ex, "Online book search failed for {Description}", model.Description);
 			return PartialView("_BookSearchResultsOnlinePartial", new SearchResultsViewModel(model)
 			{
-				OnlineSearchFailed = true,
-				ManualAddAnchorId = "add-new-book-form"
+				OnlineSearchFailed = true
 			});
 		}
 	}

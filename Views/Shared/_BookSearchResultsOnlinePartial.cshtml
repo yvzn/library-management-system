@@ -9,17 +9,28 @@
 	@if (Model.OnlineSearchFailed)
 	{
 		<div class="alert alert-warning" role="alert">
-			<p class="mb-2">@Localizer["We couldn't retrieve information about this item from our online sources. This isn't your fault—these things sometimes happen."]</p>
-			<p class="mb-3">@Localizer["Would you like to try again or add the item manually?"]</p>
-			<form hx-post="/Books/SearchResultsOnline" hx-target="#searchResultsOnline" class="d-inline-block">
+			<p class="mb-2">@Localizer["The online book search failed on this attempt."]</p>
+			<p class="mb-3">@Localizer["Would you like to try again? You can also add the item manually using the button below."]</p>
+			<form hx-post="/Books/SearchResultsOnline" hx-target="#searchResultsOnline" hx-indicator="#retryIndicator-Book-@Model.CacheKey" class="d-inline-block">
 				<input type="hidden" name="LoanId" value="@Model.LoanId" />
 				<input type="hidden" name="Title" value="@Model.Title" />
 				<input type="hidden" name="Author" value="@Model.Author" />
 				<input type="hidden" name="ISBN" value="@Model.ISBN" />
-				<button type="submit" class="btn btn-primary">@Localizer["Retry"]</button>
+				<button type="submit" class="btn btn-primary">
+					<span id="retryIndicator-Book-@Model.CacheKey" class="retry-indicator spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" aria-label="@Localizer["Loading..."]"></span>
+					<span>@Localizer["Retry"]</span>
+				</button>
 			</form>
-			<a href="#@Model.ManualAddAnchorId" class="btn btn-outline-primary ms-2">@Localizer["Add item manually"]</a>
 		</div>
+		<style>
+			.retry-indicator {
+				display: none;
+			}
+			.htmx-request .retry-indicator,
+			.htmx-request.retry-indicator {
+				display: inline-block;
+			}
+		</style>
 	}
 	else if (Model.Books.Count > 0)
 	{
