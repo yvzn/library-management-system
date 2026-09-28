@@ -84,13 +84,25 @@
 		<h2 class="display-5">@Localizer["New Music Discs"]</h2>
 		@if ("true".Equals(ViewData["ShowManualOnlineSearch"]))
 		{
-			<form hx-post="/MusicDiscs/SearchResultsOnline" hx-target="#searchResultsOnline" class="mb-3">
+			<form hx-post="/MusicDiscs/SearchResultsOnline" hx-target="#searchResultsOnline" hx-indicator="#manualSearchIndicator-MusicDisc-@Model.CacheKey" class="mb-3">
 				<input type="hidden" name="LoanId" value="@Model.LoanId" />
 				<input type="hidden" name="Title" value="@Model.Title" />
 				<input type="hidden" name="Author" value="@Model.Author" />
 				<input type="hidden" name="EAN" value="@Model.EAN" />
-				<button type="submit" class="btn btn-outline-primary text-nowrap">@Localizer["Search online"]</button>
+				<button type="submit" class="btn btn-outline-primary text-nowrap">
+					<span id="manualSearchIndicator-MusicDisc-@Model.CacheKey" class="search-indicator spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" aria-label="@Localizer["Loading..."]"></span>
+					<span>@Localizer["Search online"]</span>
+				</button>
 			</form>
+			<style>
+				.search-indicator {
+					display: none;
+				}
+				.htmx-request .search-indicator,
+				.htmx-request.search-indicator {
+					display: inline-block;
+				}
+			</style>
 		}
 		else
 		{
