@@ -21,16 +21,6 @@
 			<input type="hidden" name="ISBN" value="@Model.ISBN" />
 		</form>
 	}
-	@if ("true".Equals(ViewData["ShowManualOnlineSearch"]))
-	{
-		<form hx-post="/Books/SearchResultsOnline" hx-target="#searchResultsOnline" class="mb-3">
-			<input type="hidden" name="LoanId" value="@Model.LoanId" />
-			<input type="hidden" name="Title" value="@Model.Title" />
-			<input type="hidden" name="Author" value="@Model.Author" />
-			<input type="hidden" name="ISBN" value="@Model.ISBN" />
-			<button type="submit" class="btn btn-outline-primary text-nowrap">@Localizer["Search online"]</button>
-		</form>
-	}
 
 	@await Html.PartialAsync(
 	"_SearchParametersPartial",
@@ -83,13 +73,26 @@
 	</section>
 }
 
-@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
+@if ("true".Equals(ViewData["OnlineSearchEnabled"]) || "true".Equals(ViewData["ShowManualOnlineSearch"]))
 {
 	<section class="mb-5" id="searchResultsOnline">
 		<h2 class="display-5">@Localizer["New Books"]</h2>
-		<div class="spinner-border text-primary" role="status">
-			<span class="visually-hidden">@Localizer["Loading..."]</span>
-		</div>
+		@if ("true".Equals(ViewData["ShowManualOnlineSearch"]))
+		{
+			<form hx-post="/Books/SearchResultsOnline" hx-target="#searchResultsOnline" class="mb-3">
+				<input type="hidden" name="LoanId" value="@Model.LoanId" />
+				<input type="hidden" name="Title" value="@Model.Title" />
+				<input type="hidden" name="Author" value="@Model.Author" />
+				<input type="hidden" name="ISBN" value="@Model.ISBN" />
+				<button type="submit" class="btn btn-outline-primary text-nowrap">@Localizer["Search online"]</button>
+			</form>
+		}
+		else
+		{
+			<div class="spinner-border text-primary" role="status">
+				<span class="visually-hidden">@Localizer["Loading..."]</span>
+			</div>
+		}
 	</section>
 }
 
