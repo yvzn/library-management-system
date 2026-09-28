@@ -10,7 +10,7 @@
 }
 
 <search>
-	@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
+	@if ("true".Equals(ViewData["OnlineSearchEnabled"]) && !"true".Equals(ViewData["ShowManualOnlineSearch"]))
 	{
 		<form id="searchParams" hx-post="/Movies/SearchResultsOnline" hx-trigger="intersect once"
 			hx-target="#searchResultsOnline">
@@ -19,6 +19,17 @@
 			<input type="hidden" name="Director" value="@Model.Director" />
 			<input type="hidden" name="ReleaseYear" value="@Model.ReleaseYear" />
 			<input type="hidden" name="EAN" value="@Model.EAN" />
+		</form>
+	}
+	@if ("true".Equals(ViewData["ShowManualOnlineSearch"]))
+	{
+		<form hx-post="/Movies/SearchResultsOnline" hx-target="#searchResultsOnline" class="mb-3">
+			<input type="hidden" name="LoanId" value="@Model.LoanId" />
+			<input type="hidden" name="Title" value="@Model.Title" />
+			<input type="hidden" name="Director" value="@Model.Director" />
+			<input type="hidden" name="ReleaseYear" value="@Model.ReleaseYear" />
+			<input type="hidden" name="EAN" value="@Model.EAN" />
+			<button type="submit" class="btn btn-outline-primary text-nowrap">@Localizer["Search online"]</button>
 		</form>
 	}
 

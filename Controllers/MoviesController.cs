@@ -65,8 +65,13 @@ public class MoviesController(
 		}
 
 		var result = await movies.AsNoTracking().ToListAsync(HttpContext.RequestAborted);
+		var onlineSearchMode = OnlineSearchModeParser.Parse(
+			features.Value.OnlineMovieSearch.ToString(),
+			OnlineSearchMode.Automatic);
 
-		ViewData["OnlineSearchEnabled"] = features.Value.OnlineMovieSearch.ToString().ToLowerInvariant();
+		ViewData["OnlineSearchMode"] = onlineSearchMode.ToString();
+		ViewData["OnlineSearchEnabled"] = onlineSearchMode.ShouldTriggerOnlineSearch(result.Count > 0).ToString().ToLowerInvariant();
+		ViewData["ShowManualOnlineSearch"] = onlineSearchMode.ShouldShowManualSearchAction().ToString().ToLowerInvariant();
 
 		return View(
 			new SearchResultsViewModel(model)

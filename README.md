@@ -58,6 +58,31 @@ Change the database location by modifying the connection string in the `appsetti
 
 ### Configuration
 
+The online search settings use the `Features` section in `appsettings.json`.
+
+Supported values for each item type are:
+
+- `disabled`: never query the external API and show only local database results.
+- `automatic`: always query the external API, even when local matches already exist.
+- `fallback`: only query the external API when no local matches are found.
+- `manual`: do not query the external API automatically; show a manual search button for explicit online lookups.
+
+Legacy boolean values remain supported for compatibility: `true` maps to `automatic`, and `false` maps to `disabled`.
+
+Example:
+
+```json
+{
+  "Features": {
+    "OnlineBookSearch": "automatic",
+    "OnlineMovieSearch": "fallback",
+    "OnlineMusicDiscSearch": "disabled"
+  }
+}
+```
+
+If a value is missing or invalid, the app falls back safely to `automatic` to preserve the current default behavior.
+
 Optional: By default, book search is provided by [Open Library API](https://openlibrary.org/developers/api). No extra configuration is required to use the Open Library functionality.
 
 However, you can also choose to use the [Google Books API](https://developers.google.com/books/docs/overview). An API key is required to use the Google Books functionality. You can obtain an API key by following the instructions in the [Google Books API documentation](https://developers.google.com/books/docs/v1/using#APIKey).
