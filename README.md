@@ -58,7 +58,7 @@ Change the database location by modifying the connection string in the `appsetti
 
 ### Configuration
 
-The online search settings use the `Features` section in `appsettings.json`.
+Optional: online search capability uses the `Features` section in `appsettings.json` to fill the catalog entries.
 
 Supported values for each item type are:
 
@@ -67,7 +67,7 @@ Supported values for each item type are:
 - `fallback`: only query the external API when no local matches are found.
 - `manual`: do not query the external API automatically; show a manual search button for explicit online lookups.
 
-Legacy boolean values remain supported for compatibility: `true` maps to `automatic`, and `false` maps to `disabled`.
+Boolean values remain supported for compatibility: `true` maps to `automatic`, and `false` maps to `disabled`.
 
 Example:
 
@@ -81,7 +81,7 @@ Example:
 }
 ```
 
-If a value is missing or invalid, the app falls back safely to `automatic` to preserve the current default behavior.
+If a value is missing or invalid, the app falls back to `automatic`.
 
 Optional: By default, book search is provided by [Open Library API](https://openlibrary.org/developers/api). No extra configuration is required to use the Open Library functionality.
 
