@@ -106,6 +106,77 @@ public class BooksController(
 		}
 	}
 
+	public async Task<IActionResult> Edit(int id)
+	{
+		var book = await dbContext.Books.AsNoTracking().FirstOrDefaultAsync(b => b.ID == id, HttpContext.RequestAborted);
+		if (book == null)
+		{
+			return NotFound();
+		}
+
+		ViewData["OnlineSearchEnabled"] = (OnlineSearchModeParser.Parse(features.Value.OnlineBookSearch, OnlineSearchMode.Automatic) != OnlineSearchMode.Disabled).ToString().ToLowerInvariant();
+		return View(book);
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> Update(Book book)
+	{
+		if (!ModelState.IsValid)
+		{
+			ViewData["OnlineSearchEnabled"] = (OnlineSearchModeParser.Parse(features.Value.OnlineBookSearch, OnlineSearchMode.Automatic) != OnlineSearchMode.Disabled).ToString().ToLowerInvariant();
+			return View(nameof(Edit), book);
+		}
+
+		var existingBook = await dbContext.Books.FindAsync(book.ID);
+		if (existingBook == null)
+		{
+			return NotFound();
+		}
+
+		existingBook.Title = book.Title;
+		existingBook.Author = book.Author;
+		existingBook.ISBN_13 = book.ISBN_13;
+		existingBook.ISBN_10 = book.ISBN_10;
+
+		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
+		return RedirectToAction(nameof(Search));
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> SearchMetadata(int id)
+	{
+		var existingBook = await dbContext.Books.FirstOrDefaultAsync(b => b.ID == id, HttpContext.RequestAborted);
+		if (existingBook == null)
+		{
+			return NotFound();
+		}
+
+		var onlineSearchMode = OnlineSearchModeParser.Parse(features.Value.OnlineBookSearch, OnlineSearchMode.Automatic);
+		if (onlineSearchMode == OnlineSearchMode.Disabled)
+		{
+			ViewData["OnlineSearchEnabled"] = "false";
+			return View(nameof(Edit), existingBook);
+		}
+
+		var searchResults = await bookSearchService.SearchBooksAsync(existingBook.Title, existingBook.Author, existingBook.ISBN_13 ?? existingBook.ISBN_10, HttpContext.RequestAborted);
+		var match = searchResults.FirstOrDefault(result =>
+			string.Equals(result.Title, existingBook.Title, StringComparison.OrdinalIgnoreCase)
+			|| (result.ISBN_13 != null && existingBook.ISBN_13 != null && result.ISBN_13.Equals(existingBook.ISBN_13, StringComparison.OrdinalIgnoreCase))
+			|| (result.ISBN_10 != null && existingBook.ISBN_10 != null && result.ISBN_10.Equals(existingBook.ISBN_10, StringComparison.OrdinalIgnoreCase)))
+			?? searchResults.FirstOrDefault();
+
+		if (match != null)
+		{
+			existingBook.Title ??= match.Title;
+			existingBook.Author ??= match.Author;
+			existingBook.ISBN_13 ??= match.ISBN_13;
+			existingBook.ISBN_10 ??= match.ISBN_10;
+		}
+
+		ViewData["OnlineSearchEnabled"] = "true";
+		return View(nameof(Edit), existingBook);
+	}
+
 	public IActionResult New(Book book, int? loanId)
 	{
 		ViewData["LoanId"] = loanId;

@@ -69,6 +69,10 @@
 										asp-route-loanId="@Model.LoanId" asp-route-musicDiscId="@musicDisc.ID"
 										autofocus="@(Model.MusicDiscs.Count == 1)">@Localizer["Add to Loan"]</a>
 								}
+								else
+								{
+									<a class="btn btn-outline-secondary text-nowrap" asp-controller="MusicDiscs" asp-action="Edit" asp-route-id="@musicDisc.ID">@Localizer["Edit"]</a>
+								}
 							</td>
 						</tr>
 					}

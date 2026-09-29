@@ -152,6 +152,88 @@ public class MusicDiscsController(
 		}
 	}
 
+	public async Task<IActionResult> Edit(int id)
+	{
+		var musicDisc = await dbContext.MusicDiscs.AsNoTracking().FirstOrDefaultAsync(m => m.ID == id, HttpContext.RequestAborted);
+		if (musicDisc == null)
+		{
+			return NotFound();
+		}
+
+		ViewData["OnlineSearchEnabled"] = (OnlineSearchModeParser.Parse(features.Value.OnlineMusicDiscSearch, OnlineSearchMode.Automatic) != OnlineSearchMode.Disabled).ToString().ToLowerInvariant();
+		return View(musicDisc);
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> Update(MusicDisc musicDisc)
+	{
+		if (!ModelState.IsValid)
+		{
+			ViewData["OnlineSearchEnabled"] = (OnlineSearchModeParser.Parse(features.Value.OnlineMusicDiscSearch, OnlineSearchMode.Automatic) != OnlineSearchMode.Disabled).ToString().ToLowerInvariant();
+			return View(nameof(Edit), musicDisc);
+		}
+
+		var existingMusicDisc = await dbContext.MusicDiscs.FindAsync(musicDisc.ID);
+		if (existingMusicDisc == null)
+		{
+			return NotFound();
+		}
+
+		existingMusicDisc.Title = musicDisc.Title;
+		existingMusicDisc.Artist = musicDisc.Artist;
+		existingMusicDisc.Version = musicDisc.Version;
+		existingMusicDisc.EAN = musicDisc.EAN;
+
+		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
+		return RedirectToAction(nameof(Search));
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> SearchMetadata(int id)
+	{
+		var existingMusicDisc = await dbContext.MusicDiscs.FirstOrDefaultAsync(m => m.ID == id, HttpContext.RequestAborted);
+		if (existingMusicDisc == null)
+		{
+			return NotFound();
+		}
+
+		var onlineSearchMode = OnlineSearchModeParser.Parse(features.Value.OnlineMusicDiscSearch, OnlineSearchMode.Automatic);
+		if (onlineSearchMode == OnlineSearchMode.Disabled)
+		{
+			ViewData["OnlineSearchEnabled"] = "false";
+			return View(nameof(Edit), existingMusicDisc);
+		}
+
+		var queryParts = new List<string>();
+		if (!string.IsNullOrWhiteSpace(existingMusicDisc.Artist)) queryParts.Add($"artist:{existingMusicDisc.Artist}");
+		if (!string.IsNullOrWhiteSpace(existingMusicDisc.Title)) queryParts.Add($"recording:{existingMusicDisc.Title}");
+		if (!string.IsNullOrWhiteSpace(existingMusicDisc.EAN)) queryParts.Add($"barcode:{existingMusicDisc.EAN}");
+		if (queryParts.Count > 0)
+		{
+			queryParts.Add("format:cd");
+			var uriBuilder = new UriBuilder("https://musicbrainz.org/ws/2/release/");
+			var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
+			query["query"] = string.Join(" AND ", queryParts);
+			query["fmt"] = "json";
+			uriBuilder.Query = query.ToString();
+			var client = httpClientFactory.CreateClient();
+			client.Timeout = TimeSpan.FromSeconds(60);
+			client.DefaultRequestHeaders.UserAgent.ParseAdd($"LibreLibrary/{applicationVersionService.CurrentVersion} (https://github.com/yvzn/library-management-system)");
+			var response = await client.GetFromJsonAsync<MusicBrainzApiResponse>(uriBuilder.Uri, HttpContext.RequestAborted);
+			var match = response?.Releases?.FirstOrDefault();
+			if (match != null)
+			{
+				existingMusicDisc.Title ??= match.Title;
+				existingMusicDisc.Artist ??= string.Join(", ", match.ArtistCredit.Select(a => a.Name).Distinct());
+				existingMusicDisc.Version ??= match.Version;
+				existingMusicDisc.EAN ??= string.IsNullOrEmpty(match.BarCode) ? match.Asin : match.BarCode;
+			}
+		}
+
+		ViewData["OnlineSearchEnabled"] = "true";
+		return View(nameof(Edit), existingMusicDisc);
+	}
+
 	public IActionResult New(MusicDisc musicDisc, int? loanId)
 	{
 		ViewData["LoanId"] = loanId;

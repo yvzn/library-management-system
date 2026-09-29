@@ -148,6 +148,110 @@ public class MoviesController(
 		}
 	}
 
+	public async Task<IActionResult> Edit(int id)
+	{
+		var movie = await dbContext.Movies.AsNoTracking().FirstOrDefaultAsync(m => m.ID == id, HttpContext.RequestAborted);
+		if (movie == null)
+		{
+			return NotFound();
+		}
+
+		ViewData["OnlineSearchEnabled"] = (OnlineSearchModeParser.Parse(features.Value.OnlineMovieSearch, OnlineSearchMode.Automatic) != OnlineSearchMode.Disabled).ToString().ToLowerInvariant();
+		return View(movie);
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> Update(Movie movie)
+	{
+		if (!ModelState.IsValid)
+		{
+			ViewData["OnlineSearchEnabled"] = (OnlineSearchModeParser.Parse(features.Value.OnlineMovieSearch, OnlineSearchMode.Automatic) != OnlineSearchMode.Disabled).ToString().ToLowerInvariant();
+			return View(nameof(Edit), movie);
+		}
+
+		var existingMovie = await dbContext.Movies.FindAsync(movie.ID);
+		if (existingMovie == null)
+		{
+			return NotFound();
+		}
+
+		existingMovie.Title = movie.Title;
+		existingMovie.TitleFr = movie.TitleFr;
+		existingMovie.Director = movie.Director;
+		existingMovie.ReleaseYear = movie.ReleaseYear;
+		existingMovie.Media = movie.Media;
+		existingMovie.EAN = movie.EAN;
+
+		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
+		return RedirectToAction(nameof(Search));
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> SearchMetadata(int id)
+	{
+		var existingMovie = await dbContext.Movies.FirstOrDefaultAsync(m => m.ID == id, HttpContext.RequestAborted);
+		if (existingMovie == null)
+		{
+			return NotFound();
+		}
+
+		var onlineSearchMode = OnlineSearchModeParser.Parse(features.Value.OnlineMovieSearch, OnlineSearchMode.Automatic);
+		if (onlineSearchMode == OnlineSearchMode.Disabled)
+		{
+			ViewData["OnlineSearchEnabled"] = "false";
+			return View(nameof(Edit), existingMovie);
+		}
+
+		var uriBuilder = new UriBuilder("http://www.dvdfr.com/api/search.php");
+		var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
+		if (!string.IsNullOrWhiteSpace(existingMovie.Title))
+		{
+			query["title"] = existingMovie.Title;
+		}
+		if (!string.IsNullOrWhiteSpace(existingMovie.EAN))
+		{
+			query["gencode"] = existingMovie.EAN;
+		}
+
+		try
+		{
+			if (!string.IsNullOrEmpty(query.ToString()))
+			{
+				uriBuilder.Query = query.ToString();
+				var client = httpClientFactory.CreateClient();
+				client.Timeout = TimeSpan.FromSeconds(60);
+				client.DefaultRequestHeaders.UserAgent.ParseAdd($"LibreLibrary/{applicationVersionService.CurrentVersion} (https://github.com/yvzn/library-management-system)");
+				using var response = await client.GetAsync(uriBuilder.Uri, HttpContext.RequestAborted);
+				response.EnsureSuccessStatusCode();
+				var xmlContent = await response.Content.ReadAsStringAsync(HttpContext.RequestAborted);
+				var candidateMovies = ParseMoviesFromXml(xmlContent);
+				var match = candidateMovies.FirstOrDefault(result =>
+					string.Equals(result.Title, existingMovie.Title, StringComparison.OrdinalIgnoreCase)
+					|| (!string.IsNullOrWhiteSpace(existingMovie.EAN)
+						&& !string.IsNullOrWhiteSpace(result.EAN)
+						&& string.Equals(result.EAN, existingMovie.EAN, StringComparison.OrdinalIgnoreCase)))
+					?? candidateMovies.FirstOrDefault();
+
+				if (match != null)
+				{
+					existingMovie.Title = string.IsNullOrWhiteSpace(existingMovie.Title) ? match.Title : existingMovie.Title;
+					existingMovie.TitleFr ??= match.TitleFr;
+					existingMovie.Director ??= match.Director;
+					existingMovie.ReleaseYear ??= match.ReleaseYear;
+					existingMovie.Media ??= match.Media;
+					existingMovie.EAN ??= match.EAN;
+				}
+			}
+		}
+		catch (Exception ex) when (!HttpContext.RequestAborted.IsCancellationRequested)
+		{
+			logger.LogError(ex, "Online movie metadata lookup failed for {MovieId}", existingMovie.ID);
+		}
+
+		ViewData["OnlineSearchEnabled"] = "true";
+		return View(nameof(Edit), existingMovie);
+	}
+
 	public IActionResult New(Movie movie, int? loanId)
 	{
 		ViewData["LoanId"] = loanId;
