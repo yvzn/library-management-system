@@ -59,8 +59,13 @@ public class MusicDiscsController(
 		}
 
 		var result = await musicDiscs.AsNoTracking().ToListAsync(HttpContext.RequestAborted);
+		var onlineSearchMode = OnlineSearchModeParser.Parse(
+			features.Value.OnlineMusicDiscSearch.ToString(),
+			OnlineSearchMode.Automatic);
 
-		ViewData["OnlineSearchEnabled"] = features.Value.OnlineMusicDiscSearch.ToString().ToLowerInvariant();
+		ViewData["OnlineSearchMode"] = onlineSearchMode.ToString();
+		ViewData["OnlineSearchEnabled"] = onlineSearchMode.ShouldTriggerOnlineSearch(result.Count > 0).ToString().ToLowerInvariant();
+		ViewData["ShowManualOnlineSearch"] = onlineSearchMode.ShouldShowManualSearchAction().ToString().ToLowerInvariant();
 
 		return View(
 			new SearchResultsViewModel(model)

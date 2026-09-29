@@ -11,7 +11,7 @@
 
 
 <search>
-	@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
+	@if ("true".Equals(ViewData["OnlineSearchEnabled"]) && !"true".Equals(ViewData["ShowManualOnlineSearch"]))
 	{
 		<form id="searchParams" hx-post="/Books/SearchResultsOnline" hx-trigger="intersect once"
 			hx-target="#searchResultsOnline">
@@ -73,13 +73,38 @@
 	</section>
 }
 
-@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
+@if ("true".Equals(ViewData["OnlineSearchEnabled"]) || "true".Equals(ViewData["ShowManualOnlineSearch"]))
 {
 	<section class="mb-5" id="searchResultsOnline">
 		<h2 class="display-5">@Localizer["New Books"]</h2>
-		<div class="spinner-border text-primary" role="status">
-			<span class="visually-hidden">@Localizer["Loading..."]</span>
-		</div>
+		@if ("true".Equals(ViewData["ShowManualOnlineSearch"]))
+		{
+			<form hx-post="/Books/SearchResultsOnline" hx-target="#searchResultsOnline" hx-indicator="#manualSearchIndicator-Book-@Model.CacheKey" class="mb-3">
+				<input type="hidden" name="LoanId" value="@Model.LoanId" />
+				<input type="hidden" name="Title" value="@Model.Title" />
+				<input type="hidden" name="Author" value="@Model.Author" />
+				<input type="hidden" name="ISBN" value="@Model.ISBN" />
+				<button type="submit" class="btn btn-outline-primary text-nowrap">
+					<span id="manualSearchIndicator-Book-@Model.CacheKey" class="search-indicator spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" aria-label="@Localizer["Loading..."]"></span>
+					<span>@Localizer["Search online"]</span>
+				</button>
+			</form>
+			<style>
+				.search-indicator {
+					display: none;
+				}
+				.htmx-request .search-indicator,
+				.htmx-request.search-indicator {
+					display: inline-block;
+				}
+			</style>
+		}
+		else
+		{
+			<div class="spinner-border text-primary" role="status">
+				<span class="visually-hidden">@Localizer["Loading..."]</span>
+			</div>
+		}
 	</section>
 }
 

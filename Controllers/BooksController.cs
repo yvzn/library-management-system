@@ -56,8 +56,13 @@ public class BooksController(
 		}
 
 		var result = await books.AsNoTracking().ToListAsync(HttpContext.RequestAborted);
+		var onlineSearchMode = OnlineSearchModeParser.Parse(
+			features.Value.OnlineBookSearch.ToString(),
+			OnlineSearchMode.Automatic);
 
-		ViewData["OnlineSearchEnabled"] = features.Value.OnlineBookSearch.ToString().ToLowerInvariant();
+		ViewData["OnlineSearchMode"] = onlineSearchMode.ToString();
+		ViewData["OnlineSearchEnabled"] = onlineSearchMode.ShouldTriggerOnlineSearch(result.Count > 0).ToString().ToLowerInvariant();
+		ViewData["ShowManualOnlineSearch"] = onlineSearchMode.ShouldShowManualSearchAction().ToString().ToLowerInvariant();
 
 		return View(
 			new SearchResultsViewModel(model)
