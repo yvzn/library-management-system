@@ -11,10 +11,10 @@
 
 
 <search>
-	@if ("true".Equals(ViewData["OnlineSearchEnabled"]) && !"true".Equals(ViewData["ShowManualOnlineSearch"]))
+	@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
 	{
 		<form id="searchParams" hx-post="/Books/SearchResultsOnline" hx-trigger="intersect once"
-			hx-target="#searchResultsOnline">
+			hx-target="#searchResultsOnline" hx-indicator="#searchResultsOnline">
 			<input type="hidden" name="LoanId" value="@Model.LoanId" />
 			<input type="hidden" name="Title" value="@Model.Title" />
 			<input type="hidden" name="Author" value="@Model.Author" />
@@ -79,32 +79,20 @@
 		<h2 class="display-5">@Localizer["New Books"]</h2>
 		@if ("true".Equals(ViewData["ShowManualOnlineSearch"]))
 		{
-			<form hx-post="/Books/SearchResultsOnline" hx-target="#searchResultsOnline" hx-indicator="#manualSearchIndicator-Book-@Model.CacheKey" class="mb-3">
+			<form hx-post="/Books/SearchResultsOnline" hx-target="#searchResultsOnline" hx-indicator="#searchResultsOnline" class="mb-3">
 				<input type="hidden" name="LoanId" value="@Model.LoanId" />
 				<input type="hidden" name="Title" value="@Model.Title" />
 				<input type="hidden" name="Author" value="@Model.Author" />
 				<input type="hidden" name="ISBN" value="@Model.ISBN" />
 				<button type="submit" class="btn btn-outline-primary text-nowrap">
-					<span id="manualSearchIndicator-Book-@Model.CacheKey" class="search-indicator spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" aria-label="@Localizer["Loading..."]"></span>
 					<span>@Localizer["Search online"]</span>
 				</button>
 			</form>
-			<style>
-				.search-indicator {
-					display: none;
-				}
-				.htmx-request .search-indicator,
-				.htmx-request.search-indicator {
-					display: inline-block;
-				}
-			</style>
 		}
-		else
-		{
-			<div class="spinner-border text-primary" role="status">
-				<span class="visually-hidden">@Localizer["Loading..."]</span>
-			</div>
-		}
+
+		<div class="spinner-border text-primary" role="status">
+			<span class="visually-hidden">@Localizer["Loading..."]</span>
+		</div>
 	</section>
 }
 
@@ -126,4 +114,18 @@
 @section Scripts {
 	<script src="~/lib/htmx.org/dist/htmx.min.js" integrity="sha256-YCMa5rqds4JesVomESLV9VkhxNU7Zr9jfcGLTuJ8efk="
 		crossorigin="anonymous"></script>
+}
+
+@section Styles {
+	<style type="text/css">
+	#searchResultsOnline .spinner-border {
+		display: none;
+	}
+	#searchResultsOnline.htmx-request .spinner-border {
+		display: block;
+	}
+	#searchResultsOnline.htmx-request button[type="submit"] {
+		display: none;
+	}
+	</style>
 }
