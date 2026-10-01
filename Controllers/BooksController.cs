@@ -28,7 +28,7 @@ public class BooksController(
 		return View(model);
 	}
 
-	public async Task<IActionResult> SearchResults(SearchViewModel model)
+	public async Task<IActionResult> SearchResults(SearchViewModel model, string? previous = null)
 	{
 		if (!ModelState.IsValid)
 		{
@@ -60,9 +60,10 @@ public class BooksController(
 			features.Value.OnlineBookSearch.ToString(),
 			OnlineSearchMode.Automatic);
 
+		ViewData["PreviousAction"] = previous;
 		ViewData["OnlineSearchMode"] = onlineSearchMode.ToString();
-		ViewData["OnlineSearchEnabled"] = onlineSearchMode.ShouldTriggerOnlineSearch(result.Count > 0).ToString().ToLowerInvariant();
-		ViewData["ShowManualOnlineSearch"] = onlineSearchMode.ShouldShowManualSearchAction().ToString().ToLowerInvariant();
+		ViewData["OnlineSearchEnabled"] = model.LoanId.HasValue && onlineSearchMode.ShouldTriggerOnlineSearch(result.Count > 0) ? "true" : "false";
+		ViewData["ShowManualOnlineSearch"] = model.LoanId.HasValue && onlineSearchMode.ShouldShowManualSearchAction() ? "true" : "false";
 
 		return View(
 			new SearchResultsViewModel(model)
