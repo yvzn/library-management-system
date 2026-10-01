@@ -32,7 +32,7 @@ public class MoviesController(
 		return View(model);
 	}
 
-	public async Task<IActionResult> SearchResults(SearchViewModel model)
+	public async Task<IActionResult> SearchResults(SearchViewModel model, string? previous = null)
 	{
 		if (!ModelState.IsValid)
 		{
@@ -69,9 +69,11 @@ public class MoviesController(
 			features.Value.OnlineMovieSearch.ToString(),
 			OnlineSearchMode.Automatic);
 
+		ViewData["PreviousAction"] = previous;
 		ViewData["OnlineSearchMode"] = onlineSearchMode.ToString();
-		ViewData["OnlineSearchEnabled"] = onlineSearchMode.ShouldTriggerOnlineSearch(result.Count > 0).ToString().ToLowerInvariant();
-		ViewData["ShowManualOnlineSearch"] = onlineSearchMode.ShouldShowManualSearchAction().ToString().ToLowerInvariant();
+		var loanContext = model.LoanId.HasValue;
+		ViewData["OnlineSearchEnabled"] = loanContext && onlineSearchMode.ShouldTriggerOnlineSearch(result.Count > 0) ? "true" : "false";
+		ViewData["ShowManualOnlineSearch"] = loanContext && onlineSearchMode.ShouldShowManualSearchAction() ? "true" : "false";
 
 		return View(
 			new SearchResultsViewModel(model)
@@ -183,7 +185,14 @@ public class MoviesController(
 		existingMovie.EAN = movie.EAN;
 
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
-		return RedirectToAction(nameof(Search));
+		return RedirectToAction(nameof(SearchResults), new
+		{
+			title = existingMovie.Title,
+			director = existingMovie.Director,
+			releaseYear = existingMovie.ReleaseYear,
+			EAN = existingMovie.EAN,
+			previous = nameof(Update)
+		});
 	}
 
 	[HttpPost]

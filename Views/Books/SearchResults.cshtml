@@ -30,6 +30,14 @@
 		})
 </search>
 
+@if ("Update".Equals(ViewData["PreviousAction"]))
+{
+	<div class="p-2 mb-5 border rounded-3 border-success bg-success-subtle">
+		<i class="bi bi-check-circle" aria-hidden="true"></i>
+		@Localizer["Book updated"]
+	</div>
+}
+
 @if (Model.Books.Count > 0)
 {
 	<section class="mb-5">

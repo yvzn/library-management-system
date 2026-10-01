@@ -62,8 +62,9 @@ public class BooksController(
 
 		ViewData["PreviousAction"] = previous;
 		ViewData["OnlineSearchMode"] = onlineSearchMode.ToString();
-		ViewData["OnlineSearchEnabled"] = model.LoanId.HasValue && onlineSearchMode.ShouldTriggerOnlineSearch(result.Count > 0) ? "true" : "false";
-		ViewData["ShowManualOnlineSearch"] = model.LoanId.HasValue && onlineSearchMode.ShouldShowManualSearchAction() ? "true" : "false";
+		var loanContext = model.LoanId.HasValue;
+		ViewData["OnlineSearchEnabled"] = loanContext && onlineSearchMode.ShouldTriggerOnlineSearch(result.Count > 0) ? "true" : "false";
+		ViewData["ShowManualOnlineSearch"] = loanContext && onlineSearchMode.ShouldShowManualSearchAction() ? "true" : "false";
 
 		return View(
 			new SearchResultsViewModel(model)
@@ -140,7 +141,13 @@ public class BooksController(
 		existingBook.ISBN_10 = book.ISBN_10;
 
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
-		return RedirectToAction(nameof(Search));
+		return RedirectToAction(nameof(SearchResults), new
+		{
+			title = existingBook.Title,
+			author = existingBook.Author,
+			ISBN = existingBook.ISBN_13 ?? existingBook.ISBN_10,
+			previous = nameof(Update)
+		});
 	}
 
 	[HttpPost]

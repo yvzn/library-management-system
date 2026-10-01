@@ -30,7 +30,7 @@ public class MusicDiscsController(
 		return View(model);
 	}
 
-	public async Task<IActionResult> SearchResults(SearchViewModel model)
+	public async Task<IActionResult> SearchResults(SearchViewModel model, string? previous = null)
 	{
 		if (!ModelState.IsValid)
 		{
@@ -63,9 +63,11 @@ public class MusicDiscsController(
 			features.Value.OnlineMusicDiscSearch.ToString(),
 			OnlineSearchMode.Automatic);
 
+		ViewData["PreviousAction"] = previous;
 		ViewData["OnlineSearchMode"] = onlineSearchMode.ToString();
-		ViewData["OnlineSearchEnabled"] = onlineSearchMode.ShouldTriggerOnlineSearch(result.Count > 0).ToString().ToLowerInvariant();
-		ViewData["ShowManualOnlineSearch"] = onlineSearchMode.ShouldShowManualSearchAction().ToString().ToLowerInvariant();
+		var loanContext = model.LoanId.HasValue;
+		ViewData["OnlineSearchEnabled"] = loanContext && onlineSearchMode.ShouldTriggerOnlineSearch(result.Count > 0) ? "true" : "false";
+		ViewData["ShowManualOnlineSearch"] = loanContext && onlineSearchMode.ShouldShowManualSearchAction() ? "true" : "false";
 
 		return View(
 			new SearchResultsViewModel(model)
@@ -185,7 +187,13 @@ public class MusicDiscsController(
 		existingMusicDisc.EAN = musicDisc.EAN;
 
 		await dbContext.SaveChangesAsync(HttpContext.RequestAborted);
-		return RedirectToAction(nameof(Search));
+		return RedirectToAction(nameof(SearchResults), new
+		{
+			title = existingMusicDisc.Title,
+			author = existingMusicDisc.Artist,
+			EAN = existingMusicDisc.EAN,
+			previous = nameof(Update)
+		});
 	}
 
 	[HttpPost]
