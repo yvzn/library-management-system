@@ -135,4 +135,19 @@
   <data name="Skip to main content" xml:space="preserve">
     <value>Accéder au contenu</value>
   </data>
+  <data name="Libr(e)ary" xml:space="preserve">
+    <value>Libr(e)ary</value>
+  </data>
+  <data name="Catalog" xml:space="preserve">
+    <value>Catalogue</value>
+  </data>
+  <data name="Books" xml:space="preserve">
+    <value>Livres</value>
+  </data>
+  <data name="Movies" xml:space="preserve">
+    <value>Films</value>
+  </data>
+  <data name="Music Discs" xml:space="preserve">
+    <value>Disques</value>
+  </data>
 </root>
