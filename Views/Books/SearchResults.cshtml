@@ -30,6 +30,14 @@
 		})
 </search>
 
+@if ("Update".Equals(ViewData["PreviousAction"]))
+{
+	<div class="p-2 mb-5 border rounded-3 border-success bg-success-subtle">
+		<i class="bi bi-check-circle" aria-hidden="true"></i>
+		@Localizer["Book updated"]
+	</div>
+}
+
 @if (Model.Books.Count > 0)
 {
 	<section class="mb-5">
@@ -63,6 +71,10 @@
 									<a class="btn btn-outline-primary text-nowrap" asp-controller="Loans" asp-action="AddBook"
 										asp-route-loanId="@Model.LoanId" asp-route-bookId="@book.ID"
 										autofocus="@(Model.Books.Count == 1)">@Localizer["Add to Loan"]</a>
+								}
+								else
+								{
+									<a class="btn btn-outline-secondary text-nowrap" asp-controller="Books" asp-action="Edit" asp-route-id="@book.ID">@Localizer["Edit"]</a>
 								}
 							</td>
 						</tr>

@@ -63,6 +63,16 @@
 							<a class="nav-link @("Loans".Equals(ViewData["ActiveNav"]) ? "active" : "")"
 								asp-controller="Loans" asp-action="Index">@Localizer["Loans"]</a>
 						</li>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle @("Catalog".Equals(ViewData["ActiveNav"]) ? "active" : "")" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								@Localizer["Catalog"]
+							</a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" asp-controller="Books" asp-action="Search"><i class="bi bi-book me-2" aria-hidden="true"></i>@Localizer["Books"]</a></li>
+								<li><a class="dropdown-item" asp-controller="Movies" asp-action="Search"><i class="bi bi-film me-2" aria-hidden="true"></i>@Localizer["Movies"]</a></li>
+								<li><a class="dropdown-item" asp-controller="MusicDiscs" asp-action="Search"><i class="bi bi-disc me-2" aria-hidden="true"></i>@Localizer["Music Discs"]</a></li>
+							</ul>
+						</li>
 					</ul>
 				</div>
 			</div>
