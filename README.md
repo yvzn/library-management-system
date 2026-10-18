@@ -56,6 +56,23 @@ Change the database location by modifying the connection string in the `appsetti
 }
 ```
 
+Optional: configure automatic SQLite backups by setting the backup frequency and folder in `appsettings.json`:
+
+```json
+{
+  "DatabaseBackupFrequency": "update",
+  "DatabaseBackupFolder": "Backups"
+}
+```
+
+Supported backup frequencies:
+
+- `startup`: create a raw file copy whenever the application starts.
+- `update`: create a raw file copy only when Entity Framework detects pending migrations before applying them. This is the default.
+- `disabled`: disable all database backups.
+
+The backup folder can be a relative path (resolved from the app's base directory) or an absolute path. Backups are plain SQLite file copies, not SQL dumps.
+
 ### Configuration
 
 Optional: online search capability uses the `Features` section in `appsettings.json` to fill the catalog entries.

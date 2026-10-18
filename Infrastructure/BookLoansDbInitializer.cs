@@ -1,14 +1,21 @@
 using library_management_system.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace library_management_system.Infrastructure;
 
-public class BookLoansDbInitializer(BookLoansContext context)
+public class BookLoansDbInitializer(BookLoansContext context, IConfiguration configuration)
 {
 	internal async Task Init(string? connectionString, CancellationToken cancellationToken = default)
 	{
+		var databasePath = GetDatabasePath(connectionString);
 		Directory.CreateDirectory(GetDatabaseDirectory(connectionString));
+
+		if (await ShouldCreateBackupBeforeMigrationsAsync())
+		{
+			BackupDatabase(databasePath);
+		}
 
 		await context.Database.MigrateAsync(cancellationToken);
 		await context.Database.EnsureCreatedAsync(cancellationToken);
@@ -58,6 +65,76 @@ public class BookLoansDbInitializer(BookLoansContext context)
 		await context.SaveChangesAsync(cancellationToken);
 	}
 
+	private async Task<bool> ShouldCreateBackupBeforeMigrationsAsync()
+	{
+		var frequency = configuration["DatabaseBackupFrequency"];
+		var normalizedFrequency = string.IsNullOrWhiteSpace(frequency)
+			? "update"
+			: frequency.Trim();
+
+		if (string.Equals(normalizedFrequency, "disabled", StringComparison.OrdinalIgnoreCase))
+		{
+			return false;
+		}
+
+		if (string.Equals(normalizedFrequency, "startup", StringComparison.OrdinalIgnoreCase))
+		{
+			return true;
+		}
+
+		if (!string.Equals(normalizedFrequency, "update", StringComparison.OrdinalIgnoreCase))
+		{
+			return false;
+		}
+
+		var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
+		return pendingMigrations.Any();
+	}
+
+	private void BackupDatabase(string databasePath)
+	{
+		if (string.IsNullOrWhiteSpace(databasePath) || !File.Exists(databasePath))
+		{
+			return;
+		}
+
+		try
+		{
+			var backupFolder = GetBackupFolder();
+			Directory.CreateDirectory(backupFolder);
+			var timestamp = DateTime.UtcNow.ToString("yyyyMMdd-HHmmssfff");
+			var backupPath = Path.Combine(
+				backupFolder,
+				$"{Path.GetFileNameWithoutExtension(databasePath)}-{timestamp}{Path.GetExtension(databasePath)}");
+			File.Copy(databasePath, backupPath, overwrite: false);
+		}
+		catch (IOException)
+		{
+			// Skip backup when the SQLite file is locked or unavailable.
+		}
+		catch (UnauthorizedAccessException)
+		{
+			// Skip backup when the configured backup folder is not writable.
+		}
+	}
+
+	private string GetBackupFolder()
+	{
+		var configuredPath = configuration["DatabaseBackupFolder"];
+		if (string.IsNullOrWhiteSpace(configuredPath))
+		{
+			return Path.Combine(BookLoansContext.DbDirectory, "Backups");
+		}
+
+		configuredPath = Environment.ExpandEnvironmentVariables(configuredPath);
+		if (Path.IsPathRooted(configuredPath))
+		{
+			return Path.GetFullPath(configuredPath);
+		}
+
+		return Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, configuredPath));
+	}
+
 	private static string GetDatabaseDirectory(string? connectionString)
 	{
 		if (string.IsNullOrEmpty(connectionString))
@@ -69,4 +146,9 @@ public class BookLoansDbInitializer(BookLoansContext context)
 		return Path.GetDirectoryName(builder.DataSource)
 			?? throw new ArgumentException("Invalid connection string, no directory specified", nameof(connectionString));
 	}
+
+	private static string GetDatabasePath(string? connectionString)
+		=> string.IsNullOrEmpty(connectionString)
+			? BookLoansContext.DbPath
+			: new SqliteConnectionStringBuilder(connectionString).DataSource;
 }
