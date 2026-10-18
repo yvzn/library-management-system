@@ -20,8 +20,11 @@
 <search>
     @if ("true".Equals(ViewData["OnlineSearchEnabled"]))
     {
-        <form id="searchParams" hx-post="/Movies/SearchResultsOnline" hx-trigger="intersect once"
-              hx-target="#searchResultsOnline" hx-indicator="#searchResultsOnline">
+        <form id="searchParams"
+              hx-post="/Movies/SearchResultsOnline"
+              hx-trigger="intersect once"
+              hx-target="#searchResultsOnline"
+              hx-indicator="#searchResultsOnline">
             <input type="hidden" name="LoanId" value="@Model.LoanId" />
             <input type="hidden" name="Title" value="@Model.Title" />
             <input type="hidden" name="Director" value="@Model.Director" />
@@ -72,8 +75,11 @@
                             <td class="text-md-end">
                                 @if (Model.LoanId != null)
                                 {
-                                    <a class="btn btn-outline-primary text-nowrap" asp-controller="Loans" asp-action="AddMovie"
-                                       asp-route-loanId="@Model.LoanId" asp-route-movieId="@movie.ID"
+                                    <a class="btn btn-outline-primary text-nowrap"
+                                       asp-controller="Loans"
+                                       asp-action="AddMovie"
+                                       asp-route-loanId="@Model.LoanId"
+                                       asp-route-movieId="@movie.ID"
                                        autofocus="@(Model.Movies.Count == 1)">@Localizer["Add to Loan"]</a>
                                 }
 								else
@@ -102,9 +108,13 @@ else if (!@Model.LoanId.HasValue)
 {
     <section class="mb-5" id="searchResultsOnline">
         <h2 class="display-5">@Localizer["New Movies"]</h2>
+
         @if ("true".Equals(ViewData["ShowManualOnlineSearch"]))
         {
-            <form hx-post="/Movies/SearchResultsOnline" hx-target="#searchResultsOnline" hx-indicator="#searchResultsOnline" class="mb-3">
+            <form hx-post="/Movies/SearchResultsOnline"
+                  hx-target="#searchResultsOnline"
+                  hx-indicator="#searchResultsOnline"
+                  class="mb-3">
                 <input type="hidden" name="LoanId" value="@Model.LoanId" />
                 <input type="hidden" name="Title" value="@Model.Title" />
                 <input type="hidden" name="Director" value="@Model.Director" />

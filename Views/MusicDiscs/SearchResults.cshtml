@@ -19,8 +19,11 @@
 <search>
     @if ("true".Equals(ViewData["OnlineSearchEnabled"]))
     {
-        <form id="searchParams" hx-post="/MusicDiscs/SearchResultsOnline" hx-trigger="intersect once"
-              hx-target="#searchResultsOnline" hx-indicator="#searchResultsOnline">
+        <form id="searchParams"
+              hx-post="/MusicDiscs/SearchResultsOnline"
+              hx-trigger="intersect once"
+              hx-target="#searchResultsOnline"
+              hx-indicator="#searchResultsOnline">
             <input type="hidden" name="LoanId" value="@Model.LoanId" />
             <input type="hidden" name="Title" value="@Model.Title" />
             <input type="hidden" name="Author" value="@Model.Author" />
@@ -70,8 +73,11 @@
                             <td class="text-md-end">
                                 @if (Model.LoanId != null)
                                 {
-                                    <a class="btn btn-outline-primary text-nowrap" asp-controller="Loans" asp-action="AddMusicDisc"
-                                       asp-route-loanId="@Model.LoanId" asp-route-musicDiscId="@musicDisc.ID"
+                                    <a class="btn btn-outline-primary text-nowrap"
+                                       asp-controller="Loans"
+                                       asp-action="AddMusicDisc"
+                                       asp-route-loanId="@Model.LoanId"
+                                       asp-route-musicDiscId="@musicDisc.ID"
                                        autofocus="@(Model.MusicDiscs.Count == 1)">@Localizer["Add to Loan"]</a>
                                 }
 								else
@@ -100,9 +106,13 @@ else if (!@Model.LoanId.HasValue)
 {
     <section class="mb-5" id="searchResultsOnline">
         <h2 class="display-5">@Localizer["New Music Discs"]</h2>
+
         @if ("true".Equals(ViewData["ShowManualOnlineSearch"]))
         {
-            <form hx-post="/MusicDiscs/SearchResultsOnline" hx-target="#searchResultsOnline" hx-indicator="#searchResultsOnline" class="mb-3">
+            <form hx-post="/MusicDiscs/SearchResultsOnline"
+                  hx-target="#searchResultsOnline"
+                  hx-indicator="#searchResultsOnline"
+                  class="mb-3">
                 <input type="hidden" name="LoanId" value="@Model.LoanId" />
                 <input type="hidden" name="Title" value="@Model.Title" />
                 <input type="hidden" name="Author" value="@Model.Author" />
