@@ -55,6 +55,7 @@ internal class Program
 		else
 			builder.Services.AddScoped<IBookSearchService, GoogleBooksService>();
 		builder.Services.AddScoped<OpenLibraryService>();
+		builder.Services.AddScoped<IMovieSearchService, TmdbMovieSearchService>();
 		builder.Services.AddScoped<ApplicationVersionService>();
 
 		var urls = builder.Configuration.GetSection("urls").Get<string>()

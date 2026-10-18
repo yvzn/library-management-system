@@ -127,6 +127,16 @@ You can also set the API key in the `appsettings.json` file, but this is not rec
 }
 ```
 
+Online movie search uses the [TMDb Search Movie API](https://developer.themoviedb.org/reference/search-movie). Configure a read access token in user-secrets or environment variables:
+
+```pwsh
+dotnet user-secrets set "ConnectionStrings:MovieSearchApiKey" "YOUR_TMDB_READ_ACCESS_TOKEN"
+# Or set the token in environment variables
+$env:ConnectionStrings__MovieSearchApiKey = "YOUR_TMDB_READ_ACCESS_TOKEN"
+```
+
+If the value is missing, empty, or whitespace, online movie search is silently disabled and the app behaves the same as `"OnlineMovieSearch": "disabled"`.
+
 ## Publishing the project
 
 To publish the project, use the following command:
@@ -195,6 +205,6 @@ Icon credits:
 
 Online book search is powered by the [Open Library API](https://openlibrary.org/developers/api).
 
-Movie search is powered by [DvdFR API](https://www.dvdfr.com/api).
+Movie search is powered by the [TMDb Search Movie API](https://developer.themoviedb.org/reference/search-movie).
 
 Music disc search is powered by [MusicBrainz API](https://musicbrainz.org/doc/MusicBrainz_API).
