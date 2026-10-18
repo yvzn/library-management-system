@@ -61,7 +61,7 @@
                     @foreach (var movie in Model.Movies)
                     {
                         <tr>
-                            <td class="align-middle">@("fr".Equals(ViewData["lang"]) ? movie.TitleFr ?? movie.Title : movie.Title)</td>
+                            <td class="align-middle">@(("fr".Equals(ViewData["lang"])) ? (movie.TitleFr ?? movie.Title) : movie.Title)</td>
                             <td class="align-middle">@Html.DisplayFor(model => movie.Director)</td>
                             <td class="align-middle">@Html.DisplayFor(model => movie.ReleaseYear)</td>
                             <td class="align-middle">@Html.DisplayFor(model => movie.Media)</td>
