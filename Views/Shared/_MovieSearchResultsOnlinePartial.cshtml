@@ -21,7 +21,7 @@
                 <input type="hidden" name="ReleaseYear" value="@Model.ReleaseYear" />
                 <input type="hidden" name="EAN" value="@Model.EAN" />
                 <button type="submit" class="btn btn-primary">
-                    <span id="retryIndicator-Movie-@Model.CacheKey" class="retry-indicator spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" aria-label="@Localizer["Loading..."]"></span>
+                    <span id="retryIndicator-Movie-@Model.CacheKey" class="retry-indicator spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" aria-label='@Localizer["Loading..."]'></span>
                     <span>@Localizer["Retry"]</span>
                 </button>
             </form>
@@ -39,7 +39,7 @@
     }
     else if (Model.Movies.Count > 0)
     {
-        <output class="row">
+        <div class="row">
             <table class="table">
                 <colgroup>
                     <col class="col-5" />
@@ -77,9 +77,7 @@
                                         <input type="hidden" name="Movie.Media" value="@movie.Media" />
                                         <input type="hidden" name="Movie.EAN" value="@movie.EAN" />
 
-                                        <button type="submit" class="btn btn-outline-primary text-nowrap"
-                                                autofocus="@(Model.Movies.Count == 1)"
-                                                >@Localizer["Add to Loan"]</button>
+                                        <button type="submit" class="btn btn-outline-primary text-nowrap" autofocus="@(Model.Movies.Count == 1)">@Localizer["Add to Loan"]</button>
                                     </form>
                                 }
                             </td>
@@ -87,7 +85,7 @@
                     }
                 </tbody>
             </table>
-        </output>
+        </div>
     }
     else
     {

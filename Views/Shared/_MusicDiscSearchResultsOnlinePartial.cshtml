@@ -16,7 +16,7 @@
                 <input type="hidden" name="Author" value="@Model.Author" />
                 <input type="hidden" name="EAN" value="@Model.EAN" />
                 <button type="submit" class="btn btn-primary">
-                    <span id="retryIndicator-MusicDisc-@Model.CacheKey" class="retry-indicator spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" aria-label="@Localizer["Loading..."]"></span>
+                    <span id="retryIndicator-MusicDisc-@Model.CacheKey" class="retry-indicator spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" aria-label='@Localizer["Loading..."]'></span>
                     <span>@Localizer["Retry"]</span>
                 </button>
             </form>
@@ -34,7 +34,7 @@
     }
     else if (Model.MusicDiscs.Count > 0)
     {
-        <output class="row">
+        <div class="row">
             <table class="table">
                 <colgroup>
                     <col class="col-4" />
@@ -70,9 +70,7 @@
                                         <input type="hidden" name="MusicDisc.Version" value="@musicDisc.Version" />
                                         <input type="hidden" name="MusicDisc.EAN" value="@musicDisc.EAN" />
 
-                                        <button type="submit" class="btn btn-outline-primary text-nowrap"
-                                                autofocus="@(Model.MusicDiscs.Count == 1)"
-                                                >@Localizer["Add to Loan"]</button>
+                                        <button type="submit" class="btn btn-outline-primary text-nowrap" autofocus="@(Model.MusicDiscs.Count == 1)">@Localizer["Add to Loan"]</button>
                                     </form>
                                 }
                             </td>
@@ -80,7 +78,7 @@
                     }
                 </tbody>
             </table>
-        </output>
+        </div>
     }
     else
     {

@@ -4,8 +4,8 @@
 @model library_management_system.Models.SearchResultsViewModel
 
 @{
-	ViewData["Title"] = Localizer["Search Results"];
-	ViewData["ActiveNav"] = "Loans";
+    ViewData["Title"] = Localizer["Search Results"];
+    ViewData["ActiveNav"] = "Loans";
 }
 
 @if ("Update".Equals(ViewData["PreviousAction"]))
@@ -17,73 +17,74 @@
 }
 
 <search>
-	@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
-	{
-		<form id="searchParams" hx-post="/MusicDiscs/SearchResultsOnline" hx-trigger="intersect once"
-			hx-target="#searchResultsOnline" hx-indicator="#searchResultsOnline">
-			<input type="hidden" name="LoanId" value="@Model.LoanId" />
-			<input type="hidden" name="Title" value="@Model.Title" />
-			<input type="hidden" name="Author" value="@Model.Author" />
-			<input type="hidden" name="EAN" value="@Model.EAN" />
-		</form>
-	}
+    @if ("true".Equals(ViewData["OnlineSearchEnabled"]))
+    {
+        <form id="searchParams" hx-post="/MusicDiscs/SearchResultsOnline" hx-trigger="intersect once"
+              hx-target="#searchResultsOnline" hx-indicator="#searchResultsOnline">
+            <input type="hidden" name="LoanId" value="@Model.LoanId" />
+            <input type="hidden" name="Title" value="@Model.Title" />
+            <input type="hidden" name="Author" value="@Model.Author" />
+            <input type="hidden" name="EAN" value="@Model.EAN" />
+        </form>
+    }
 
-	@await Html.PartialAsync(
-	"_SearchParametersPartial",
-		Model,
-		new ViewDataDictionary(ViewData) {
-		{"Controller", "MusicDiscs"}
-		})
+    @await Html.PartialAsync(
+        "_SearchParametersPartial",
+        Model,
+        new ViewDataDictionary(ViewData)
+        {
+            { "Controller", "MusicDiscs" }
+        })
 </search>
 
 @if (Model.MusicDiscs.Count > 0)
 {
-	<section class="mb-5">
-		<h2 class="display-5">@Localizer["Known Music Discs"]</h2>
-		<div class="row" role="status">
-			<table class="table">
-				<colgroup>
-					<col class="col-4" />
-					<col class="col-3" />
-					<col class="col-2" />
-					<col class="col-1" />
-					<col class="col-2" />
-				</colgroup>
-				<thead>
-					<tr>
-						<th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().Title)</th>
-						<th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().Artist)</th>
-						<th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().Version)</th>
-						<th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().EAN)</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (var musicDisc in Model.MusicDiscs.OrderBy(m => m.Title))
-					{
-						<tr>
-							<td class="align-middle">@Html.DisplayFor(model => musicDisc.Title)</td>
-							<td class="align-middle">@Html.DisplayFor(model => musicDisc.Artist)</td>
-							<td class="align-middle">@Html.DisplayFor(model => musicDisc.Version)</td>
-							<td class="align-middle">@Html.DisplayFor(model => musicDisc.EAN)</td>
-							<td class="text-md-end">
-								@if (Model.LoanId != null)
-								{
-									<a class="btn btn-outline-primary text-nowrap" asp-controller="Loans" asp-action="AddMusicDisc"
-										asp-route-loanId="@Model.LoanId" asp-route-musicDiscId="@musicDisc.ID"
-										autofocus="@(Model.MusicDiscs.Count == 1)">@Localizer["Add to Loan"]</a>
-								}
+    <section class="mb-5">
+        <h2 class="display-5">@Localizer["Known Music Discs"]</h2>
+        <div class="row" role="status">
+            <table class="table">
+                <colgroup>
+                    <col class="col-4" />
+                    <col class="col-3" />
+                    <col class="col-2" />
+                    <col class="col-1" />
+                    <col class="col-2" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().Title)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().Artist)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().Version)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().EAN)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var musicDisc in Model.MusicDiscs.OrderBy(m => m.Title))
+                    {
+                        <tr>
+                            <td class="align-middle">@Html.DisplayFor(model => musicDisc.Title)</td>
+                            <td class="align-middle">@Html.DisplayFor(model => musicDisc.Artist)</td>
+                            <td class="align-middle">@Html.DisplayFor(model => musicDisc.Version)</td>
+                            <td class="align-middle">@Html.DisplayFor(model => musicDisc.EAN)</td>
+                            <td class="text-md-end">
+                                @if (Model.LoanId != null)
+                                {
+                                    <a class="btn btn-outline-primary text-nowrap" asp-controller="Loans" asp-action="AddMusicDisc"
+                                       asp-route-loanId="@Model.LoanId" asp-route-musicDiscId="@musicDisc.ID"
+                                       autofocus="@(Model.MusicDiscs.Count == 1)">@Localizer["Add to Loan"]</a>
+                                }
 								else
 								{
 									<a class="btn btn-outline-secondary text-nowrap" asp-controller="MusicDiscs" asp-action="Edit" asp-route-id="@musicDisc.ID">@Localizer["Edit"]</a>
 								}
-							</td>
-						</tr>
-					}
-				</tbody>
-			</table>
-		</div>
-	</section>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
 }
 else if (!@Model.LoanId.HasValue)
 {
@@ -97,56 +98,59 @@ else if (!@Model.LoanId.HasValue)
 
 @if ("true".Equals(ViewData["OnlineSearchEnabled"]) || "true".Equals(ViewData["ShowManualOnlineSearch"]))
 {
-	<section class="mb-5" id="searchResultsOnline">
-		<h2 class="display-5">@Localizer["New Music Discs"]</h2>
-		@if ("true".Equals(ViewData["ShowManualOnlineSearch"]))
-		{
-			<form hx-post="/MusicDiscs/SearchResultsOnline" hx-target="#searchResultsOnline" hx-indicator="#searchResultsOnline" class="mb-3">
-				<input type="hidden" name="LoanId" value="@Model.LoanId" />
-				<input type="hidden" name="Title" value="@Model.Title" />
-				<input type="hidden" name="Author" value="@Model.Author" />
-				<input type="hidden" name="EAN" value="@Model.EAN" />
-				<button type="submit" class="btn btn-outline-primary text-nowrap">
-					<span>@Localizer["Search online"]</span>
-				</button>
-			</form>
-		}
+    <section class="mb-5" id="searchResultsOnline">
+        <h2 class="display-5">@Localizer["New Music Discs"]</h2>
+        @if ("true".Equals(ViewData["ShowManualOnlineSearch"]))
+        {
+            <form hx-post="/MusicDiscs/SearchResultsOnline" hx-target="#searchResultsOnline" hx-indicator="#searchResultsOnline" class="mb-3">
+                <input type="hidden" name="LoanId" value="@Model.LoanId" />
+                <input type="hidden" name="Title" value="@Model.Title" />
+                <input type="hidden" name="Author" value="@Model.Author" />
+                <input type="hidden" name="EAN" value="@Model.EAN" />
+                <button type="submit" class="btn btn-outline-primary text-nowrap">
+                    <span>@Localizer["Search online"]</span>
+                </button>
+            </form>
+        }
 
-		<div class="spinner-border text-primary" role="status">
-			<span class="visually-hidden">@Localizer["Loading..."]</span>
-		</div>
-	</section>
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">@Localizer["Loading..."]</span>
+        </div>
+    </section>
 }
 
 <form id="add-new-music-disc-form" asp-controller="MusicDiscs" asp-action="New" class="mb-5">
-	<h2 class="display-5">@Localizer["Add New Music Disc"]</h2>
+    <h2 class="display-5">@Localizer["Add New Music Disc"]</h2>
 
-	<input type="hidden" name="LoanId" value="@Model.LoanId" />
-	<input type="hidden" name="MusicDisc.Title" value="@Model.Title" />
-	<input type="hidden" name="MusicDisc.Artist" value="@Model.Author" />
-	<input type="hidden" name="MusicDisc.EAN" value="@Model.EAN" />
+    <input type="hidden" name="LoanId" value="@Model.LoanId" />
+    <input type="hidden" name="MusicDisc.Title" value="@Model.Title" />
+    <input type="hidden" name="MusicDisc.Artist" value="@Model.Author" />
+    <input type="hidden" name="MusicDisc.EAN" value="@Model.EAN" />
 
-	<p>@Localizer["Music disc not listed?"]</p>
+    <p>@Localizer["Music disc not listed?"]</p>
 
-	<button type="submit" class="btn btn-outline-primary text-nowrap"><i class="bi bi-disc me-2" aria-hidden="true"></i>
-		@Localizer["Add New Music Disc"]</button>
+    <button type="submit" class="btn btn-outline-primary text-nowrap">
+        <i class="bi bi-disc me-2" aria-hidden="true"></i>
+        @Localizer["Add New Music Disc"]
+    </button>
 </form>
 
 @section Scripts {
-	<script src="~/lib/htmx.org/dist/htmx.min.js" integrity="sha256-YCMa5rqds4JesVomESLV9VkhxNU7Zr9jfcGLTuJ8efk="
-		crossorigin="anonymous"></script>
+    <script src="~/lib/htmx.org/dist/htmx.min.js" integrity="sha256-YCMa5rqds4JesVomESLV9VkhxNU7Zr9jfcGLTuJ8efk=" crossorigin="anonymous"></script>
 }
 
 @section Styles {
-	<style type="text/css">
-	#searchResultsOnline .spinner-border {
-		display: none;
-	}
-	#searchResultsOnline.htmx-request .spinner-border {
-		display: block;
-	}
-	#searchResultsOnline.htmx-request button[type="submit"] {
-		display: none;
-	}
-	</style>
+    <style type="text/css">
+        #searchResultsOnline .spinner-border {
+            display: none;
+        }
+
+        #searchResultsOnline.htmx-request .spinner-border {
+            display: block;
+        }
+
+        #searchResultsOnline.htmx-request button[type="submit"] {
+            display: none;
+        }
+    </style>
 }
