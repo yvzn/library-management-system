@@ -56,6 +56,25 @@ Change the database location by modifying the connection string in the `appsetti
 }
 ```
 
+Optional: configure automatic SQLite backups by setting the backup frequency and folder in `appsettings.json`:
+
+```json
+{
+  "Backup": {
+    "Frequency": "update",
+    "Folder": "Backups"
+  }
+}
+```
+
+Supported backup frequencies:
+
+- `startup`: create a raw file copy whenever the application starts.
+- `update`: create a raw file copy only when Entity Framework detects pending migrations before applying them. This is the default.
+- `disabled`: disable all database backups.
+
+The backup folder can be a relative path (resolved from the app's base directory) or an absolute path. Backups are plain SQLite file copies, not SQL dumps.
+
 ### Configuration
 
 Optional: online search capability uses the `Features` section in `appsettings.json` to fill the catalog entries.
@@ -179,4 +198,3 @@ Online book search is powered by the [Open Library API](https://openlibrary.org/
 Movie search is powered by [DvdFR API](https://www.dvdfr.com/api).
 
 Music disc search is powered by [MusicBrainz API](https://musicbrainz.org/doc/MusicBrainz_API).
-
