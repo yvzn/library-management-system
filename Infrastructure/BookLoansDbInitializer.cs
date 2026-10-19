@@ -2,17 +2,18 @@ using library_management_system.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace library_management_system.Infrastructure;
 
-public class BookLoansDbInitializer(BookLoansContext context, IConfiguration configuration)
+public class BookLoansDbInitializer(BookLoansContext context, IConfiguration configuration, ILogger<BookLoansDbInitializer> logger)
 {
 	internal async Task Init(string? connectionString, CancellationToken cancellationToken = default)
 	{
 		var databasePath = GetDatabasePath(connectionString);
 		Directory.CreateDirectory(GetDatabaseDirectory(connectionString));
 
-		if (await ShouldCreateBackupBeforeMigrationsAsync())
+		if (await ShouldCreateBackupAsync())
 		{
 			BackupDatabase(databasePath);
 		}
@@ -65,9 +66,9 @@ public class BookLoansDbInitializer(BookLoansContext context, IConfiguration con
 		await context.SaveChangesAsync(cancellationToken);
 	}
 
-	private async Task<bool> ShouldCreateBackupBeforeMigrationsAsync()
+	private async Task<bool> ShouldCreateBackupAsync()
 	{
-		var frequency = configuration["DatabaseBackupFrequency"];
+		var frequency = configuration["Backup:Frequency"];
 		var normalizedFrequency = string.IsNullOrWhiteSpace(frequency)
 			? "update"
 			: frequency.Trim();
@@ -107,20 +108,22 @@ public class BookLoansDbInitializer(BookLoansContext context, IConfiguration con
 				backupFolder,
 				$"{Path.GetFileNameWithoutExtension(databasePath)}-{timestamp}{Path.GetExtension(databasePath)}");
 			File.Copy(databasePath, backupPath, overwrite: false);
+
+			logger.LogInformation("Database backup created at {BackupPath}", backupPath);
 		}
-		catch (IOException)
+		catch (IOException ex)
 		{
-			// Skip backup when the SQLite file is locked or unavailable.
+			logger.LogWarning(ex, "Database backup skipped: file locked or unavailable");
 		}
-		catch (UnauthorizedAccessException)
+		catch (UnauthorizedAccessException ex)
 		{
-			// Skip backup when the configured backup folder is not writable.
+			logger.LogWarning(ex, "Database backup skipped: backup folder not writable");
 		}
 	}
 
 	private string GetBackupFolder()
 	{
-		var configuredPath = configuration["DatabaseBackupFolder"];
+		var configuredPath = configuration["Backup:Folder"];
 		if (string.IsNullOrWhiteSpace(configuredPath))
 		{
 			return Path.Combine(BookLoansContext.DbDirectory, "Backups");

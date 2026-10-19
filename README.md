@@ -60,8 +60,10 @@ Optional: configure automatic SQLite backups by setting the backup frequency and
 
 ```json
 {
-  "DatabaseBackupFrequency": "update",
-  "DatabaseBackupFolder": "Backups"
+  "Backup": {
+    "Frequency": "update",
+    "Folder": "Backups"
+  }
 }
 ```
 
@@ -196,4 +198,3 @@ Online book search is powered by the [Open Library API](https://openlibrary.org/
 Movie search is powered by [DvdFR API](https://www.dvdfr.com/api).
 
 Music disc search is powered by [MusicBrainz API](https://musicbrainz.org/doc/MusicBrainz_API).
-
