@@ -8,6 +8,14 @@
 	ViewData["ActiveNav"] = "Loans";
 }
 
+@if ("Update".Equals(ViewData["PreviousAction"]))
+{
+	<div class="p-2 mb-5 border rounded-3 border-success bg-success-subtle">
+		<i class="bi bi-check-circle" aria-hidden="true"></i>
+		@Localizer["Music disc updated"]
+	</div>
+}
+
 <search>
 	@if ("true".Equals(ViewData["OnlineSearchEnabled"]) && !"true".Equals(ViewData["ShowManualOnlineSearch"]))
 	{
@@ -27,14 +35,6 @@
 		{"Controller", "MusicDiscs"}
 		})
 </search>
-
-@if ("Update".Equals(ViewData["PreviousAction"]))
-{
-	<div class="p-2 mb-5 border rounded-3 border-success bg-success-subtle">
-		<i class="bi bi-check-circle" aria-hidden="true"></i>
-		@Localizer["Music disc updated"]
-	</div>
-}
 
 @if (Model.MusicDiscs.Count > 0)
 {
@@ -87,6 +87,15 @@
 					}
 				</tbody>
 			</table>
+		</div>
+	</section>
+}
+else if (!@Model.LoanId.HasValue)
+{
+	<section class="mb-5">
+		<h2 class="display-5">@Localizer["Known Music Discs"]</h2>
+		<div>
+			@Localizer["No music discs found."]
 		</div>
 	</section>
 }

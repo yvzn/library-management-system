@@ -120,14 +120,26 @@
   <data name="Search Results" xml:space="preserve">
     <value>Résultats de recherche</value>
   </data>
+  <data name="Book updated" xml:space="preserve">
+    <value>Livre mis à jour</value>
+  </data>
   <data name="Known Books" xml:space="preserve">
     <value>Livres répertoriés</value>
   </data>
   <data name="Add to Loan" xml:space="preserve">
     <value>Ajouter</value>
   </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="No books found." xml:space="preserve">
+    <value>Aucun livre trouvé.</value>
+  </data>
   <data name="New Books" xml:space="preserve">
     <value>Nouveaux livres</value>
+  </data>
+  <data name="Search online" xml:space="preserve">
+    <value>Rechercher en ligne</value>
   </data>
   <data name="Loading..." xml:space="preserve">
     <value>Chargement...</value>

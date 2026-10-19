@@ -9,6 +9,14 @@
 	ViewData["ActiveNav"] = "Loans";
 }
 
+@if ("Update".Equals(ViewData["PreviousAction"]))
+{
+	<div class="p-2 mb-5 border rounded-3 border-success bg-success-subtle">
+		<i class="bi bi-check-circle" aria-hidden="true"></i>
+		@Localizer["Movie updated"]
+	</div>
+}
+
 <search>
 	@if ("true".Equals(ViewData["OnlineSearchEnabled"]) && !"true".Equals(ViewData["ShowManualOnlineSearch"]))
 	{
@@ -29,14 +37,6 @@
 		{"Controller", "Movies"}
 		})
 </search>
-
-@if ("Update".Equals(ViewData["PreviousAction"]))
-{
-	<div class="p-2 mb-5 border rounded-3 border-success bg-success-subtle">
-		<i class="bi bi-check-circle" aria-hidden="true"></i>
-		@Localizer["Movie updated"]
-	</div>
-}
 
 @if (Model.Movies.Count > 0)
 {
@@ -90,6 +90,15 @@
 					}
 				</tbody>
 			</table>
+		</div>
+	</section>
+}
+else if (!@Model.LoanId.HasValue)
+{
+	<section class="mb-5">
+		<h2 class="display-5">@Localizer["Known Movies"]</h2>
+		<div>
+			@Localizer["No movies found."]
 		</div>
 	</section>
 }

@@ -120,14 +120,26 @@
   <data name="Search Results" xml:space="preserve">
     <value>Résultats de recherche</value>
   </data>
+  <data name="Music disc updated" xml:space="preserve">
+    <value>Disque mis à jour</value>
+  </data>
   <data name="Known Music Discs" xml:space="preserve">
     <value>Disques connus</value>
   </data>
   <data name="Add to Loan" xml:space="preserve">
     <value>Ajouter à l'emprunt</value>
   </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="No music discs found." xml:space="preserve">
+    <value>Aucun disque trouvé.</value>
+  </data>
   <data name="New Music Discs" xml:space="preserve">
     <value>Nouveaux disques</value>
+  </data>
+  <data name="Search online" xml:space="preserve">
+    <value>Rechercher en ligne</value>
   </data>
   <data name="Loading..." xml:space="preserve">
     <value>Chargement...</value>
