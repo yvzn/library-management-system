@@ -9,6 +9,14 @@
 	ViewData["ActiveNav"] = "Loans";
 }
 
+@if ("Update".Equals(ViewData["PreviousAction"]))
+{
+	<div class="p-2 mb-5 border rounded-3 border-success bg-success-subtle">
+		<i class="bi bi-check-circle" aria-hidden="true"></i>
+		@Localizer["Movie updated"]
+	</div>
+}
+
 <search>
 	@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
 	{
@@ -73,11 +81,24 @@
 										asp-route-loanId="@Model.LoanId" asp-route-movieId="@movie.ID"
 										autofocus="@(Model.Movies.Count == 1)">@Localizer["Add to Loan"]</a>
 								}
+								else
+								{
+									<a class="btn btn-outline-secondary text-nowrap" asp-controller="Movies" asp-action="Edit" asp-route-id="@movie.ID">@Localizer["Edit"]</a>
+								}
 							</td>
 						</tr>
 					}
 				</tbody>
 			</table>
+		</div>
+	</section>
+}
+else if (!@Model.LoanId.HasValue)
+{
+	<section class="mb-5">
+		<h2 class="display-5">@Localizer["Known Movies"]</h2>
+		<div>
+			@Localizer["No movies found."]
 		</div>
 	</section>
 }

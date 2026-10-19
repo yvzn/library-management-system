@@ -8,6 +8,14 @@
 	ViewData["ActiveNav"] = "Loans";
 }
 
+@if ("Update".Equals(ViewData["PreviousAction"]))
+{
+	<div class="p-2 mb-5 border rounded-3 border-success bg-success-subtle">
+		<i class="bi bi-check-circle" aria-hidden="true"></i>
+		@Localizer["Music disc updated"]
+	</div>
+}
+
 <search>
 	@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
 	{
@@ -27,6 +35,7 @@
 		{"Controller", "MusicDiscs"}
 		})
 </search>
+
 @if (Model.MusicDiscs.Count > 0)
 {
 	<section class="mb-5">
@@ -69,11 +78,24 @@
 										asp-route-loanId="@Model.LoanId" asp-route-musicDiscId="@musicDisc.ID"
 										autofocus="@(Model.MusicDiscs.Count == 1)">@Localizer["Add to Loan"]</a>
 								}
+								else
+								{
+									<a class="btn btn-outline-secondary text-nowrap" asp-controller="MusicDiscs" asp-action="Edit" asp-route-id="@musicDisc.ID">@Localizer["Edit"]</a>
+								}
 							</td>
 						</tr>
 					}
 				</tbody>
 			</table>
+		</div>
+	</section>
+}
+else if (!@Model.LoanId.HasValue)
+{
+	<section class="mb-5">
+		<h2 class="display-5">@Localizer["Known Music Discs"]</h2>
+		<div>
+			@Localizer["No music discs found."]
 		</div>
 	</section>
 }

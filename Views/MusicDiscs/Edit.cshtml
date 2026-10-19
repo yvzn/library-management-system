@@ -1,0 +1,60 @@
+@model library_management_system.Models.MusicDisc
+
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@{
+	ViewData["Title"] = Localizer["Edit Music Disc"];
+	ViewData["ActiveNav"] = "Catalog";
+}
+
+<div class="mb-3">
+	<h1 class="display-4">@Localizer["Edit Music Disc"]</h1>
+</div>
+
+<form method="post" asp-controller="MusicDiscs" asp-action="Update">
+	<input asp-for="ID" type="hidden" />
+	<div class="row">
+		<div class="col-12 col-md-6 mb-3">
+			<label asp-for="Title" class="form-label">@Html.DisplayNameFor(model => model.Title) *</label>
+			<input asp-for="Title" class="form-control" type="text" required />
+			<span asp-validation-for="Title" class="text-danger"></span>
+		</div>
+		<div class="col-12 col-md-6 mb-3">
+			<label asp-for="Artist" class="form-label">@Html.DisplayNameFor(model => model.Artist) *</label>
+			<input asp-for="Artist" class="form-control" type="text" required />
+			<span asp-validation-for="Artist" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="row mb-3">
+		<div class="col-12 col-md-6 mb-3">
+			<label asp-for="Version" class="form-label">@Html.DisplayNameFor(model => model.Version)</label>
+			<input asp-for="Version" class="form-control" type="text" />
+			<span asp-validation-for="Version" class="text-danger"></span>
+		</div>
+		<div class="col-12 col-md-6 mb-3">
+			<label asp-for="EAN" class="form-label">@Html.DisplayNameFor(model => model.EAN)</label>
+			<input asp-for="EAN" class="form-control" type="text" />
+			<span asp-validation-for="EAN" class="text-danger"></span>
+		</div>
+	</div>
+
+	<div class="row align-items-center">
+		<div class="col-12 col-md-6">
+			<button type="submit" class="btn btn-primary"><i class="bi bi-floppy me-2" aria-hidden="true"></i>@Localizer["Save changes"]</button>
+		</div>
+		@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
+		{
+			<div class="col-12 col-md-6 text-md-end mt-3 mt-md-0">
+				<button type="submit" class="btn btn-outline-primary" formaction="@Url.Action("SearchMetadata", "MusicDiscs", new { id = Model.ID })" formmethod="post">
+					<i class="bi bi-search-heart me-2" aria-hidden="true"></i>@Localizer["Search online metadata"]
+				</button>
+			</div>
+		}
+	</div>
+</form>
+
+@section Scripts {
+	@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
