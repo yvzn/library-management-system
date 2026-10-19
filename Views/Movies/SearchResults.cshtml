@@ -7,6 +7,14 @@
 	ViewData["lang"] = System.Globalization.CultureInfo.CurrentCulture.Name;
 	ViewData["Title"] = Localizer["Search Results"];
 	ViewData["ActiveNav"] = "Loans";
+	var movieManualAddUrl = Url.Action("New", "Movies", new Dictionary<string, object?>
+	{
+		["loanId"] = Model.LoanId,
+		["Movie.Title"] = Model.Title,
+		["Movie.Director"] = Model.Director,
+		["Movie.ReleaseYear"] = Model.ReleaseYear,
+		["Movie.EAN"] = Model.EAN,
+	});
 }
 
 @if ("Update".Equals(ViewData["PreviousAction"]))
@@ -18,6 +26,14 @@
 }
 
 <search>
+	@if (TempData["ValidationErrorMessage"] is string validationErrorMessage)
+	{
+		<div class="alert alert-warning" role="alert">
+			<p class="mb-2">@validationErrorMessage</p>
+			<p class="mb-0"><a href="@movieManualAddUrl">@Localizer["Add this item manually"]</a></p>
+		</div>
+	}
+
 	@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
 	{
 		<form id="searchParams" hx-post="/Movies/SearchResultsOnline" hx-trigger="intersect once"

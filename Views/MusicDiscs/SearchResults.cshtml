@@ -6,6 +6,13 @@
 @{
 	ViewData["Title"] = Localizer["Search Results"];
 	ViewData["ActiveNav"] = "Loans";
+	var musicDiscManualAddUrl = Url.Action("New", "MusicDiscs", new Dictionary<string, object?>
+	{
+		["loanId"] = Model.LoanId,
+		["MusicDisc.Title"] = Model.Title,
+		["MusicDisc.Artist"] = Model.Author,
+		["MusicDisc.EAN"] = Model.EAN,
+	});
 }
 
 @if ("Update".Equals(ViewData["PreviousAction"]))
@@ -17,6 +24,14 @@
 }
 
 <search>
+	@if (TempData["ValidationErrorMessage"] is string validationErrorMessage)
+	{
+		<div class="alert alert-warning" role="alert">
+			<p class="mb-2">@validationErrorMessage</p>
+			<p class="mb-0"><a href="@musicDiscManualAddUrl">@Localizer["Add this item manually"]</a></p>
+		</div>
+	}
+
 	@if ("true".Equals(ViewData["OnlineSearchEnabled"]))
 	{
 		<form id="searchParams" hx-post="/MusicDiscs/SearchResultsOnline" hx-trigger="intersect once"

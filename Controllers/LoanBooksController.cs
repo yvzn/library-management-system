@@ -10,7 +10,19 @@ public class LoanBooksController(BookLoansContext dbContext) : Controller
 	{
 		if (!ModelState.IsValid)
 		{
-			return RedirectToAction("Details", "Loans", new { id = loanBook.LoanID });
+			TempData["ValidationErrorMessage"] = string.Join(" ", ModelState
+				.Values
+				.SelectMany(value => value.Errors)
+				.Select(error => error.ErrorMessage)
+				.Distinct());
+
+			return RedirectToAction("SearchResults", "Books", new
+			{
+				loanId = loanBook.LoanID,
+				title = loanBook.Book?.Title,
+				author = loanBook.Book?.Author,
+				ISBN = loanBook.Book?.ISBN_13 ?? loanBook.Book?.ISBN_10,
+			});
 		}
 
 		var newlyCreatedBook = await dbContext.Books.AddAsync(loanBook.Book!, HttpContext.RequestAborted);

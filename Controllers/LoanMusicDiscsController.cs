@@ -10,7 +10,19 @@ public class LoanMusicDiscsController(BookLoansContext dbContext) : Controller
 	{
 		if (!ModelState.IsValid)
 		{
-			return RedirectToAction("Details", "Loans", new { id = loanMusicDisc.LoanID });
+			TempData["ValidationErrorMessage"] = string.Join(" ", ModelState
+				.Values
+				.SelectMany(value => value.Errors)
+				.Select(error => error.ErrorMessage)
+				.Distinct());
+
+			return RedirectToAction("SearchResults", "MusicDiscs", new
+			{
+				loanId = loanMusicDisc.LoanID,
+				title = loanMusicDisc.MusicDisc?.Title,
+				author = loanMusicDisc.MusicDisc?.Artist,
+				EAN = loanMusicDisc.MusicDisc?.EAN,
+			});
 		}
 
 		var newlyCreatedMusicDisc = await dbContext.MusicDiscs.AddAsync(loanMusicDisc.MusicDisc!, HttpContext.RequestAborted);

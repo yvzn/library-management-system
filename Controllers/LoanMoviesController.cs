@@ -10,7 +10,20 @@ public class LoanMoviesController(BookLoansContext dbContext) : Controller
 	{
 		if (!ModelState.IsValid)
 		{
-			return RedirectToAction("Details", "Loans", new { id = loanMovie.LoanID });
+			TempData["ValidationErrorMessage"] = string.Join(" ", ModelState
+				.Values
+				.SelectMany(value => value.Errors)
+				.Select(error => error.ErrorMessage)
+				.Distinct());
+
+			return RedirectToAction("SearchResults", "Movies", new
+			{
+				loanId = loanMovie.LoanID,
+				title = loanMovie.Movie?.Title,
+				director = loanMovie.Movie?.Director,
+				releaseYear = loanMovie.Movie?.ReleaseYear,
+				EAN = loanMovie.Movie?.EAN,
+			});
 		}
 
 		var newlyCreatedMovie = await dbContext.Movies.AddAsync(loanMovie.Movie!, HttpContext.RequestAborted);
