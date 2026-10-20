@@ -4,18 +4,17 @@ using library_management_system.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using System.Reflection;
-using System.Xml.Linq;
 
 namespace library_management_system.Controllers;
 
 public class MoviesController(
 	BookLoansContext dbContext,
 	IMemoryCache memoryCache,
-	IHttpClientFactory httpClientFactory,
-	ApplicationVersionService applicationVersionService,
+	IConfiguration configuration,
 	IOptions<Features> features,
+	IMovieSearchService movieSearchService,
 	ILogger<MoviesController> logger) : Controller
 {
 	public IActionResult Search(int? loanId, string? title, string? director, int? releaseYear, string? EAN)
@@ -68,12 +67,13 @@ public class MoviesController(
 		var onlineSearchMode = OnlineSearchModeParser.Parse(
 			features.Value.OnlineMovieSearch.ToString(),
 			OnlineSearchMode.Automatic);
+		var onlineSearchEnabled = MovieSearchConfiguration.IsEnabled(configuration, features.Value, result.Count > 0);
 
 		ViewData["PreviousAction"] = previous;
 		ViewData["OnlineSearchMode"] = onlineSearchMode.ToString();
 		var loanContext = model.LoanId.HasValue;
-		ViewData["OnlineSearchEnabled"] = loanContext && onlineSearchMode.ShouldTriggerOnlineSearch(result.Count > 0) ? "true" : "false";
-		ViewData["ShowManualOnlineSearch"] = loanContext && onlineSearchMode.ShouldShowManualSearchAction() ? "true" : "false";
+		ViewData["OnlineSearchEnabled"] = (loanContext && onlineSearchEnabled && onlineSearchMode.ShouldTriggerOnlineSearch(result.Count > 0)) ? "true" : "false";
+		ViewData["ShowManualOnlineSearch"] = (loanContext && onlineSearchEnabled && onlineSearchMode.ShouldShowManualSearchAction()) ? "true" : "false";
 
 		return View(
 			new SearchResultsViewModel(model)
@@ -84,53 +84,20 @@ public class MoviesController(
 
 	public async Task<IActionResult> SearchResultsOnline(SearchViewModel model)
 	{
+		if (string.IsNullOrWhiteSpace(MovieSearchConfiguration.GetTmdbApiKey(configuration)))
+		{
+			return PartialView("_MovieSearchResultsOnlinePartial", new SearchResultsViewModel(model));
+		}
+
 		var cacheKey = $"SearchResultsOnline_Movies_{model.CacheKey}";
 		if (memoryCache.TryGetValue(cacheKey, out SearchResultsViewModel? cachedResults))
 		{
 			return PartialView("_MovieSearchResultsOnlinePartial", cachedResults);
 		}
 
-		var uriBuilder = new UriBuilder("http://www.dvdfr.com/api/search.php");
-
-		var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
-		if (!string.IsNullOrWhiteSpace(model.Title))
-		{
-			query["title"] = model.Title;
-		}
-		if (!string.IsNullOrWhiteSpace(model.EAN))
-		{
-			query["gencode"] = model.EAN;
-		}
-
-		var queryString = query.ToString();
-		if (string.IsNullOrEmpty(queryString))
-		{
-			return PartialView(
-				"_MovieSearchResultsOnlinePartial",
-				new SearchResultsViewModel(model));
-		}
-
 		try
 		{
-			uriBuilder.Query = queryString;
-			var client = httpClientFactory.CreateClient();
-			client.Timeout = TimeSpan.FromSeconds(60);
-			client.DefaultRequestHeaders.UserAgent.ParseAdd(
-				$"LibreLibrary/{applicationVersionService.CurrentVersion} (https://github.com/yvzn/library-management-system)");
-
-			using var response = await client.GetAsync(uriBuilder.Uri, HttpContext.RequestAborted);
-			response.EnsureSuccessStatusCode();
-
-			var xmlContent = await response.Content.ReadAsStringAsync(HttpContext.RequestAborted);
-			var movies = ParseMoviesFromXml(xmlContent);
-
-			movies = [.. movies.DistinctBy(m => m.Title + m.Director + m.ReleaseYear + m.Media).Take(20)];
-
-			if (!string.IsNullOrWhiteSpace(model.EAN))
-			{
-				movies = [.. movies.Select(x => { x.EAN = model.EAN; return x; })];
-			}
-
+			var movies = await movieSearchService.SearchMoviesAsync(model.Title, model.EAN, HttpContext.RequestAborted);
 			var searchResults = new SearchResultsViewModel(model)
 			{
 				Movies = [.. movies]
@@ -211,45 +178,28 @@ public class MoviesController(
 			return View(nameof(Edit), existingMovie);
 		}
 
-		var uriBuilder = new UriBuilder("http://www.dvdfr.com/api/search.php");
-		var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
-		if (!string.IsNullOrWhiteSpace(existingMovie.Title))
-		{
-			query["title"] = existingMovie.Title;
-		}
-		if (!string.IsNullOrWhiteSpace(existingMovie.EAN))
-		{
-			query["gencode"] = existingMovie.EAN;
-		}
-
 		try
 		{
-			if (!string.IsNullOrEmpty(query.ToString()))
-			{
-				uriBuilder.Query = query.ToString();
-				var client = httpClientFactory.CreateClient();
-				client.Timeout = TimeSpan.FromSeconds(60);
-				client.DefaultRequestHeaders.UserAgent.ParseAdd($"LibreLibrary/{applicationVersionService.CurrentVersion} (https://github.com/yvzn/library-management-system)");
-				using var response = await client.GetAsync(uriBuilder.Uri, HttpContext.RequestAborted);
-				response.EnsureSuccessStatusCode();
-				var xmlContent = await response.Content.ReadAsStringAsync(HttpContext.RequestAborted);
-				var candidateMovies = ParseMoviesFromXml(xmlContent);
-				var match = candidateMovies.FirstOrDefault(result =>
-					string.Equals(result.Title, existingMovie.Title, StringComparison.OrdinalIgnoreCase)
-					|| (!string.IsNullOrWhiteSpace(existingMovie.EAN)
-						&& !string.IsNullOrWhiteSpace(result.EAN)
-						&& string.Equals(result.EAN, existingMovie.EAN, StringComparison.OrdinalIgnoreCase)))
-					?? candidateMovies.FirstOrDefault();
+			var candidateMovies = await movieSearchService.SearchMoviesAsync(
+				existingMovie.Title,
+				existingMovie.EAN,
+				HttpContext.RequestAborted);
+			var match = candidateMovies.FirstOrDefault(result =>
+				string.Equals(result.Title, existingMovie.Title, StringComparison.OrdinalIgnoreCase)
+				|| string.Equals(result.TitleFr, existingMovie.Title, StringComparison.OrdinalIgnoreCase))
+				?? candidateMovies.FirstOrDefault(result =>
+					!string.IsNullOrWhiteSpace(existingMovie.EAN)
+					&& !string.IsNullOrWhiteSpace(result.EAN)
+					&& string.Equals(result.EAN, existingMovie.EAN, StringComparison.OrdinalIgnoreCase))
+				?? candidateMovies.FirstOrDefault();
 
-				if (match != null)
-				{
-					existingMovie.Title = string.IsNullOrWhiteSpace(existingMovie.Title) ? match.Title : existingMovie.Title;
-					existingMovie.TitleFr ??= match.TitleFr;
-					existingMovie.Director ??= match.Director;
-					existingMovie.ReleaseYear ??= match.ReleaseYear;
-					existingMovie.Media ??= match.Media;
-					existingMovie.EAN ??= match.EAN;
-				}
+			if (match != null)
+			{
+				existingMovie.Title = string.IsNullOrWhiteSpace(existingMovie.Title) ? match.Title : existingMovie.Title;
+				existingMovie.TitleFr ??= match.TitleFr;
+				existingMovie.ReleaseYear ??= match.ReleaseYear;
+				existingMovie.Media ??= match.Media;
+				existingMovie.EAN ??= match.EAN;
 			}
 		}
 		catch (Exception ex) when (!HttpContext.RequestAborted.IsCancellationRequested)
@@ -294,66 +244,5 @@ public class MoviesController(
 		}
 
 		return RedirectToAction("Index", "Loans");
-	}
-
-	private static IEnumerable<Movie> ParseMoviesFromXml(string xmlContent)
-	{
-		var document = XDocument.Parse(xmlContent);
-		var dvdElements = document.Root?.Elements("dvd");
-
-		if (dvdElements == null)
-		{
-			yield break;
-		}
-
-		foreach (var dvdElement in dvdElements)
-		{
-			var movie = new Movie();
-
-			var titresElement = dvdElement.Element("titres");
-			if (titresElement != null)
-			{
-				var voTitle = titresElement.Element("vo")?.Value?.Trim();
-				var frTitle = titresElement.Element("fr")?.Value?.Trim();
-				var anyTitle = titresElement.Elements()
-					.FirstOrDefault(e => !string.IsNullOrWhiteSpace(e.Value))?.Value?.Trim();
-
-				movie.Title = !string.IsNullOrEmpty(voTitle) ? voTitle :
-								!string.IsNullOrEmpty(frTitle) ? frTitle :
-								anyTitle;
-				movie.TitleFr = frTitle;
-			}
-
-			var anneeElement = dvdElement.Element("annee");
-			if (anneeElement != null && int.TryParse(anneeElement.Value, out var year))
-			{
-				movie.ReleaseYear = year;
-			}
-
-			var mediaElement = dvdElement.Element("media");
-			if (mediaElement != null)
-			{
-				movie.Media = mediaElement.Value?.Trim();
-			}
-
-			var starsElement = dvdElement.Element("stars");
-			if (starsElement != null)
-			{
-				var directors = starsElement.Elements("star")
-					.Where(s => s.Attribute("type")?.Value == "Réalisateur")
-					.Select(s => s.Value?.Trim())
-					.Where(name => !string.IsNullOrEmpty(name));
-
-				movie.Director = string.Join(", ", directors);
-			}
-
-			// EAN is not provided in the XML structure, so we leave it null
-			movie.EAN = null;
-
-			if (!string.IsNullOrEmpty(movie.Title))
-			{
-				yield return movie;
-			}
-		}
 	}
 }

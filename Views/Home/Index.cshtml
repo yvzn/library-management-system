@@ -1,73 +1,75 @@
 @model IList<library_management_system.Models.Loan>
 
 @using Microsoft.AspNetCore.Mvc.Localization
-
 @inject IViewLocalizer Localizer
 
 @{
-	ViewData["Title"] = Localizer["Home Page"];
-	ViewData["ActiveNav"] = "Home";
-	ViewData["VersionCheckEnabled"] = "true";
+    ViewData["Title"] = Localizer["Home Page"];
+    ViewData["ActiveNav"] = "Home";
+    ViewData["VersionCheckEnabled"] = "true";
 }
 
 <div class="mb-3 row align-items-center">
-	<h1 class="display-4 col-12 col-md-6">@Localizer["Most Current Loans"]</h1>
-	<div class="col-12 col-md-6 text-md-end">
-		<a class="btn btn-primary" asp-controller="Loans" asp-action="New"><i class="bi bi-calendar-plus me-2"
-				aria-hidden="true"></i>@Localizer["Add New Loan"]</a>
-	</div>
+    <h1 class="display-4 col-12 col-md-6">@Localizer["Most Current Loans"]</h1>
+    <div class="col-12 col-md-6 text-md-end">
+        <a class="btn btn-primary" asp-controller="Loans" asp-action="New">
+            <i class="bi bi-calendar-plus me-2" aria-hidden="true"></i>
+            @Localizer["Add New Loan"]
+        </a>
+    </div>
 </div>
 
 @if (Model.Count == 0)
 {
-	<p class="mb-5">@Localizer["No current loans."]</p>
+    <p class="mb-5">@Localizer["No current loans."]</p>
 }
 else
 {
-	<div class="table-responsive mb-5">
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th scope="col">@Html.DisplayNameFor(model => model.First().LoanDate)</th>
-					<th scope="col">@Html.DisplayNameFor(model => model.First().DueDate)</th>
-					<th scope="col">@Localizer["Items"]</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var loan in Model)
-				{
-					<tr>
-						<td>@Html.DisplayFor(model => loan.LoanDate)</td>
-						<td>@Html.DisplayFor(model => loan.DueDate)</td>
-						<td>
-							@if (loan.LoanBooks.Count > 0)
-							{
-								<span title="@Localizer["Books"]">
-									<i class="bi bi-book" aria-hidden="true"></i>
-									@Html.DisplayFor(model => loan.LoanBooks.Count)
-								</span>
-							}
-							@if (loan.LoanMovies.Count > 0)
-							{
-								<span title="@Localizer["Movies"]">
-									<i class="bi bi-film" aria-hidden="true"></i>
-									@Html.DisplayFor(model => loan.LoanMovies.Count)
-								</span>
-							}
-							@if (loan.LoanMusicDiscs.Count > 0)
-							{
-								<span title="@Localizer["Music Discs"]">
-									<i class="bi bi-disc" aria-hidden="true"></i>
-									@Html.DisplayFor(model => loan.LoanMusicDiscs.Count)
-								</span>
-							}
-						</td>
-						<td class="text-md-end"><a asp-controller="Loans" asp-action="Details"
-								asp-route-id="@loan.ID">@Localizer["Details"]</a></td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
+    <div class="table-responsive mb-5">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">@Html.DisplayNameFor(model => model.First().LoanDate)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.First().DueDate)</th>
+                    <th scope="col">@Localizer["Items"]</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var loan in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(model => loan.LoanDate)</td>
+                        <td>@Html.DisplayFor(model => loan.DueDate)</td>
+                        <td>
+                            @if (loan.LoanBooks.Count > 0)
+                            {
+                                <span title="@Localizer["Books"]">
+                                    <i class="bi bi-book" aria-hidden="true"></i>
+                                    @Html.DisplayFor(model => loan.LoanBooks.Count)
+                                </span>
+                            }
+                            @if (loan.LoanMovies.Count > 0)
+                            {
+                                <span title="@Localizer["Movies"]">
+                                    <i class="bi bi-film" aria-hidden="true"></i>
+                                    @Html.DisplayFor(model => loan.LoanMovies.Count)
+                                </span>
+                            }
+                            @if (loan.LoanMusicDiscs.Count > 0)
+                            {
+                                <span title="@Localizer["Music Discs"]">
+                                    <i class="bi bi-disc" aria-hidden="true"></i>
+                                    @Html.DisplayFor(model => loan.LoanMusicDiscs.Count)
+                                </span>
+                            }
+                        </td>
+                        <td class="text-md-end">
+                            <a asp-controller="Loans" asp-action="Details" asp-route-id="@loan.ID">@Localizer["Details"]</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }

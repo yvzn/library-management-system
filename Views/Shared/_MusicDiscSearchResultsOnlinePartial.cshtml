@@ -4,92 +4,86 @@
 @model library_management_system.Models.SearchResultsViewModel
 
 <section class="mb-5">
-	<h2 class="display-5">@Localizer["New Music Discs"]</h2>
-	@if (Model.OnlineSearchFailed)
-	{
-		<div class="alert alert-warning" role="alert">
-			<p class="mb-2">@Localizer["The online music disc search failed on this attempt."]</p>
-			<p class="mb-3">@Localizer["Would you like to try again? You can also add the item manually using the button below."]</p>
-			<form hx-post="/MusicDiscs/SearchResultsOnline" hx-target="#searchResultsOnline" hx-indicator="#retryIndicator-MusicDisc-@Model.CacheKey" class="d-inline-block">
-				<input type="hidden" name="LoanId" value="@Model.LoanId" />
-				<input type="hidden" name="Title" value="@Model.Title" />
-				<input type="hidden" name="Author" value="@Model.Author" />
-				<input type="hidden" name="EAN" value="@Model.EAN" />
-				<button type="submit" class="btn btn-primary">
-					<span id="retryIndicator-MusicDisc-@Model.CacheKey" class="retry-indicator spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" aria-label="@Localizer["Loading..."]"></span>
-					<span>@Localizer["Retry"]</span>
-				</button>
-			</form>
-		</div>
-		<style>
-			.retry-indicator {
-				display: none;
-			}
-			.htmx-request .retry-indicator,
-			.htmx-request.retry-indicator {
-				display: inline-block;
-			}
-		</style>
-	}
-	else if (Model.MusicDiscs.Count > 0)
-	{
-		<output class="row">
-			<table class="table">
-				<colgroup>
-					<col class="col-4">
-					</col>
-					<col class="col-3">
-					</col>
-					<col class="col-2">
-					</col>
-					<col class="col-1">
-					</col>
-					<col class="col-2">
-					</col>
-				</colgroup>
-				<thead>
-					<tr>
-						<th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().Title)</th>
-						<th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().Artist)</th>
-						<th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().Version)</th>
-						<th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().EAN)</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (var musicDisc in Model.MusicDiscs)
-					{
-						<tr>
-							<td class="align-middle">@Html.DisplayFor(model => musicDisc.Title)</td>
-							<td class="align-middle">@Html.DisplayFor(model => musicDisc.Artist)</td>
-							<td class="align-middle">@Html.DisplayFor(model => musicDisc.Version)</td>
-							<td class="align-middle">@Html.DisplayFor(model => musicDisc.EAN)</td>
-							<td class="text-md-end">
-								@if (Model.LoanId != null)
-								{
-									<form asp-controller="LoanMusicDiscs" asp-action="Create">
-										<input type="hidden" name="LoanId" value="@Model.LoanId" />
-										<input type="hidden" name="MusicDisc.Title" value="@musicDisc.Title" />
-										<input type="hidden" name="MusicDisc.Artist" value="@musicDisc.Artist" />
-										<input type="hidden" name="MusicDisc.Version" value="@musicDisc.Version" />
-										<input type="hidden" name="MusicDisc.EAN" value="@musicDisc.EAN" />
+    <h2 class="display-5">@Localizer["New Music Discs"]</h2>
+    @if (Model.OnlineSearchFailed)
+    {
+        <div class="alert alert-warning" role="alert">
+            <p class="mb-2">@Localizer["The online music disc search failed on this attempt."]</p>
+            <p class="mb-3">@Localizer["Would you like to try again? You can also add the item manually using the button below."]</p>
+            <form hx-post="/MusicDiscs/SearchResultsOnline" hx-target="#searchResultsOnline" hx-indicator="#retryIndicator-MusicDisc-@Model.CacheKey" class="d-inline-block">
+                <input type="hidden" name="LoanId" value="@Model.LoanId" />
+                <input type="hidden" name="Title" value="@Model.Title" />
+                <input type="hidden" name="Author" value="@Model.Author" />
+                <input type="hidden" name="EAN" value="@Model.EAN" />
+                <button type="submit" class="btn btn-primary">
+                    <span id="retryIndicator-MusicDisc-@Model.CacheKey" class="retry-indicator spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" aria-label='@Localizer["Loading..."]'></span>
+                    <span>@Localizer["Retry"]</span>
+                </button>
+            </form>
+        </div>
+        <style>
+            .retry-indicator {
+                display: none;
+            }
 
-										<button type="submit" class="btn btn-outline-primary text-nowrap"
-											autofocus="@(Model.MusicDiscs.Count == 1)"
-											>@Localizer["Add to Loan"]</button>
-									</form>
-								}
-							</td>
-						</tr>
-					}
-				</tbody>
-			</table>
-		</output>
-	}
-	else
-	{
-		<div>
-			@Localizer["No music discs found."]
-		</div>
-	}
+            .htmx-request .retry-indicator,
+            .htmx-request.retry-indicator {
+                display: inline-block;
+            }
+        </style>
+    }
+    else if (Model.MusicDiscs.Count > 0)
+    {
+        <div class="row">
+            <table class="table">
+                <colgroup>
+                    <col class="col-4" />
+                    <col class="col-3" />
+                    <col class="col-2" />
+                    <col class="col-1" />
+                    <col class="col-2" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().Title)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().Artist)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().Version)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.MusicDiscs.First().EAN)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var musicDisc in Model.MusicDiscs)
+                    {
+                        <tr>
+                            <td class="align-middle">@Html.DisplayFor(model => musicDisc.Title)</td>
+                            <td class="align-middle">@Html.DisplayFor(model => musicDisc.Artist)</td>
+                            <td class="align-middle">@Html.DisplayFor(model => musicDisc.Version)</td>
+                            <td class="align-middle">@Html.DisplayFor(model => musicDisc.EAN)</td>
+                            <td class="text-md-end">
+                                @if (Model.LoanId != null)
+                                {
+                                    <form asp-controller="LoanMusicDiscs" asp-action="Create">
+                                        <input type="hidden" name="LoanId" value="@Model.LoanId" />
+                                        <input type="hidden" name="MusicDisc.Title" value="@musicDisc.Title" />
+                                        <input type="hidden" name="MusicDisc.Artist" value="@musicDisc.Artist" />
+                                        <input type="hidden" name="MusicDisc.Version" value="@musicDisc.Version" />
+                                        <input type="hidden" name="MusicDisc.EAN" value="@musicDisc.EAN" />
+
+                                        <button type="submit" class="btn btn-outline-primary text-nowrap" autofocus="@(Model.MusicDiscs.Count == 1)">@Localizer["Add to Loan"]</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div>
+            @Localizer["No music discs found."]
+        </div>
+    }
 </section>

@@ -1,92 +1,86 @@
 @using Microsoft.AspNetCore.Mvc.Localization
-
 @inject IViewLocalizer Localizer
 
 @model library_management_system.Models.SearchResultsViewModel
 
 <section class="mb-5">
-	<h2 class="display-5">@Localizer["New Books"]</h2>
-	@if (Model.OnlineSearchFailed)
-	{
-		<div class="alert alert-warning" role="alert">
-			<p class="mb-2">@Localizer["The online book search failed on this attempt."]</p>
-			<p class="mb-3">@Localizer["Would you like to try again? You can also add the item manually using the button below."]</p>
-			<form hx-post="/Books/SearchResultsOnline" hx-target="#searchResultsOnline" hx-indicator="#retryIndicator-Book-@Model.CacheKey" class="d-inline-block">
-				<input type="hidden" name="LoanId" value="@Model.LoanId" />
-				<input type="hidden" name="Title" value="@Model.Title" />
-				<input type="hidden" name="Author" value="@Model.Author" />
-				<input type="hidden" name="ISBN" value="@Model.ISBN" />
-				<button type="submit" class="btn btn-primary">
-					<span id="retryIndicator-Book-@Model.CacheKey" class="retry-indicator spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" aria-label="@Localizer["Loading..."]"></span>
-					<span>@Localizer["Retry"]</span>
-				</button>
-			</form>
-		</div>
-		<style>
-			.retry-indicator {
-				display: none;
-			}
-			.htmx-request .retry-indicator,
-			.htmx-request.retry-indicator {
-				display: inline-block;
-			}
-		</style>
-	}
-	else if (Model.Books.Count > 0)
-	{
-		<output class="row">
-			<table class="table">
-				<colgroup>
-					<col class="col-5">
-					</col>
-					<col class="col-3">
-					</col>
-					<col class="col-2">
-					</col>
-					<col class="col-2">
-					</col>
-				</colgroup>
-				<thead>
-					<tr>
-						<th scope="col">@Html.DisplayNameFor(model => model.Books.First().Title)</th>
-						<th scope="col">@Html.DisplayNameFor(model => model.Books.First().Author)</th>
-						<th scope="col">@Html.DisplayNameFor(model => model.Books.First().ISBN_10)</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (var book in Model.Books)
-					{
-						<tr>
-							<td class="align-middle">@Html.DisplayFor(model => book.Title)</td>
-							<td class="align-middle">@Html.DisplayFor(model => book.Author)</td>
-							<td class="align-middle">@Html.DisplayFor(model => book.ISBN_10)</td>
-							<td class="text-md-end">
-								@if (Model.LoanId != null)
-								{
-									<form asp-controller="LoanBooks" asp-action="Create">
-										<input type="hidden" name="LoanId" value="@Model.LoanId" />
-										<input type="hidden" name="Book.Title" value="@book.Title" />
-										<input type="hidden" name="Book.Author" value="@book.Author" />
-										<input type="hidden" name="Book.ISBN_13" value="@book.ISBN_13" />
-										<input type="hidden" name="Book.ISBN_10" value="@book.ISBN_10" />
+    <h2 class="display-5">@Localizer["New Books"]</h2>
+    @if (Model.OnlineSearchFailed)
+    {
+        <div class="alert alert-warning" role="alert">
+            <p class="mb-2">@Localizer["The online book search failed on this attempt."]</p>
+            <p class="mb-3">@Localizer["Would you like to try again? You can also add the item manually using the button below."]</p>
+            <form hx-post="/Books/SearchResultsOnline" hx-target="#searchResultsOnline" hx-indicator="#retryIndicator-Book-@Model.CacheKey" class="d-inline-block">
+                <input type="hidden" name="LoanId" value="@Model.LoanId" />
+                <input type="hidden" name="Title" value="@Model.Title" />
+                <input type="hidden" name="Author" value="@Model.Author" />
+                <input type="hidden" name="ISBN" value="@Model.ISBN" />
+                <button type="submit" class="btn btn-primary">
+                    <span id="retryIndicator-Book-@Model.CacheKey" class="retry-indicator spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" aria-label='@Localizer["Loading..."]'></span>
+                    <span>@Localizer["Retry"]</span>
+                </button>
+            </form>
+        </div>
+        <style>
+            .retry-indicator {
+                display: none;
+            }
 
-										<button type="submit" class="btn btn-outline-primary text-nowrap"
-											autofocus="@(Model.Books.Count == 1)"
-											>@Localizer["Add to Loan"]</button>
-									</form>
-								}
-							</td>
-						</tr>
-					}
-				</tbody>
-			</table>
-		</output>
-	}
-	else
-	{
-		<div>
-			@Localizer["No books found."]
-		</div>
-	}
+            .htmx-request .retry-indicator,
+            .htmx-request.retry-indicator {
+                display: inline-block;
+            }
+        </style>
+    }
+    else if (Model.Books.Count > 0)
+    {
+        <div class="row">
+            <table class="table">
+                <colgroup>
+                    <col class="col-5" />
+                    <col class="col-3" />
+                    <col class="col-2" />
+                    <col class="col-2" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th scope="col">@Html.DisplayNameFor(model => model.Books.First().Title)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.Books.First().Author)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.Books.First().ISBN_10)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var book in Model.Books)
+                    {
+                        <tr>
+                            <td class="align-middle">@Html.DisplayFor(model => book.Title)</td>
+                            <td class="align-middle">@Html.DisplayFor(model => book.Author)</td>
+                            <td class="align-middle">@Html.DisplayFor(model => book.ISBN_10)</td>
+                            <td class="text-md-end">
+                                @if (Model.LoanId != null)
+                                {
+                                    <form asp-controller="LoanBooks" asp-action="Create">
+                                        <input type="hidden" name="LoanId" value="@Model.LoanId" />
+                                        <input type="hidden" name="Book.Title" value="@book.Title" />
+                                        <input type="hidden" name="Book.Author" value="@book.Author" />
+                                        <input type="hidden" name="Book.ISBN_13" value="@book.ISBN_13" />
+                                        <input type="hidden" name="Book.ISBN_10" value="@book.ISBN_10" />
+
+                                        <button type="submit" class="btn btn-outline-primary text-nowrap" autofocus="@(Model.Books.Count == 1)">@Localizer["Add to Loan"]</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div>
+            @Localizer["No books found."]
+        </div>
+    }
 </section>
