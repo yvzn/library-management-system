@@ -1,3 +1,4 @@
+using System.Text.Json;
 using library_management_system.Models;
 
 namespace library_management_system.Services;
@@ -47,9 +48,15 @@ public class GoogleBooksService(
 
 		uriBuilder.Query = query.ToString();
 
-		var response = await HttpClient.GetFromJsonAsync<GoogleBooksApiResponse>(uriBuilder.Uri, cancellationToken);
+		using var response = await HttpClient.GetAsync(uriBuilder.Uri, cancellationToken);
+		var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
-		var result = response?.Items
+		var searchResults = JsonSerializer.Deserialize<GoogleBooksApiResponse>(content, new JsonSerializerOptions
+		{
+			PropertyNameCaseInsensitive = true,
+		});
+
+		var result = searchResults?.Items
 			.Select(item => item.VolumeInfo)
 			.Select(volumeInfo => new Book
 			{
