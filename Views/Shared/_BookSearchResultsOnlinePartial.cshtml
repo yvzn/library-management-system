@@ -37,15 +37,17 @@
         <div class="row">
             <table class="table">
                 <colgroup>
-                    <col class="col-5" />
+                    <col class="col-4" />
                     <col class="col-3" />
                     <col class="col-2" />
+                    <col class="col-1" />
                     <col class="col-2" />
                 </colgroup>
                 <thead>
                     <tr>
                         <th scope="col">@Html.DisplayNameFor(model => model.Books.First().Title)</th>
                         <th scope="col">@Html.DisplayNameFor(model => model.Books.First().Author)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.Books.First().ISBN_13)</th>
                         <th scope="col">@Html.DisplayNameFor(model => model.Books.First().ISBN_10)</th>
                         <th></th>
                     </tr>
@@ -56,6 +58,7 @@
                         <tr>
                             <td class="align-middle">@Html.DisplayFor(model => book.Title)</td>
                             <td class="align-middle">@Html.DisplayFor(model => book.Author)</td>
+                            <td class="align-middle">@Html.DisplayFor(model => book.ISBN_13)</td>
                             <td class="align-middle">@Html.DisplayFor(model => book.ISBN_10)</td>
                             <td class="text-md-end">
                                 @if (Model.MetadataItemId.HasValue)
