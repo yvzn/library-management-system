@@ -163,7 +163,7 @@ public class MoviesController(
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> SearchMetadata(int id)
+	public async Task<IActionResult> SearchMetadata(int id, Movie? movie = null)
 	{
 		var existingMovie = await dbContext.Movies.FirstOrDefaultAsync(m => m.ID == id, HttpContext.RequestAborted);
 		if (existingMovie == null)
@@ -175,40 +175,52 @@ public class MoviesController(
 		if (onlineSearchMode == OnlineSearchMode.Disabled)
 		{
 			ViewData["OnlineSearchEnabled"] = "false";
-			return View(nameof(Edit), existingMovie);
+			return View(nameof(Edit), movie ?? existingMovie);
 		}
+
+		movie = movie != null && !string.IsNullOrWhiteSpace(movie.Title) ? movie : existingMovie;
+		movie.ID = id;
 
 		try
 		{
 			var candidateMovies = await movieSearchService.SearchMoviesAsync(
-				existingMovie.Title,
-				existingMovie.EAN,
+				movie.Title,
+				movie.EAN,
 				HttpContext.RequestAborted);
-			var match = candidateMovies.FirstOrDefault(result =>
-				string.Equals(result.Title, existingMovie.Title, StringComparison.OrdinalIgnoreCase)
-				|| string.Equals(result.TitleFr, existingMovie.Title, StringComparison.OrdinalIgnoreCase))
-				?? candidateMovies.FirstOrDefault(result =>
-					!string.IsNullOrWhiteSpace(existingMovie.EAN)
-					&& !string.IsNullOrWhiteSpace(result.EAN)
-					&& string.Equals(result.EAN, existingMovie.EAN, StringComparison.OrdinalIgnoreCase))
-				?? candidateMovies.FirstOrDefault();
 
-			if (match != null)
+			ViewData["OnlineSearchResults"] = new SearchResultsViewModel(new SearchViewModel
 			{
-				existingMovie.Title = string.IsNullOrWhiteSpace(existingMovie.Title) ? match.Title : existingMovie.Title;
-				existingMovie.TitleFr ??= match.TitleFr;
-				existingMovie.ReleaseYear ??= match.ReleaseYear;
-				existingMovie.Media ??= match.Media;
-				existingMovie.EAN ??= match.EAN;
-			}
+				Title = movie.Title,
+				Director = movie.Director,
+				ReleaseYear = movie.ReleaseYear,
+				EAN = movie.EAN
+			})
+			{
+				Movies = [.. candidateMovies.Where(result => !string.IsNullOrWhiteSpace(result.Title))],
+				MetadataItemId = id,
+				MetadataMovie = movie
+			};
 		}
 		catch (Exception ex) when (!HttpContext.RequestAborted.IsCancellationRequested)
 		{
-			logger.LogError(ex, "Online movie metadata lookup failed for {MovieId}", existingMovie.ID);
+			logger.LogError(ex, "Online movie metadata lookup failed for {MovieId}", id);
 		}
 
 		ViewData["OnlineSearchEnabled"] = "true";
-		return View(nameof(Edit), existingMovie);
+		return View(nameof(Edit), movie);
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> SelectMetadata(int id, Movie movie)
+	{
+		if (!await dbContext.Movies.AsNoTracking().AnyAsync(existingMovie => existingMovie.ID == id, HttpContext.RequestAborted))
+		{
+			return NotFound();
+		}
+
+		movie.ID = id;
+		ViewData["OnlineSearchEnabled"] = (OnlineSearchModeParser.Parse(features.Value.OnlineMovieSearch, OnlineSearchMode.Automatic) != OnlineSearchMode.Disabled).ToString().ToLowerInvariant();
+		return View(nameof(Edit), movie);
 	}
 
 	public IActionResult New(Movie movie, int? loanId)

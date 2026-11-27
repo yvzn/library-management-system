@@ -55,6 +55,11 @@
 	</div>
 </form>
 
+@if (ViewData["OnlineSearchResults"] is SearchResultsViewModel searchResults)
+{
+	@await Html.PartialAsync("_MusicDiscSearchResultsOnlinePartial", searchResults)
+}
+
 @section Scripts {
 	@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

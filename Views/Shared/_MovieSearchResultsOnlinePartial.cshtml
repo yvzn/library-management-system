@@ -66,7 +66,19 @@
                             <td class="align-middle">@Html.DisplayFor(model => movie.ReleaseYear)</td>
                             <td class="align-middle">@Html.DisplayFor(model => movie.Media)</td>
                             <td class="text-md-end">
-                                @if (Model.LoanId != null)
+                                @if (Model.MetadataItemId.HasValue)
+                                {
+                                    <form asp-controller="Movies" asp-action="SelectMetadata" asp-route-id="@Model.MetadataItemId">
+                                        <input type="hidden" name="Title" value="@movie.Title" />
+                                        <input type="hidden" name="TitleFr" value="@(movie.TitleFr ?? Model.MetadataMovie?.TitleFr)" />
+                                        <input type="hidden" name="Director" value="@(movie.Director ?? Model.MetadataMovie?.Director)" />
+                                        <input type="hidden" name="ReleaseYear" value="@(movie.ReleaseYear ?? Model.MetadataMovie?.ReleaseYear)" />
+                                        <input type="hidden" name="Media" value="@(movie.Media ?? Model.MetadataMovie?.Media)" />
+                                        <input type="hidden" name="EAN" value="@(movie.EAN ?? Model.MetadataMovie?.EAN)" />
+                                        <button type="submit" class="btn btn-outline-primary text-nowrap">@Localizer["Select"]</button>
+                                    </form>
+                                }
+                                else if (Model.LoanId != null)
                                 {
                                     <form asp-controller="LoanMovies" asp-action="Create">
                                         <input type="hidden" name="LoanId" value="@Model.LoanId" />

@@ -151,7 +151,7 @@ public class BooksController(
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> SearchMetadata(int id)
+	public async Task<IActionResult> SearchMetadata(int id, Book? book = null)
 	{
 		var existingBook = await dbContext.Books.FirstOrDefaultAsync(b => b.ID == id, HttpContext.RequestAborted);
 		if (existingBook == null)
@@ -163,26 +163,54 @@ public class BooksController(
 		if (onlineSearchMode == OnlineSearchMode.Disabled)
 		{
 			ViewData["OnlineSearchEnabled"] = "false";
-			return View(nameof(Edit), existingBook);
+			return View(nameof(Edit), book ?? existingBook);
 		}
 
-		var searchResults = await bookSearchService.SearchBooksAsync(existingBook.Title, existingBook.Author, existingBook.ISBN_13 ?? existingBook.ISBN_10, HttpContext.RequestAborted);
-		var match = searchResults.FirstOrDefault(result =>
-			string.Equals(result.Title, existingBook.Title, StringComparison.OrdinalIgnoreCase)
-			|| (result.ISBN_13 != null && existingBook.ISBN_13 != null && result.ISBN_13.Equals(existingBook.ISBN_13, StringComparison.OrdinalIgnoreCase))
-			|| (result.ISBN_10 != null && existingBook.ISBN_10 != null && result.ISBN_10.Equals(existingBook.ISBN_10, StringComparison.OrdinalIgnoreCase)))
-			?? searchResults.FirstOrDefault();
+		book = book != null && !string.IsNullOrWhiteSpace(book.Title) ? book : existingBook;
+		book.ID = id;
 
-		if (match != null)
+		try
 		{
-			existingBook.Title ??= match.Title;
-			existingBook.Author ??= match.Author;
-			existingBook.ISBN_13 ??= match.ISBN_13;
-			existingBook.ISBN_10 ??= match.ISBN_10;
+			var searchResults = await bookSearchService.SearchBooksAsync(
+				book.Title,
+				book.Author,
+				book.ISBN_13 ?? book.ISBN_10,
+				HttpContext.RequestAborted);
+
+			ViewData["OnlineSearchResults"] = new SearchResultsViewModel(new SearchViewModel
+			{
+				Title = book.Title,
+				Author = book.Author,
+				ISBN = book.ISBN_13 ?? book.ISBN_10
+			})
+			{
+				Books = [.. searchResults.Where(result =>
+					!string.IsNullOrWhiteSpace(result.Title)
+					&& !string.IsNullOrWhiteSpace(result.Author))],
+				MetadataItemId = id,
+				MetadataBook = book
+			};
+		}
+		catch (Exception ex) when (!HttpContext.RequestAborted.IsCancellationRequested)
+		{
+			logger.LogError(ex, "Online book metadata lookup failed for {BookId}", id);
 		}
 
 		ViewData["OnlineSearchEnabled"] = "true";
-		return View(nameof(Edit), existingBook);
+		return View(nameof(Edit), book);
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> SelectMetadata(int id, Book book)
+	{
+		if (!await dbContext.Books.AsNoTracking().AnyAsync(existingBook => existingBook.ID == id, HttpContext.RequestAborted))
+		{
+			return NotFound();
+		}
+
+		book.ID = id;
+		ViewData["OnlineSearchEnabled"] = (OnlineSearchModeParser.Parse(features.Value.OnlineBookSearch, OnlineSearchMode.Automatic) != OnlineSearchMode.Disabled).ToString().ToLowerInvariant();
+		return View(nameof(Edit), book);
 	}
 
 	public IActionResult New(Book book, int? loanId)

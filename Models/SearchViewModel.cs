@@ -70,4 +70,12 @@ public record SearchResultsViewModel : SearchViewModel
 	public List<Movie> Movies { get; set; } = [];
 
 	public List<MusicDisc> MusicDiscs { get; set; } = [];
+
+	public int? MetadataItemId { get; set; }
+
+	public Book? MetadataBook { get; set; }
+
+	public Movie? MetadataMovie { get; set; }
+
+	public MusicDisc? MetadataMusicDisc { get; set; }
 }

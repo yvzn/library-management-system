@@ -197,7 +197,7 @@ public class MusicDiscsController(
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> SearchMetadata(int id)
+	public async Task<IActionResult> SearchMetadata(int id, MusicDisc? musicDisc = null)
 	{
 		var existingMusicDisc = await dbContext.MusicDiscs.FirstOrDefaultAsync(m => m.ID == id, HttpContext.RequestAborted);
 		if (existingMusicDisc == null)
@@ -209,37 +209,74 @@ public class MusicDiscsController(
 		if (onlineSearchMode == OnlineSearchMode.Disabled)
 		{
 			ViewData["OnlineSearchEnabled"] = "false";
-			return View(nameof(Edit), existingMusicDisc);
+			return View(nameof(Edit), musicDisc ?? existingMusicDisc);
 		}
 
+		musicDisc = musicDisc != null && !string.IsNullOrWhiteSpace(musicDisc.Title) ? musicDisc : existingMusicDisc;
+		musicDisc.ID = id;
+
 		var queryParts = new List<string>();
-		if (!string.IsNullOrWhiteSpace(existingMusicDisc.Artist)) queryParts.Add($"artist:{existingMusicDisc.Artist}");
-		if (!string.IsNullOrWhiteSpace(existingMusicDisc.Title)) queryParts.Add($"recording:{existingMusicDisc.Title}");
-		if (!string.IsNullOrWhiteSpace(existingMusicDisc.EAN)) queryParts.Add($"barcode:{existingMusicDisc.EAN}");
-		if (queryParts.Count > 0)
+		if (!string.IsNullOrWhiteSpace(musicDisc.Artist)) queryParts.Add($"artist:{musicDisc.Artist}");
+		if (!string.IsNullOrWhiteSpace(musicDisc.Title)) queryParts.Add($"recording:{musicDisc.Title}");
+		if (!string.IsNullOrWhiteSpace(musicDisc.EAN)) queryParts.Add($"barcode:{musicDisc.EAN}");
+		try
 		{
-			queryParts.Add("format:cd");
-			var uriBuilder = new UriBuilder("https://musicbrainz.org/ws/2/release/");
-			var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
-			query["query"] = string.Join(" AND ", queryParts);
-			query["fmt"] = "json";
-			uriBuilder.Query = query.ToString();
-			var client = httpClientFactory.CreateClient();
-			client.Timeout = TimeSpan.FromSeconds(60);
-			client.DefaultRequestHeaders.UserAgent.ParseAdd($"LibreLibrary/{applicationVersionService.CurrentVersion} (https://github.com/yvzn/library-management-system)");
-			var response = await client.GetFromJsonAsync<MusicBrainzApiResponse>(uriBuilder.Uri, HttpContext.RequestAborted);
-			var match = response?.Releases?.FirstOrDefault();
-			if (match != null)
+			if (queryParts.Count > 0)
 			{
-				existingMusicDisc.Title ??= match.Title;
-				existingMusicDisc.Artist ??= string.Join(", ", match.ArtistCredit.Select(a => a.Name).Distinct());
-				existingMusicDisc.Version ??= match.Version;
-				existingMusicDisc.EAN ??= string.IsNullOrEmpty(match.BarCode) ? match.Asin : match.BarCode;
+				queryParts.Add("format:cd");
+				var uriBuilder = new UriBuilder("https://musicbrainz.org/ws/2/release/");
+				var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
+				query["query"] = string.Join(" AND ", queryParts);
+				query["fmt"] = "json";
+				uriBuilder.Query = query.ToString();
+				var client = httpClientFactory.CreateClient();
+				client.Timeout = TimeSpan.FromSeconds(60);
+				client.DefaultRequestHeaders.UserAgent.ParseAdd($"LibreLibrary/{applicationVersionService.CurrentVersion} (https://github.com/yvzn/library-management-system)");
+				var response = await client.GetFromJsonAsync<MusicBrainzApiResponse>(uriBuilder.Uri, HttpContext.RequestAborted);
+				var results = response?.Releases?
+					.Select(release => new MusicDisc
+					{
+						Title = release.Title,
+						Artist = string.Join(", ", release.ArtistCredit.Select(artist => artist.Name).Distinct()),
+						Version = release.Version,
+						EAN = string.IsNullOrEmpty(release.BarCode) ? release.Asin : release.BarCode
+					})
+					.Where(result => !string.IsNullOrWhiteSpace(result.Title) && !string.IsNullOrWhiteSpace(result.Artist))
+					.Take(20) ?? [];
+
+				ViewData["OnlineSearchResults"] = new SearchResultsViewModel(new SearchViewModel
+				{
+					Title = musicDisc.Title,
+					Author = musicDisc.Artist,
+					EAN = musicDisc.EAN
+				})
+				{
+					MusicDiscs = [.. results],
+					MetadataItemId = id,
+					MetadataMusicDisc = musicDisc
+				};
 			}
+		}
+		catch (Exception ex) when (!HttpContext.RequestAborted.IsCancellationRequested)
+		{
+			logger.LogError(ex, "Online music disc metadata lookup failed for {MusicDiscId}", id);
 		}
 
 		ViewData["OnlineSearchEnabled"] = "true";
-		return View(nameof(Edit), existingMusicDisc);
+		return View(nameof(Edit), musicDisc);
+	}
+
+	[HttpPost]
+	public async Task<IActionResult> SelectMetadata(int id, MusicDisc musicDisc)
+	{
+		if (!await dbContext.MusicDiscs.AsNoTracking().AnyAsync(existingMusicDisc => existingMusicDisc.ID == id, HttpContext.RequestAborted))
+		{
+			return NotFound();
+		}
+
+		musicDisc.ID = id;
+		ViewData["OnlineSearchEnabled"] = (OnlineSearchModeParser.Parse(features.Value.OnlineMusicDiscSearch, OnlineSearchMode.Automatic) != OnlineSearchMode.Disabled).ToString().ToLowerInvariant();
+		return View(nameof(Edit), musicDisc);
 	}
 
 	public IActionResult New(MusicDisc musicDisc, int? loanId)
