@@ -61,7 +61,17 @@
                             <td class="align-middle">@Html.DisplayFor(model => musicDisc.Version)</td>
                             <td class="align-middle">@Html.DisplayFor(model => musicDisc.EAN)</td>
                             <td class="text-md-end">
-                                @if (Model.LoanId != null)
+                                @if (Model.MetadataItemId.HasValue)
+                                {
+                                    <form asp-controller="MusicDiscs" asp-action="SelectMetadata" asp-route-id="@Model.MetadataItemId">
+                                        <input type="hidden" name="Title" value="@musicDisc.Title" />
+                                        <input type="hidden" name="Artist" value="@musicDisc.Artist" />
+                                        <input type="hidden" name="Version" value="@(musicDisc.Version ?? Model.MetadataMusicDisc?.Version)" />
+                                        <input type="hidden" name="EAN" value="@(musicDisc.EAN ?? Model.MetadataMusicDisc?.EAN)" />
+                                        <button type="submit" class="btn btn-outline-primary text-nowrap">@Localizer["Select"]</button>
+                                    </form>
+                                }
+                                else if (Model.LoanId != null)
                                 {
                                     <form asp-controller="LoanMusicDiscs" asp-action="Create">
                                         <input type="hidden" name="LoanId" value="@Model.LoanId" />

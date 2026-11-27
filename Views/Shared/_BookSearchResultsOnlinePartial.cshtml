@@ -37,15 +37,17 @@
         <div class="row">
             <table class="table">
                 <colgroup>
-                    <col class="col-5" />
+                    <col class="col-4" />
                     <col class="col-3" />
                     <col class="col-2" />
+                    <col class="col-1" />
                     <col class="col-2" />
                 </colgroup>
                 <thead>
                     <tr>
                         <th scope="col">@Html.DisplayNameFor(model => model.Books.First().Title)</th>
                         <th scope="col">@Html.DisplayNameFor(model => model.Books.First().Author)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.Books.First().ISBN_13)</th>
                         <th scope="col">@Html.DisplayNameFor(model => model.Books.First().ISBN_10)</th>
                         <th></th>
                     </tr>
@@ -56,9 +58,20 @@
                         <tr>
                             <td class="align-middle">@Html.DisplayFor(model => book.Title)</td>
                             <td class="align-middle">@Html.DisplayFor(model => book.Author)</td>
+                            <td class="align-middle">@Html.DisplayFor(model => book.ISBN_13)</td>
                             <td class="align-middle">@Html.DisplayFor(model => book.ISBN_10)</td>
                             <td class="text-md-end">
-                                @if (Model.LoanId != null)
+                                @if (Model.MetadataItemId.HasValue)
+                                {
+                                    <form asp-controller="Books" asp-action="SelectMetadata" asp-route-id="@Model.MetadataItemId">
+                                        <input type="hidden" name="Title" value="@book.Title" />
+                                        <input type="hidden" name="Author" value="@book.Author" />
+                                        <input type="hidden" name="ISBN_13" value="@(book.ISBN_13 ?? Model.MetadataBook?.ISBN_13)" />
+                                        <input type="hidden" name="ISBN_10" value="@(book.ISBN_10 ?? Model.MetadataBook?.ISBN_10)" />
+                                        <button type="submit" class="btn btn-outline-primary text-nowrap">@Localizer["Select"]</button>
+                                    </form>
+                                }
+                                else if (Model.LoanId != null)
                                 {
                                     <form asp-controller="LoanBooks" asp-action="Create">
                                         <input type="hidden" name="LoanId" value="@Model.LoanId" />
