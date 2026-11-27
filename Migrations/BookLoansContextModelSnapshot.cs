@@ -24,7 +24,6 @@ namespace library_management_system.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Author")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ISBN_10")

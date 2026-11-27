@@ -11,7 +11,6 @@ public class Book
 
 	public string? Title { get; set; }
 
-	[Required]
 	[Display(Name = "Author")]
 	public string? Author { get; set; }
 
